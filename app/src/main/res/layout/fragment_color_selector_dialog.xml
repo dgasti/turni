@@ -31,7 +31,7 @@
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
                 android:paddingTop="16dp"
-                android:text="Medium Text"
+                android:text="Lavanda"
                 android:drawableLeft="@drawable/blu"
                 android:textAppearance="?android:attr/textAppearanceListItem" />
 
@@ -46,7 +46,7 @@
                 android:paddingLeft="16dp"
                 android:drawableLeft="@drawable/blu"
                 android:paddingRight="16dp"
-                android:text="Medium Text"
+                android:text="Salvia"
 
                 android:textAppearance="?android:attr/textAppearanceListItem" />
 
@@ -61,7 +61,7 @@
                 android:drawableLeft="@drawable/viola_3"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
-                android:text="Medium Text"
+                android:text="Vinaccia"
                 android:textAppearance="?android:attr/textAppearanceListItem" />
 
             <Button
@@ -75,7 +75,7 @@
                 android:drawableLeft="@drawable/rosso_4"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
-                android:text="Medium Text"
+                android:text="Fenicottero"
                 android:textAppearance="?android:attr/textAppearanceListItem" />
 
             <Button
@@ -89,7 +89,7 @@
                 android:paddingLeft="16dp"
                 android:drawableLeft="@drawable/giallo_5"
                 android:paddingRight="16dp"
-                android:text="Medium Text"
+                android:text="Banana"
                 android:textAppearance="?android:attr/textAppearanceListItem" />
 
             <Button

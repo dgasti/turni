@@ -1,47 +1,34 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="turni.app.it.turni.view_controller.WorkingFragment">
+    tools:context="turni.app.it.turni.view_controller.WorkingFragment"
+    android:rowCount="28"
+    android:columnCount="12"
+    android:orientation="vertical">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView android:layout_width="match_parent" android:layout_height="match_parent"
-        android:text="ciao" />
 
-    <RatingBar
+    <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/ratingBar"
-        android:layout_gravity="center_horizontal|top" />
+        android:text="Fatto!"
+        android:id="@+id/checkBox"
+        android:layout_marginTop="20dp"
+        android:layout_row="12"
+        android:layout_column="10"
+        android:layout_gravity="center|top"
+        android:layout_rowSpan="2"
+        android:layout_columnSpan="2"
+        android:checked="true"/>
 
-    <DialerFilter
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="left|top">
-
-        <EditText
-            android:id="@android:id/hint"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="Hint" />
-
-        <EditText
-            android:id="@android:id/primary"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@android:id/hint"
-            android:text="Primary" />
-    </DialerFilter>
-
-    <Chronometer
+    <TextView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/chronometer"
-        android:layout_gravity="center" />
-
-    <AnalogClock
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/analogClock"
-        android:layout_gravity="left|center_vertical" />
-
-</FrameLayout>
+        android:layout_marginTop="20dp"
+        android:layout_height="36dp"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Controlla il calendario!"
+        android:id="@+id/textView"
+        android:layout_row="22"
+        android:layout_column="11"
+        android:layout_gravity="top|center"/>
+</GridLayout>
