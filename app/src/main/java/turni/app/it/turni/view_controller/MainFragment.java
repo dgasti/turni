@@ -112,8 +112,8 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         if (calendarName != null && accountName != null && Util.getCalendarID(getActivity(), calendarName, accountName) >= 0)
             mAccountButton.setText(calendarName + "  (" + accountName + ")");
 
-        String text = "2015-11-23 XL90355Bonuzzi N.LD1-VR107.00-14.12\n" +
-                "2015-11-24 XL90355Bonuzzi N.LD1-VR207.00-14.12";
+        String text = "2016-07-24EE39318Gastaldo S.WEDAssenza WeekEnd\n" +
+               "2016-07-25EE39318Gastaldo S.LN4-VR100.01-07.13";
         //         "2015-04-07 XL90355Bonuzzi N.RECRecupero";
 //        String text="";
         mEditText.setText(text);
