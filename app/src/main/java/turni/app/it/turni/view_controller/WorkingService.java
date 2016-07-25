@@ -111,7 +111,7 @@ public class WorkingService extends Service {
         if (CREATE_EVENTS.equals(action)) {
             //Get the desired data (text to process)
             String text = intent.getStringExtra(CREATE_EVENTS);
-            Toast.makeText(this, "Start event command", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Caricamento sul calendario eseguito", Toast.LENGTH_LONG).show();
             //Create a background thread that does all the heavy work
             Thread thread = new Thread(new BackgroundThread(text));
             thread.start();

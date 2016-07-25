@@ -1,6 +1,7 @@
 package turni.app.it.turni.view_controller;
 
 import android.app.Fragment;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
 import android.transition.TransitionInflater;
@@ -8,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.Button;
 
 import turni.app.it.turni.R;
 
@@ -59,7 +61,7 @@ public class WorkingFragment extends Fragment {
             if (mText != null)
                 isActivityCalled = true;
         }
-        getActivity().getWindow().setEnterTransition(TransitionInflater.from(getActivity()).inflateTransition(R.transition.enter_ma_dwa));
+        //getActivity().getWindow().setEnterTransition(TransitionInflater.from(getActivity()).inflateTransition(R.transition.enter_ma_dwa));
     }
 
     @Override
@@ -79,6 +81,19 @@ public class WorkingFragment extends Fragment {
                     isActivityCalled = false;
                     mText = null;
                     getActivity().startPostponedEnterTransition();
+                }
+            }
+        });
+
+        Button calendario = (Button) mView.findViewById(R.id.calendar);
+        calendario.setOnClickListener( new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                Intent launchIntent = getActivity().getPackageManager().getLaunchIntentForPackage("com.google.android.calendar");
+                if (launchIntent != null) {
+                    startActivity(launchIntent);//null pointer check in case package name was not found
                 }
             }
         });

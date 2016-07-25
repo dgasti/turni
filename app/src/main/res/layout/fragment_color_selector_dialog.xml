@@ -103,7 +103,7 @@
                 android:drawableLeft="@drawable/arancione_6"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
-                android:text="Medium Text"
+                android:text="Mandarino"
                 android:textAppearance="?android:attr/textAppearanceListItem" />
 
             <Button
@@ -117,7 +117,7 @@
                 android:paddingLeft="16dp"
                 android:drawableLeft="@drawable/blu"
                 android:paddingRight="16dp"
-                android:text="Medium Text"
+                android:text="Pavone"
                 android:textAppearance="?android:attr/textAppearanceListItem" />
 
             <Button
@@ -131,7 +131,7 @@
                 android:paddingLeft="16dp"
                 android:drawableLeft="@drawable/blu"
                 android:paddingRight="16dp"
-                android:text="Medium Text"
+                android:text="Grafite"
                 android:textAppearance="?android:attr/textAppearanceListItem" />
 
             <Button
@@ -145,7 +145,7 @@
                 android:minHeight="32dp"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
-                android:text="Medium Text"
+                android:text="Mirtillo"
                 android:textAppearance="?android:attr/textAppearanceListItem" />
 
             <Button
@@ -159,7 +159,7 @@
                 android:drawableLeft="@drawable/blu"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
-                android:text="Medium Text"
+                android:text="Basilico"
                 android:textAppearance="?android:attr/textAppearanceListItem" />
 
             <Button
@@ -173,7 +173,7 @@
                 android:drawableLeft="@drawable/rosso_acceso_11"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
-                android:text="Medium Text"
+                android:text="Pomodoro"
                 android:textAppearance="?android:attr/textAppearanceListItem" />
 
         </LinearLayout>
