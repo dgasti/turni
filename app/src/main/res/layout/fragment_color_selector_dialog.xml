@@ -9,7 +9,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true">
+        android:layout_centerVertical="true"
+        android:id="@+id/scrollView2">
 
         <LinearLayout
             android:id="@+id/color_dialog_llayout"
@@ -19,6 +20,14 @@
             android:orientation="vertical"
             android:transitionName="@string/transition_dialog_llayout">
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?android:attr/selectableItemBackground"
+                android:text="Scegli il colore dell'evento"
+                android:textAppearance="?android:attr/textAppearanceListItem"
+                android:textSize="20dp"
+                android:layout_gravity="center_vertical" />
 
             <Button
                 android:id="@+id/row_color_1"
@@ -46,8 +55,8 @@
                 android:paddingLeft="16dp"
                 android:drawableLeft="@drawable/blu"
                 android:paddingRight="16dp"
+                android:paddingTop="16dp"
                 android:text="Salvia"
-
                 android:textAppearance="?android:attr/textAppearanceListItem" />
 
             <Button
@@ -61,6 +70,7 @@
                 android:drawableLeft="@drawable/viola_3"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
+                android:paddingTop="16dp"
                 android:text="Vinaccia"
                 android:textAppearance="?android:attr/textAppearanceListItem" />
 
@@ -75,6 +85,7 @@
                 android:drawableLeft="@drawable/rosso_4"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
+                android:paddingTop="16dp"
                 android:text="Fenicottero"
                 android:textAppearance="?android:attr/textAppearanceListItem" />
 
@@ -89,6 +100,7 @@
                 android:paddingLeft="16dp"
                 android:drawableLeft="@drawable/giallo_5"
                 android:paddingRight="16dp"
+                android:paddingTop="16dp"
                 android:text="Banana"
                 android:textAppearance="?android:attr/textAppearanceListItem" />
 
@@ -103,6 +115,7 @@
                 android:drawableLeft="@drawable/arancione_6"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
+                android:paddingTop="16dp"
                 android:text="Mandarino"
                 android:textAppearance="?android:attr/textAppearanceListItem" />
 
@@ -117,6 +130,7 @@
                 android:paddingLeft="16dp"
                 android:drawableLeft="@drawable/blu"
                 android:paddingRight="16dp"
+                android:paddingTop="16dp"
                 android:text="Pavone"
                 android:textAppearance="?android:attr/textAppearanceListItem" />
 
@@ -131,6 +145,7 @@
                 android:paddingLeft="16dp"
                 android:drawableLeft="@drawable/blu"
                 android:paddingRight="16dp"
+                android:paddingTop="16dp"
                 android:text="Grafite"
                 android:textAppearance="?android:attr/textAppearanceListItem" />
 
@@ -145,6 +160,7 @@
                 android:minHeight="32dp"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
+                android:paddingTop="16dp"
                 android:text="Mirtillo"
                 android:textAppearance="?android:attr/textAppearanceListItem" />
 
@@ -159,6 +175,7 @@
                 android:drawableLeft="@drawable/blu"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
+                android:paddingTop="16dp"
                 android:text="Basilico"
                 android:textAppearance="?android:attr/textAppearanceListItem" />
 
@@ -173,6 +190,7 @@
                 android:drawableLeft="@drawable/rosso_acceso_11"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
+                android:paddingTop="16dp"
                 android:text="Pomodoro"
                 android:textAppearance="?android:attr/textAppearanceListItem" />
 
