@@ -6,7 +6,7 @@
     tools:context="turni.app.it.turni.view_controller.ColorSelectorDialog$PlaceholderFragment">
 
     <ScrollView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
@@ -14,34 +14,28 @@
 
         <LinearLayout
             android:id="@+id/color_dialog_llayout"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:color/white"
             android:orientation="vertical"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
             android:transitionName="@string/transition_dialog_llayout">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="?android:attr/selectableItemBackground"
-                android:text="Scegli il colore dell'evento"
-                android:textAppearance="?android:attr/textAppearanceListItem"
-                android:textSize="20dp"
-                android:layout_gravity="center_vertical" />
 
             <Button
                 android:id="@+id/row_color_1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?android:attr/selectableItemBackground"
-                android:drawablePadding="16dp"
+                android:drawableLeft="@drawable/blu"
+                android:drawablePadding="20dp"
                 android:gravity="left"
                 android:minHeight="32dp"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
+                android:paddingLeft="10dp"
                 android:paddingTop="16dp"
+                android:paddingBottom="10dp"
                 android:text="Lavanda"
-                android:drawableLeft="@drawable/blu"
+
                 android:textAppearance="?android:attr/textAppearanceListItem" />
 
             <Button
@@ -49,13 +43,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?android:attr/selectableItemBackground"
-                android:drawablePadding="16dp"
+                android:drawablePadding="20dp"
                 android:minHeight="32dp"
                 android:gravity="left"
-                android:paddingLeft="16dp"
+                android:paddingLeft="10dp"
                 android:drawableLeft="@drawable/blu"
-                android:paddingRight="16dp"
                 android:paddingTop="16dp"
+                android:paddingBottom="10dp"
                 android:text="Salvia"
                 android:textAppearance="?android:attr/textAppearanceListItem" />
 
@@ -64,13 +58,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?android:attr/selectableItemBackground"
-                android:drawablePadding="16dp"
+                android:drawablePadding="20dp"
                 android:gravity="left"
                 android:minHeight="32dp"
                 android:drawableLeft="@drawable/viola_3"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
+                android:paddingLeft="10dp"
                 android:paddingTop="16dp"
+                android:paddingBottom="10dp"
                 android:text="Vinaccia"
                 android:textAppearance="?android:attr/textAppearanceListItem" />
 
@@ -79,13 +73,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?android:attr/selectableItemBackground"
-                android:drawablePadding="16dp"
+                android:drawablePadding="20dp"
                 android:minHeight="32dp"
                 android:gravity="left"
                 android:drawableLeft="@drawable/rosso_4"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
+                android:paddingLeft="10dp"
                 android:paddingTop="16dp"
+                android:paddingBottom="10dp"
                 android:text="Fenicottero"
                 android:textAppearance="?android:attr/textAppearanceListItem" />
 
@@ -94,13 +88,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?android:attr/selectableItemBackground"
-                android:drawablePadding="16dp"
+                android:drawablePadding="20dp"
                 android:minHeight="32dp"
                 android:gravity="left"
-                android:paddingLeft="16dp"
+                android:paddingLeft="10dp"
                 android:drawableLeft="@drawable/giallo_5"
-                android:paddingRight="16dp"
                 android:paddingTop="16dp"
+                android:paddingBottom="10dp"
                 android:text="Banana"
                 android:textAppearance="?android:attr/textAppearanceListItem" />
 
@@ -109,13 +103,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?android:attr/selectableItemBackground"
-                android:drawablePadding="16dp"
+                android:drawablePadding="20dp"
                 android:gravity="left"
                 android:minHeight="32dp"
                 android:drawableLeft="@drawable/arancione_6"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
+                android:paddingLeft="10dp"
                 android:paddingTop="16dp"
+                android:paddingBottom="10dp"
                 android:text="Mandarino"
                 android:textAppearance="?android:attr/textAppearanceListItem" />
 
@@ -124,13 +118,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?android:attr/selectableItemBackground"
-                android:drawablePadding="16dp"
+                android:drawablePadding="20dp"
                 android:minHeight="32dp"
                 android:gravity="left"
-                android:paddingLeft="16dp"
+                android:paddingLeft="10dp"
                 android:drawableLeft="@drawable/blu"
-                android:paddingRight="16dp"
                 android:paddingTop="16dp"
+                android:paddingBottom="10dp"
                 android:text="Pavone"
                 android:textAppearance="?android:attr/textAppearanceListItem" />
 
@@ -139,13 +133,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?android:attr/selectableItemBackground"
-                android:drawablePadding="16dp"
+                android:drawablePadding="20dp"
                 android:gravity="left"
                 android:minHeight="32dp"
-                android:paddingLeft="16dp"
+                android:paddingLeft="10dp"
                 android:drawableLeft="@drawable/blu"
-                android:paddingRight="16dp"
                 android:paddingTop="16dp"
+                android:paddingBottom="10dp"
                 android:text="Grafite"
                 android:textAppearance="?android:attr/textAppearanceListItem" />
 
@@ -154,13 +148,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?android:attr/selectableItemBackground"
-                android:drawablePadding="16dp"
+                android:drawablePadding="20dp"
                 android:gravity="left"
                 android:drawableLeft="@drawable/blu"
                 android:minHeight="32dp"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
+                android:paddingLeft="10dp"
                 android:paddingTop="16dp"
+                android:paddingBottom="10dp"
                 android:text="Mirtillo"
                 android:textAppearance="?android:attr/textAppearanceListItem" />
 
@@ -169,13 +163,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?android:attr/selectableItemBackground"
-                android:drawablePadding="16dp"
+                android:drawablePadding="20dp"
                 android:gravity="left"
                 android:minHeight="32dp"
                 android:drawableLeft="@drawable/blu"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
+                android:paddingLeft="10dp"
                 android:paddingTop="16dp"
+                android:paddingBottom="10dp"
                 android:text="Basilico"
                 android:textAppearance="?android:attr/textAppearanceListItem" />
 
@@ -184,13 +178,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?android:attr/selectableItemBackground"
-                android:drawablePadding="16dp"
+                android:drawablePadding="20dp"
                 android:minHeight="32dp"
                 android:gravity="left"
                 android:drawableLeft="@drawable/rosso_acceso_11"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
+                android:paddingLeft="10dp"
                 android:paddingTop="16dp"
+                android:paddingBottom="10dp"
                 android:text="Pomodoro"
                 android:textAppearance="?android:attr/textAppearanceListItem" />
 
