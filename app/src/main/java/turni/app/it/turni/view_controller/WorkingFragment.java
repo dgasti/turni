@@ -1,15 +1,22 @@
 package turni.app.it.turni.view_controller;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.app.Fragment;
 import android.content.ComponentName;
+import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Debug;
 import android.transition.TransitionInflater;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
+import android.widget.Toast;
 
 import turni.app.it.turni.R;
 
@@ -26,6 +33,7 @@ public class WorkingFragment extends Fragment {
     private static final String CREATE_EVENTS = "create events";
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
+
 
     private String mText;
     private View mView;
@@ -85,8 +93,10 @@ public class WorkingFragment extends Fragment {
             }
         });
 
+        Button sync_cal = (Button) mView.findViewById(R.id.sync);
         Button calendario = (Button) mView.findViewById(R.id.calendar);
-        calendario.setOnClickListener( new View.OnClickListener() {
+
+       /* calendario.setOnClickListener( new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -98,8 +108,40 @@ public class WorkingFragment extends Fragment {
             }
         });
 
+
+        sync_cal.setOnClickListener( new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                AccountManager manager = AccountManager.get(getActivity());
+                Account[] accounts = manager.getAccountsByType("com.google");
+                String accountName = "";
+                String accountType = "";
+                for (Account account : accounts) {
+                    accountName = account.name;
+                    accountType = account.type;
+                    break;
+                }
+
+                Account a = new Account(accountName, accountType);
+                ContentResolver.addPeriodicSync(a, "com.android.calendar", new Bundle(), 10);
+
+                Log.d(TAG, "FATTO");
+
+                Toast.makeText(getActivity(), "Sincronizzazione effettuata", Toast.LENGTH_SHORT);
+            }
+
+           Intent launchIntent = getActivity().getPackageManager().getLaunchIntentForPackage("com.google.android.calendar");
+
+           if (launchIntent != null)
+
+            {
+                startActivity(launchIntent);//null pointer check in case package name was not found
+            }
+        });
+    */
+
         return mView;
     }
-
-
 }
