@@ -27,7 +27,7 @@ import turni.app.it.turni.R;
  * Use the {@link WorkingFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class WorkingFragment extends Fragment {
+public class WorkingFragment extends Fragment implements View.OnClickListener {
     private static final boolean DEBUG = true;
     private static final String TAG = "WORKING FRAGMENT";
     private static final String CREATE_EVENTS = "create events";
@@ -94,54 +94,51 @@ public class WorkingFragment extends Fragment {
         });
 
         Button sync_cal = (Button) mView.findViewById(R.id.sync);
+        sync_cal.setOnClickListener(this);
         Button calendario = (Button) mView.findViewById(R.id.calendar);
-
-       /* calendario.setOnClickListener( new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                // TODO Auto-generated method stub
-                Intent launchIntent = getActivity().getPackageManager().getLaunchIntentForPackage("com.google.android.calendar");
-                if (launchIntent != null) {
-                    startActivity(launchIntent);//null pointer check in case package name was not found
-                }
-            }
-        });
-
-
-        sync_cal.setOnClickListener( new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                // TODO Auto-generated method stub
-                AccountManager manager = AccountManager.get(getActivity());
-                Account[] accounts = manager.getAccountsByType("com.google");
-                String accountName = "";
-                String accountType = "";
-                for (Account account : accounts) {
-                    accountName = account.name;
-                    accountType = account.type;
-                    break;
-                }
-
-                Account a = new Account(accountName, accountType);
-                ContentResolver.addPeriodicSync(a, "com.android.calendar", new Bundle(), 10);
-
-                Log.d(TAG, "FATTO");
-
-                Toast.makeText(getActivity(), "Sincronizzazione effettuata", Toast.LENGTH_SHORT);
-            }
-
-           Intent launchIntent = getActivity().getPackageManager().getLaunchIntentForPackage("com.google.android.calendar");
-
-           if (launchIntent != null)
-
-            {
-                startActivity(launchIntent);//null pointer check in case package name was not found
-            }
-        });
-    */
+        calendario.setOnClickListener(this);
 
         return mView;
     }
+
+        @Override
+        public void onClick(View mView) {
+            switch (mView.getId()) {
+                case R.id.sync:
+                    AccountManager manager = AccountManager.get(getActivity());
+                    Account[] accounts = manager.getAccountsByType("com.google");
+                    String accountName = "";
+                    String accountType = "";
+                    for (Account account : accounts) {
+                        accountName = account.name;
+                        accountType = account.type;
+                        break;
+                    }
+
+                    Account a = new Account(accountName, accountType);
+                    ContentResolver.addPeriodicSync(a, "com.android.calendar", new Bundle(), 10);
+
+                    Log.d(TAG, "SYNC EFFETTUATA");
+
+                    Toast.makeText(getActivity().getApplicationContext(), "Sincronizzazione effettuata", Toast.LENGTH_SHORT).show();
+                    break;
+
+                case R.id.calendar:
+                    Intent launchIntent = getActivity().getPackageManager().getLaunchIntentForPackage("com.google.android.calendar");
+                    if (launchIntent != null) {
+                        startActivity(launchIntent);//null pointer check in case package name was not found
+                    }
+                    break;
+            }
+
+        }
+
+        /*
+        Intent launchIntent = getActivity().getPackageManager().getLaunchIntentForPackage("com.google.android.calendar");
+
+        if (launchIntent != null)
+
+        {
+                startActivity(launchIntent);//null pointer check in case package name was not found
+        } */
 }
