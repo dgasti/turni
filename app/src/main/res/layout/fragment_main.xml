@@ -140,7 +140,7 @@
             android:layout_height="60dp"
             android:layout_centerHorizontal="true"
             android:layout_marginRight="20dp"
-            android:text="New Button" />
+            android:text="Non funziona" />
 
         <View
             android:id="@+id/view"

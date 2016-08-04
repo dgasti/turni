@@ -112,7 +112,7 @@ public class ColorSelectorDialog extends ActionBarActivity {
 
             //modify the text for the button that has the precedent color
             String colorButtonText = (String) mColorView[colorDefault].getText();
-            colorButtonText = colorButtonText + " (Default)";
+            colorButtonText = colorButtonText + "                   [Selezionata]";
             mColorView[colorDefault].setText(colorButtonText);
 
             //   catch (Exception e){}
