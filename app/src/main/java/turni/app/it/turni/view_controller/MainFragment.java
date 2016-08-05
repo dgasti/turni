@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.melnykov.fab.FloatingActionButton;
 
@@ -34,6 +35,10 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     private static final int COLOR_DIALOG_ACTIVITY_RESULT_CODE = 2;
     private static final String RESULT_COLOR_SELECTED = "result color selected";
     private static final String CALENDAR_ROW = "calendar row";
+    /**
+     * Dialog Account is used?
+     */
+    private static boolean ACCOUNT_IS_USED = false;
     /**
      * Activity result intent Key
      */
@@ -57,6 +62,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     private static final String COLOR_SELECTOR_BUNDLE = "color selector bundle";
     private static final String BASSONA_COLOR_DEFAULT = "bassona color default";
     private static final String VERONA_COLOR_DEFAULT = "result color selected";
+    private static final String TAG_IMPORT_TEXT_BUTTON = "import text button";
 
     private View mView;
     private FloatingActionButton mFowardButton;
@@ -68,6 +74,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     private Button mVeronaColorButton;
     private Button mBassonaColorButton;
     private boolean openVerona=false;
+    private Button mImportTextButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -86,11 +93,13 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         mAccountButton = (Button) mView.findViewById(R.id.account_button);
         mVeronaColorButton = (Button) mView.findViewById(R.id.verona_color_button);
         mBassonaColorButton = (Button) mView.findViewById(R.id.bassona_color_button);
+        mImportTextButton = (Button) mView.findViewById(R.id.import_text_button);
 
         mFowardButton.setTag(TAG_FOWARD_BUTTON);
         mAccountButton.setTag(TAG_ACCOUNT_BUTTON);
         mVeronaColorButton.setTag((TAG_VERONA_COLOR_BUTTON));
         mBassonaColorButton.setTag((TAG_BASSONA_COLOR_BUTTON));
+        mImportTextButton.setTag(TAG_IMPORT_TEXT_BUTTON);
 
         int drawableColor=ColorSelectorDialog.getColorDrawable(mSharedPref.getInt(VERONA_COLOR_DEFAULT, 1));
         Drawable d = getResources().getDrawable(drawableColor);
@@ -104,6 +113,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         mAccountButton.setOnClickListener(this);
         mVeronaColorButton.setOnClickListener(this);
         mBassonaColorButton.setOnClickListener(this);
+        mImportTextButton.setOnClickListener(this);
 
         String calendarName, accountName = null;
         calendarName = mSharedPref.getString(SP_CALENDAR_USED, null);
@@ -126,15 +136,22 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         String tag = (String) v.getTag();
         if (TAG_FOWARD_BUTTON.equals(tag)) {
-            String text = mEditText.getText().toString();
-            Intent intent = new Intent(getActivity(), WorkingActivity.class);
-            intent.putExtra(TURN_TEXT, text);
-            getActivity().getWindow().setExitTransition(null);
-            getActivity().getWindow().setEnterTransition(TransitionInflater.from(getActivity()).inflateTransition(R.transition.enter_ma_dwa));
-            startActivity(intent,
-                    ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
+            if (ACCOUNT_IS_USED == false)
+            {
+                //TODO: create alert dialog
+            }
+            else {
+                String text = mEditText.getText().toString();
+                Intent intent = new Intent(getActivity(), WorkingActivity.class);
+                intent.putExtra(TURN_TEXT, text);
+                getActivity().getWindow().setExitTransition(null);
+                getActivity().getWindow().setEnterTransition(TransitionInflater.from(getActivity()).inflateTransition(R.transition.enter_ma_dwa));
+                startActivity(intent,
+                        ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
+            }
         }
         if (TAG_ACCOUNT_BUTTON.equals(tag)) {
+            ACCOUNT_IS_USED = true;
             Intent intent = new Intent(getActivity(), CalendarDialog.class);
             v.setTransitionName("snapshot");
             getActivity().getWindow().setExitTransition(null);
@@ -166,6 +183,9 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                 mVeronaColorButton.animate().alpha(0).setDuration(250);
             if (TAG_BASSONA_COLOR_BUTTON.equals(tag))
                 mBassonaColorButton.animate().alpha(0).setDuration(250);
+        }
+        if (TAG_IMPORT_TEXT_BUTTON.equals(tag)) {
+            Toast.makeText(getActivity().getApplicationContext(), "Funzione ancora non attiva!", Toast.LENGTH_LONG).show();
         }
     }
 

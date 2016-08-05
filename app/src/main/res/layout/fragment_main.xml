@@ -135,12 +135,12 @@
         android:visibility="visible">
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/import_text_button"
             android:layout_width="256dp"
             android:layout_height="60dp"
             android:layout_centerHorizontal="true"
             android:layout_marginRight="20dp"
-            android:text="Non funziona" />
+            android:text="Importa testo" />
 
         <View
             android:id="@+id/view"
@@ -159,6 +159,7 @@
         android:layout_alignParentRight="true"
         android:layout_marginBottom="@dimen/activity_vertical_margin"
         android:layout_marginRight="@dimen/activity_horizontal_short_margin"
+        android:src="@drawable/plus"
         fab:fab_colorNormal="@color/red_500"
         fab:fab_colorPressed="@color/red_500"
         fab:fab_colorRipple="@color/red_A700"
