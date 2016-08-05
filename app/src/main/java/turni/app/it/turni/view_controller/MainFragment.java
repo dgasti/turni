@@ -1,8 +1,10 @@
 package turni.app.it.turni.view_controller;
 
 import android.app.ActivityOptions;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
@@ -139,6 +141,18 @@ public class MainFragment extends Fragment implements View.OnClickListener {
             if (ACCOUNT_IS_USED == false)
             {
                 //TODO: create alert dialog
+                //Intent intent = new Intent(getActivity(), DialogAlert.class);
+                //startActivity(intent);
+                AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+                alertDialog.setTitle("Attenzione");
+                alertDialog.setMessage("Seleziona un calendario prima di continuare!");
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                alertDialog.show();
             }
             else {
                 String text = mEditText.getText().toString();

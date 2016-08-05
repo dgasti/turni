@@ -21,7 +21,9 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.melnykov:floatingactionbutton:1.2.0'
-    compile 'com.android.support:appcompat-v7:21.0.+'
     compile files('libs/postgresql-9.4-1201.jdbc4.jar')
+    compile 'com.melnykov:floatingactionbutton:1.2.0'
+    compile 'com.android.support:appcompat-v7:21.0.3'
+    compile 'com.android.support:support-v4:21.0.3'
+    compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha1'
 }
