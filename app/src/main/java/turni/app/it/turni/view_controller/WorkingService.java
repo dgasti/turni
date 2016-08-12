@@ -27,6 +27,10 @@ public class WorkingService extends Service {
      * Indicates that the day is a RECUPERO
      */
     private final static String RECUPERO = "N.REC";
+    /**
+     * Indicates that the day you are Reachable
+     */
+    private final static String REPERIBILE = "REP";
     //Constants representing the work place
     private final static String VERONA = "VR1";
     private final static String BASSONA = "VR2";
@@ -158,18 +162,22 @@ public class WorkingService extends Service {
             long endMillis = 0;
             boolean isFullDay;
             boolean hasToCreateEvent;
+            boolean hasReachable;
             boolean isVerona, isBassona;
-            String titleText, placeText = "";
+            String titleText, titleText_REP, placeText = "";
             String recText = "RECUPERO";
             Calendar beginTime = null;
             Calendar endTime = null;
+            Calendar allday = null;
             //Process every line of the input text
             while (sc.hasNextLine()) {
                 hasToCreateEvent = false;
+                hasReachable = false;
                 isFullDay = false;
                 isVerona = isBassona = false;
                 line = sc.nextLine();
                 titleText = "TURNO LAVORATIVO";
+                titleText_REP = "REPERIBILITA'";
                 //Get the date for this event (year,month,day)
                 beginTime = Util.getEventDate(line);
                 endTime = null;
@@ -244,6 +252,16 @@ public class WorkingService extends Service {
                     endTime.set(Calendar.MINUTE, 59);
                     hasToCreateEvent = true;
                 }
+                if (line.contains(REPERIBILE)) {
+                    beginTime.set(Calendar.HOUR_OF_DAY,00);
+                    beginTime.set(Calendar.MINUTE,0);
+                    endTime = (Calendar) beginTime.clone();
+                    endTime.set(Calendar.HOUR_OF_DAY,23);
+                    endTime.set(Calendar.MINUTE, 59);
+                    isFullDay = true;
+                    hasToCreateEvent = true;
+                    hasReachable = true;
+                }
 
                 if (line.contains(VERONA)) {
                     isVerona = true;
@@ -273,8 +291,14 @@ public class WorkingService extends Service {
                         values.put(CalendarContract.Events.TITLE, recText);
                         if (DEBUG)
                             Log.d(TAG, "Full day SET");
-                    } else
-                        values.put(CalendarContract.Events.TITLE, titleText);
+                    } else {
+                        if (hasReachable) {
+                            values.put(CalendarContract.Events.TITLE, titleText_REP);
+                        }
+                        else {
+                            values.put(CalendarContract.Events.TITLE, titleText);
+                        }
+                    }
                     //TODO opzione modifica descrizione
                     values.put(CalendarContract.Events.DESCRIPTION, "Group workout");
                     if (isVerona) {
