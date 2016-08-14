@@ -253,8 +253,8 @@ public class WorkingService extends Service {
                     hasToCreateEvent = true;
                 }
                 if (line.contains(REPERIBILE)) {
-                    beginTime.set(Calendar.HOUR_OF_DAY,00);
-                    beginTime.set(Calendar.MINUTE,0);
+                    beginTime.set(Calendar.HOUR_OF_DAY,0);
+                    beginTime.set(Calendar.MINUTE,1);
                     endTime = (Calendar) beginTime.clone();
                     endTime.set(Calendar.HOUR_OF_DAY,23);
                     endTime.set(Calendar.MINUTE, 59);
@@ -283,15 +283,15 @@ public class WorkingService extends Service {
                     ContentValues values = new ContentValues();
                     values.put(CalendarContract.Events.DTSTART, startMillis);
                     //Set the event for the all day if necessary
-                    if (isFullDay)
-                        values.put(CalendarContract.Events.ALL_DAY, true);
-                    values.put(CalendarContract.Events.DTEND, endMillis);
                     //TODO opzione modifica titolo
+                    //TODO fix all day events
                     if (isFullDay) {
+                        values.put(CalendarContract.Events.ALL_DAY, true);
+                        values.put(CalendarContract.Events.DTSTART, startMillis);
+                        values.put(CalendarContract.Events.DTEND, endMillis);
                         values.put(CalendarContract.Events.TITLE, recText);
                         if (DEBUG)
                             Log.d(TAG, "Full day SET");
-                    } else {
                         if (hasReachable) {
                             values.put(CalendarContract.Events.TITLE, titleText_REP);
                         }
