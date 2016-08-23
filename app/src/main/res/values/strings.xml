@@ -4,7 +4,8 @@
     <string name="app_name">turni</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    <string name="edit_text_hint">Incolla qui il testo dei turni o importa un file txt</string>
+    <string name="edit_text_hint">Incolla qui il testo dei turni o importa un file</string>
+    <string name="edit_surname">Scrivi il tuo cognome</string>
     <string name="title_activity_working">WorkingActivity</string>
     <string name="edittext_hint">Copia il testo dei turni o importalo da un file txt</string>
     <string name="account_button_string">Scegli un calendario</string>

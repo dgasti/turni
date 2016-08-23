@@ -112,12 +112,14 @@ public class ColorSelectorDialog extends ActionBarActivity {
 
             //modify the text for the button that has the precedent color
             String colorButtonText = (String) mColorView[colorDefault].getText();
-            colorButtonText = colorButtonText + "                   [Selezionata]";
+            colorButtonText = colorButtonText;
             mColorView[colorDefault].setText(colorButtonText);
+            mColorView[colorDefault].setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.check, 0);
 
             //   catch (Exception e){}
             for (int i = 1; i < 12; i++) {
                 mColorView[i].setTag(i+"");
+                //mColorView[i].setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.check, 0);
                 mColorView[i].setOnClickListener(this);
             }
             mBackground.setTag(VIEW_BACKGROUND);
@@ -181,27 +183,27 @@ public class ColorSelectorDialog extends ActionBarActivity {
     public static int getColorDrawable(int color) {
         switch (color) {
             case COLOR_1:
-                return R.drawable.blu;
+                return R.drawable.lavanda;
             case COLOR_2:
-                return R.drawable.blu;
+                return R.drawable.salvia;
             case COLOR_3:
-                return R.drawable.viola_3;
+                return R.drawable.vinaccia;
             case COLOR_4:
-                return R.drawable.rosso_4;
+                return R.drawable.fenicottero;
             case COLOR_5:
-                return R.drawable.giallo_5;
+                return R.drawable.banana;
             case COLOR_6:
-                return R.drawable.arancione_6;
+                return R.drawable.mandarino;
             case COLOR_7:
-                return R.drawable.blu;
+                return R.drawable.pavone;
             case COLOR_8:
-                return R.drawable.blu;
+                return R.drawable.grafite;
             case COLOR_9:
-                return R.drawable.blu;
+                return R.drawable.mirtillo;
             case COLOR_10:
-                return R.drawable.blu;
+                return R.drawable.basilico;
             case COLOR_11:
-                return R.drawable.rosso_acceso_11;
+                return R.drawable.pomodoro;
         }
         return 0;
     }

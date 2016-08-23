@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.transition.TransitionInflater;
@@ -90,6 +91,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         mView = inflater.inflate(R.layout.fragment_main, null, false);
         Toolbar toolbar = (Toolbar) mView.findViewById(R.id.my_awesome_toolbar);
         ((ActionBarActivity) getActivity()).setSupportActionBar(toolbar);
+        ((ActionBarActivity) getActivity()).setTitle(" ");
         mFowardButton = (FloatingActionButton) mView.findViewById(R.id.foward_button);
         mEditText = (EditText) mView.findViewById(R.id.edit_text);
         mAccountButton = (Button) mView.findViewById(R.id.account_button);
@@ -124,11 +126,10 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         if (calendarName != null && accountName != null && Util.getCalendarID(getActivity(), calendarName, accountName) >= 0)
             mAccountButton.setText(calendarName + "  (" + accountName + ")");
 
-        String text = "2016-07-24EE39318Gastaldo S.WEDAssenza WeekEnd\n" +
-               "2016-07-25EE39318Gastaldo S.LN4-VR100.01-07.13";
+        //String text = "Inserisci quì le stringhe dei turni";
         //         "2015-04-07 XL90355Bonuzzi N.RECRecupero";
 //        String text="";
-        mEditText.setText(text);
+        //mEditText.setText(text);
 
         return mView;
     }

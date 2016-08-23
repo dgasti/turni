@@ -60,69 +60,69 @@ public class Util {
         switch(color){
             case 1:
                 if(isCircle)
-                    resource=context.getResources().getDrawable(R.drawable.blu);
+                    resource=context.getResources().getDrawable(R.drawable.lavanda);
                 else
-                    resource=context.getResources().getDrawable(R.drawable.blu);
+                    resource=context.getResources().getDrawable(R.drawable.lavanda);
                 break;
             case 2:
                 if(isCircle)
-                    resource=context.getResources().getDrawable(R.drawable.verde);
+                    resource=context.getResources().getDrawable(R.drawable.salvia);
                 else
-                    resource=context.getResources().getDrawable(R.drawable.blu);
+                    resource=context.getResources().getDrawable(R.drawable.lavanda);
                 break;
             case 3:
                 if(isCircle)
-                    resource=context.getResources().getDrawable(R.drawable.viola_3);
+                    resource=context.getResources().getDrawable(R.drawable.vinaccia);
                 else
-                    resource=context.getResources().getDrawable(R.drawable.blu);
+                    resource=context.getResources().getDrawable(R.drawable.lavanda);
                 break;
             case 4:
                 if(isCircle)
-                    resource=context.getResources().getDrawable(R.drawable.rosso_4);
+                    resource=context.getResources().getDrawable(R.drawable.fenicottero);
                 else
-                    resource=context.getResources().getDrawable(R.drawable.blu);
+                    resource=context.getResources().getDrawable(R.drawable.lavanda);
                 break;
             case 5:
                 if(isCircle)
-                    resource=context.getResources().getDrawable(R.drawable.giallo_5);
+                    resource=context.getResources().getDrawable(R.drawable.banana);
                 else
-                    resource=context.getResources().getDrawable(R.drawable.blu);
+                    resource=context.getResources().getDrawable(R.drawable.lavanda);
                 break;
             case 6:
                 if(isCircle)
-                    resource=context.getResources().getDrawable(R.drawable.arancione_6);
+                    resource=context.getResources().getDrawable(R.drawable.mandarino);
                 else
-                    resource=context.getResources().getDrawable(R.drawable.blu);
+                    resource=context.getResources().getDrawable(R.drawable.lavanda);
                 break;
             case 7:
                 if(isCircle)
-                    resource=context.getResources().getDrawable(R.drawable.turchese);
+                    resource=context.getResources().getDrawable(R.drawable.pavone);
                 else
-                    resource=context.getResources().getDrawable(R.drawable.blu);
+                    resource=context.getResources().getDrawable(R.drawable.lavanda);
                 break;
             case 8:
                 if(isCircle)
-                    resource=context.getResources().getDrawable(R.drawable.grigio);
+                    resource=context.getResources().getDrawable(R.drawable.grafite);
                 else
-                    resource=context.getResources().getDrawable(R.drawable.blu);
+                    resource=context.getResources().getDrawable(R.drawable.lavanda);
                 break;
             case 9:
                 if(isCircle)
-                    resource=context.getResources().getDrawable(R.drawable.blu_intenso);
+                    resource=context.getResources().getDrawable(R.drawable.mirtillo);
                 else
-                    resource=context.getResources().getDrawable(R.drawable.blu);
+                    resource=context.getResources().getDrawable(R.drawable.lavanda);
                 break;
             case 10:
                 if(isCircle)
-                    resource=context.getResources().getDrawable(R.drawable.verde_intenso);
+                    resource=context.getResources().getDrawable(R.drawable.basilico);
                 else
-                    resource=context.getResources().getDrawable(R.drawable.blu);
+                    resource=context.getResources().getDrawable(R.drawable.lavanda);
                 break;
             case 11:
                 if(isCircle)
-                    resource=context.getResources().getDrawable(R.drawable.rosso_acceso_11);
+                    resource=context.getResources().getDrawable(R.drawable.pomodoro);
                 else
-                    resource=context.getResources().getDrawable(R.drawable.blu);
+                    resource=context.getResources().getDrawable(R.drawable.lavanda);
                 break;
         }
         return resource;
