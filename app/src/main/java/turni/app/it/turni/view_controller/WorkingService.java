@@ -253,10 +253,10 @@ public class WorkingService extends Service {
                     hasToCreateEvent = true;
                 }
                 if (line.contains(REPERIBILE)) {
-                    beginTime.set(Calendar.HOUR_OF_DAY,0);
-                    beginTime.set(Calendar.MINUTE,1);
+                    beginTime.set(Calendar.HOUR_OF_DAY, 0);
+                    beginTime.set(Calendar.MINUTE, 1);
                     endTime = (Calendar) beginTime.clone();
-                    endTime.set(Calendar.HOUR_OF_DAY,23);
+                    endTime.set(Calendar.HOUR_OF_DAY, 23);
                     endTime.set(Calendar.MINUTE, 59);
                     isFullDay = true;
                     hasToCreateEvent = true;
@@ -283,22 +283,16 @@ public class WorkingService extends Service {
                     ContentValues values = new ContentValues();
                     values.put(CalendarContract.Events.DTSTART, startMillis);
                     //Set the event for the all day if necessary
-                    //TODO opzione modifica titolo
-                    //TODO fix all day events
-                    if (isFullDay) {
+                    if (isFullDay)
                         values.put(CalendarContract.Events.ALL_DAY, true);
-                        values.put(CalendarContract.Events.DTSTART, startMillis);
-                        values.put(CalendarContract.Events.DTEND, endMillis);
+                    values.put(CalendarContract.Events.DTEND, endMillis);
+                    //TODO opzione modifica titolo
+                    if (isFullDay) {
                         values.put(CalendarContract.Events.TITLE, recText);
                         if (DEBUG)
                             Log.d(TAG, "Full day SET");
-                        if (hasReachable) {
-                            values.put(CalendarContract.Events.TITLE, titleText_REP);
-                        }
-                        else {
-                            values.put(CalendarContract.Events.TITLE, titleText);
-                        }
-                    }
+                    } else
+                        values.put(CalendarContract.Events.TITLE, titleText);
                     //TODO opzione modifica descrizione
                     values.put(CalendarContract.Events.DESCRIPTION, "Group workout");
                     if (isVerona) {
