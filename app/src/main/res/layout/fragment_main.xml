@@ -28,31 +28,10 @@
     </android.support.v7.widget.Toolbar>
 
     <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/surname"
-        android:layout_below="@+id/my_awesome_toolbar"
-        android:layout_alignParentStart="true"
-        android:background="@color/transparent"
-        android:elegantTextHeight="true"
-        android:hint="@string/edit_surname"
-        android:maxHeight="150dp"
-        android:paddingLeft="@dimen/activity_horizontal_short_margin"
-        android:paddingTop="@dimen/activity_horizontal_short_margin"
-        android:visibility="visible" />
-
-    <View
-        android:id="@+id/divider"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_below="@+id/surname"
-        android:background="#BDBDBD" />
-
-    <EditText
         android:id="@+id/edit_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/divider"
+        android:layout_below="@+id/my_awesome_toolbar"
         android:layout_alignParentStart="true"
         android:background="@color/transparent"
         android:elegantTextHeight="true"

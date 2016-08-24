@@ -127,11 +127,9 @@ public class MainFragment extends Fragment implements View.OnClickListener {
             mAccountButton.setText(calendarName + "  (" + accountName + ")");
 
         //String text = "Inserisci quì le stringhe dei turni";
-        //         "2015-04-07 XL90355Bonuzzi N.RECRecupero";
+        //             "2015-04-07 XL90355Bonuzzi N.RECRecupero";
 //        String text="";
         //mEditText.setText(text);
-
-        //ciao
 
         return mView;
     }
