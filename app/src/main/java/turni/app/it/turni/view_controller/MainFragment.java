@@ -131,6 +131,8 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 //        String text="";
         //mEditText.setText(text);
 
+        //ciao
+
         return mView;
     }
 
