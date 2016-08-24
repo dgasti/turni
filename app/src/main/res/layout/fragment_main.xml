@@ -12,21 +12,8 @@
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
         android:elevation="10dp"
-        android:minHeight="?attr/actionBarSize" >
-    <ImageView
-        android:layout_width="wrap_content"
-        android:paddingLeft="0dp"
-        android:id="@+id/icon"
-        android:src="@drawable/turni_di_lavoro_icon"
-        android:layout_height="match_parent" />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:text="VTS - Turni"
-        android:textSize="20dp"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        />
-    </android.support.v7.widget.Toolbar>
+        android:minHeight="?attr/actionBarSize" />
+
 
     <EditText
         android:id="@+id/edit_text"
