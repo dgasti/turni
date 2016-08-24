@@ -24,7 +24,8 @@
         android:layout_height="match_parent"
         android:text="VTS - Turni"
         android:textSize="20dp"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        />
     </android.support.v7.widget.Toolbar>
 
     <EditText
