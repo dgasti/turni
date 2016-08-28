@@ -90,13 +90,15 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         mView = inflater.inflate(R.layout.fragment_main, null, false);
         Toolbar toolbar = (Toolbar) mView.findViewById(R.id.my_awesome_toolbar);
         ((ActionBarActivity) getActivity()).setSupportActionBar(toolbar);
-        //((ActionBarActivity) getActivity()).setTitle(" ");
+        ((ActionBarActivity) getActivity()).setTitle("VTS - Turni");
+        toolbar.setLogo(R.drawable.turni_di_lavoro_icon);
         mFowardButton = (FloatingActionButton) mView.findViewById(R.id.foward_button);
         mEditText = (EditText) mView.findViewById(R.id.edit_text);
         mAccountButton = (Button) mView.findViewById(R.id.account_button);
         mVeronaColorButton = (Button) mView.findViewById(R.id.verona_color_button);
         mBassonaColorButton = (Button) mView.findViewById(R.id.bassona_color_button);
         mImportTextButton = (Button) mView.findViewById(R.id.import_text_button);
+
 
         mFowardButton.setTag(TAG_FOWARD_BUTTON);
         mAccountButton.setTag(TAG_ACCOUNT_BUTTON);
@@ -110,7 +112,6 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         drawableColor=ColorSelectorDialog.getColorDrawable(mSharedPref.getInt(BASSONA_COLOR_DEFAULT, 1));
         d = getResources().getDrawable(drawableColor);
         mBassonaColorButton.setCompoundDrawablesWithIntrinsicBounds(d, null, null, null);
-
 
         mFowardButton.setOnClickListener(this);
         mAccountButton.setOnClickListener(this);
@@ -139,12 +140,10 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         String tag = (String) v.getTag();
+        boolean account_is_used = mSharedPref.getBoolean("ACCOUNT_IS_USED", false);
         if (TAG_FOWARD_BUTTON.equals(tag)) {
-            if (ACCOUNT_IS_USED == false)
+            if (account_is_used == false)
             {
-                //TODO: create alert dialog
-                //Intent intent = new Intent(getActivity(), DialogAlert.class);
-                //startActivity(intent);
                 AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
                 alertDialog.setTitle("Attenzione");
                 alertDialog.setMessage("Seleziona un calendario prima di continuare!");
@@ -167,7 +166,6 @@ public class MainFragment extends Fragment implements View.OnClickListener {
             }
         }
         if (TAG_ACCOUNT_BUTTON.equals(tag)) {
-            ACCOUNT_IS_USED = true;
             Intent intent = new Intent(getActivity(), CalendarDialog.class);
             v.setTransitionName("snapshot");
             getActivity().getWindow().setExitTransition(null);
@@ -211,6 +209,8 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         switch (requestCode) {
             case (CALENDAR_DIALOG_ACTIVITY_RESULT_CODE):
                 if (resultCode == CODE_OK) {
+                    ACCOUNT_IS_USED = true;
+                    mSharedPref.edit().putBoolean("ACCOUNT_IS_USED", true).commit();
                     String calendarName = data.getStringExtra(RESULT_CALENDAR);
                     String accountName = data.getStringExtra(RESULT_ACCOUNT);
                     // calendar_name  (account_name)
