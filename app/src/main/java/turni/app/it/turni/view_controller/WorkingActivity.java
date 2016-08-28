@@ -12,6 +12,7 @@ import turni.app.it.turni.R;
 public class WorkingActivity extends Activity {
 
     private static final String LAUNCH_ACTIVITY = "LAUNCH_WORKINGACTIVITY";
+    private static final String SURNAME = "SURNAME";
     private static final boolean DEBUG = true;
     private static final String TAG = "WORKING ACTIVITY";
 
@@ -20,10 +21,11 @@ public class WorkingActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_working);
         String text = getIntent().getStringExtra(LAUNCH_ACTIVITY);
+        String surname = getIntent().getStringExtra(SURNAME);
         postponeEnterTransition();
         // Add the fragment to the activity, pushing this transaction
         // on to the back stack.
-        Fragment newFragment = WorkingFragment.newInstance(text);
+        Fragment newFragment = WorkingFragment.newInstance(text, surname);
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.replace(R.id.working_activity_fragment, newFragment);
         ft.commit();

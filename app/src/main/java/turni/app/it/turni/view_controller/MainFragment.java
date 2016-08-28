@@ -37,6 +37,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     private static final int COLOR_DIALOG_ACTIVITY_RESULT_CODE = 2;
     private static final String RESULT_COLOR_SELECTED = "result color selected";
     private static final String CALENDAR_ROW = "calendar row";
+    private static final String SURNAME_TEXT = "SURNAME";
     /**
      * Dialog Account is used?
      */
@@ -68,7 +69,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
     private View mView;
     private FloatingActionButton mFowardButton;
-    private EditText mEditText;
+    private EditText mEditText, mEdittextSurname;
     private String mText;
     private TextView mTextView;
     private Button mAccountButton;
@@ -94,6 +95,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         toolbar.setLogo(R.drawable.turni_di_lavoro_icon);
         mFowardButton = (FloatingActionButton) mView.findViewById(R.id.foward_button);
         mEditText = (EditText) mView.findViewById(R.id.edit_text);
+        mEdittextSurname = (EditText) mView.findViewById(R.id.surname);
         mAccountButton = (Button) mView.findViewById(R.id.account_button);
         mVeronaColorButton = (Button) mView.findViewById(R.id.verona_color_button);
         mBassonaColorButton = (Button) mView.findViewById(R.id.bassona_color_button);
@@ -157,8 +159,10 @@ public class MainFragment extends Fragment implements View.OnClickListener {
             }
             else {
                 String text = mEditText.getText().toString();
+                String surnameText = mEdittextSurname.getText().toString();
                 Intent intent = new Intent(getActivity(), WorkingActivity.class);
                 intent.putExtra(TURN_TEXT, text);
+                intent.putExtra(SURNAME_TEXT, surnameText);
                 getActivity().getWindow().setExitTransition(null);
                 getActivity().getWindow().setEnterTransition(TransitionInflater.from(getActivity()).inflateTransition(R.transition.enter_ma_dwa));
                 startActivity(intent,
