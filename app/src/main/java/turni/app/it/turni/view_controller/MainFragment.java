@@ -77,7 +77,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     private SharedPreferences mSharedPref;
     private Button mVeronaColorButton;
     private Button mBassonaColorButton;
-    private boolean openVerona=false;
+    private boolean openVerona = false;
     private Button mImportTextButton;
 
     @Override
@@ -109,10 +109,10 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         mBassonaColorButton.setTag((TAG_BASSONA_COLOR_BUTTON));
         mImportTextButton.setTag(TAG_IMPORT_TEXT_BUTTON);
 
-        int drawableColor=ColorSelectorDialog.getColorDrawable(mSharedPref.getInt(VERONA_COLOR_DEFAULT, 1));
+        int drawableColor = ColorSelectorDialog.getColorDrawable(mSharedPref.getInt(VERONA_COLOR_DEFAULT, 1));
         Drawable d = getResources().getDrawable(drawableColor);
         mVeronaColorButton.setCompoundDrawablesWithIntrinsicBounds(d, null, null, null);
-        drawableColor=ColorSelectorDialog.getColorDrawable(mSharedPref.getInt(BASSONA_COLOR_DEFAULT, 1));
+        drawableColor = ColorSelectorDialog.getColorDrawable(mSharedPref.getInt(BASSONA_COLOR_DEFAULT, 1));
         d = getResources().getDrawable(drawableColor);
         mBassonaColorButton.setCompoundDrawablesWithIntrinsicBounds(d, null, null, null);
 
@@ -129,12 +129,12 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         if (calendarName != null && accountName != null && Util.getCalendarID(getActivity(), calendarName, accountName) >= 0)
             mAccountButton.setText(calendarName + "  (" + accountName + ")");
 
-        String text = "2016-08-26EE39318Gastaldo S.LD1-VR107.00-14.12 \n" +
-                "2016-08-27EE39318Gastaldo S.WEDAssenza WeekEnd \n" +
-                "2016-08-28EE39318Gastaldo S.FN2-VR116.00-24.00";
+        //String text = "2016-08-26EE39318Gastaldo S.LD1-VR107.00-14.12 \n" +
+        //      "2016-08-27EE39318Gastaldo S.WEDAssenza WeekEnd \n" +
+        //    "2016-08-28EE39318Gastaldo S.FN2-VR116.00-24.00";
         //         "2015-04-07 XL90355Bonuzzi N.RECRecupero";
-//        String text="";
-        mEditText.setText(text);
+        //String text="";
+        //mEditText.setText(text);
 
         return mView;
     }
@@ -146,8 +146,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         String surname = mEdittextSurname.getText().toString();
         boolean account_is_used = mSharedPref.getBoolean("ACCOUNT_IS_USED", false);
         if (TAG_FOWARD_BUTTON.equals(tag)) {
-            if (account_is_used == false)
-            {
+            if (account_is_used == false) {
                 AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
                 alertDialog.setTitle("Attenzione");
                 alertDialog.setMessage("Seleziona un calendario prima di continuare!");
@@ -158,9 +157,8 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                             }
                         });
                 alertDialog.show();
-            }
-            else if(surname.compareToIgnoreCase("")==0) {
-                Log.d(TAG, "entrato nel if del compare surname: "+surname);
+            } else if (surname.compareToIgnoreCase("") == 0) {
+                Log.d(TAG, "entrato nel if del compare surname: " + surname);
                 AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
                 alertDialog.setTitle("Attenzione");
                 alertDialog.setMessage("Inserisci il tuo cognome prima di continuare!");
@@ -171,12 +169,11 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                             }
                         });
                 alertDialog.show();
-            }
-            else {
+            } else {
                 String text = mEditText.getText().toString();
                 String surnameText = mEdittextSurname.getText().toString();
                 surnameText = surnameText.trim();
-                Log.d(TAG, "Surname nel mainFragment: "+surnameText);
+                Log.d(TAG, "Surname nel mainFragment: " + surnameText);
                 Intent intent = new Intent(getActivity(), WorkingActivity.class);
                 intent.putExtra(TURN_TEXT, text);
                 intent.putExtra(SURNAME_TEXT, surnameText);
@@ -262,8 +259,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                         mBassonaColorButton.animate().alpha(1f).setDuration(250);
                     }
                     break;
-                }
-                else {
+                } else {
                     mVeronaColorButton.animate().alpha(1f).setDuration(250);
                     mBassonaColorButton.animate().alpha(1f).setDuration(250);
                 }
