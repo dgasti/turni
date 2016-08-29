@@ -114,7 +114,7 @@ public class ColorSelectorDialog extends ActionBarActivity {
             String colorButtonText = (String) mColorView[colorDefault].getText();
             colorButtonText = colorButtonText;
             mColorView[colorDefault].setText(colorButtonText);
-            mColorView[colorDefault].setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.check, 0);
+            mColorView[colorDefault].setCompoundDrawablesWithIntrinsicBounds(getColorDrawable(colorDefault), 0, R.drawable.check, 0);
 
             //   catch (Exception e){}
             for (int i = 1; i < 12; i++) {
