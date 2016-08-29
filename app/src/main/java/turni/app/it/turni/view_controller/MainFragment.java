@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.transition.TransitionInflater;
@@ -90,7 +91,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         mView = inflater.inflate(R.layout.fragment_main, null, false);
         Toolbar toolbar = (Toolbar) mView.findViewById(R.id.my_awesome_toolbar);
         ((ActionBarActivity) getActivity()).setSupportActionBar(toolbar);
-        //((ActionBarActivity) getActivity()).setTitle(" ");
+        ((ActionBarActivity) getActivity()).setTitle(" ");
         mFowardButton = (FloatingActionButton) mView.findViewById(R.id.foward_button);
         mEditText = (EditText) mView.findViewById(R.id.edit_text);
         mAccountButton = (Button) mView.findViewById(R.id.account_button);
@@ -125,12 +126,10 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         if (calendarName != null && accountName != null && Util.getCalendarID(getActivity(), calendarName, accountName) >= 0)
             mAccountButton.setText(calendarName + "  (" + accountName + ")");
 
-        String text = "2016-08-26EE39318Gastaldo S.LD1-VR107.00-14.12 \n" +
-                "2016-08-27EE39318Gastaldo S.WEDAssenza WeekEnd \n" +
-                "2016-08-28EE39318Gastaldo S.FN2-VR116.00-24.00";
-        //         "2015-04-07 XL90355Bonuzzi N.RECRecupero";
+        //String text = "Inserisci quì le stringhe dei turni";
+        //             "2015-04-07 XL90355Bonuzzi N.RECRecupero";
 //        String text="";
-        mEditText.setText(text);
+        //mEditText.setText(text);
 
         return mView;
     }
