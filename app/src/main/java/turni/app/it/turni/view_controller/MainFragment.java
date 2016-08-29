@@ -175,6 +175,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
             else {
                 String text = mEditText.getText().toString();
                 String surnameText = mEdittextSurname.getText().toString();
+                surnameText = surnameText.trim();
                 Log.d(TAG, "Surname nel mainFragment: "+surnameText);
                 Intent intent = new Intent(getActivity(), WorkingActivity.class);
                 intent.putExtra(TURN_TEXT, text);

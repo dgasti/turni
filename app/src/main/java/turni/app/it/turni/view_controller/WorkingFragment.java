@@ -89,6 +89,8 @@ public class WorkingFragment extends Fragment implements View.OnClickListener {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
+    private static int events = 0;
+
 
     private String mText;
     private View mView;
@@ -189,7 +191,7 @@ public class WorkingFragment extends Fragment implements View.OnClickListener {
         Log.d(TAG, "testo dei turni: " + mText);
         int fromIndex = 0;
         int i = 1;
-        Log.d(TAG, "Surname = " + mSurname);
+        events = mText.indexOf(mSurname, fromIndex);
         //un indice che permette di iterare (dopo vedi)
         //-1 è quel  valore che dice che non trova la substringa perche ha finito le iterazioni
         //fromIndex all'inizio è zero quindi cerca la substringa dall'inizio del testo
@@ -202,6 +204,8 @@ public class WorkingFragment extends Fragment implements View.OnClickListener {
                                                                      //- trovo la posizione del cognome successivo. Per fare questo dico a indexOf di partire dalla fine del cognome precedente (surNameIndex+surName lenght)
                                                                      //- successivamente tolgo 18 posizioni e quindi mi si mette prima della seconda data
                                                                      //- faccio una verifica che il cognome che sto verificando ne abbia uno successivo o sia già l'ultimo
+            Log.d(TAG, "startline = "+startLine);
+
             int endLine;
             if (mText.indexOf(mSurname, surNameIndex + mSurname.length()) != -1) {
                 endLine = mText.indexOf(mSurname, surNameIndex + mSurname.length()) - 17;
@@ -264,7 +268,6 @@ public class WorkingFragment extends Fragment implements View.OnClickListener {
                 hasToCreateEvent = true;
                 titleText = titleNott2;
             }
-            //TODO controllare add day
             if (line.contains(NOTTURNO_21)) {
                 beginTime.set(Calendar.HOUR_OF_DAY, 21);
                 beginTime.set(Calendar.MINUTE, 15);
@@ -303,12 +306,13 @@ public class WorkingFragment extends Fragment implements View.OnClickListener {
                 hasToCreateEvent = true;
                 titleText = titlePom;
             }
+            //TODO controllare evento creato all day
             if (line.contains(REPERIBILE)) {
-                beginTime.set(Calendar.HOUR_OF_DAY, 0);
-                beginTime.set(Calendar.MINUTE, 1);
+                beginTime.set(Calendar.HOUR_OF_DAY, 8);
+                beginTime.set(Calendar.MINUTE, 0);
                 endTime = (Calendar) beginTime.clone();
                 endTime.set(Calendar.HOUR_OF_DAY, 23);
-                endTime.set(Calendar.MINUTE, 59);
+                endTime.set(Calendar.MINUTE, 0);
                 isFullDay = true;
                 hasToCreateEvent = true;
                 hasReachable = true;
@@ -332,15 +336,10 @@ public class WorkingFragment extends Fragment implements View.OnClickListener {
                 endMillis = endTime.getTimeInMillis();
                 mContentResolver = getActivity().getContentResolver();
                 ContentValues values = new ContentValues();
-                values.put(CalendarContract.Events.DTSTART, startMillis);
-                values.put(CalendarContract.Events.DTEND, endMillis);
-                //Set the event for the all day if necessary
-                //TODO opzione modifica titolo
-                //TODO fix all day events
                 if (isFullDay) {
                     values.put(CalendarContract.Events.ALL_DAY, true);
-                    //values.put(CalendarContract.Events.DTSTART, startMillis);
-                    values.put(CalendarContract.Events.TITLE, recText);
+                    values.put(CalendarContract.Events.DTSTART, startMillis);
+                    values.put(CalendarContract.Events.DTEND, endMillis);
                     if (DEBUG)
                         Log.d(TAG, "Full day SET");
                     if (hasReachable) {
@@ -373,6 +372,12 @@ public class WorkingFragment extends Fragment implements View.OnClickListener {
                 //  Uri  long eventID = Long.parseLong(uri1.getLastPathSegment());
             }
             i++;
+        }
+        if(events == -1) {
+            Toast.makeText(getActivity().getApplicationContext(), "NESSUN EVENTO CREATO", Toast.LENGTH_LONG).show();
+        }
+        else {
+            Toast.makeText(getActivity().getApplicationContext(), "EVENTI CREATI", Toast.LENGTH_LONG).show();
         }
     }
 
