@@ -1,9 +1,11 @@
 package turni.app.it.turni.view_controller;
 
 
+import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -146,6 +148,7 @@ public class WorkingFragment extends Fragment implements View.OnClickListener {
                     createEvent();
                     isActivityCalled = false;
                     mText = null;
+                    mSurname = null;
                     getActivity().startPostponedEnterTransition();
                 }
             }
@@ -163,7 +166,7 @@ public class WorkingFragment extends Fragment implements View.OnClickListener {
         //Put all the string to upper case to avoid errors reading the string
         mText = mText.toUpperCase();
         mSurname = mSurname.toUpperCase();
-        Log.d(TAG, "surname = "+mSurname);
+        Log.d(TAG, "surname = " + mSurname);
         Scanner sc = new Scanner(mText);
         String line = "";
         //Get the calendar ID where the events should be put
@@ -183,26 +186,22 @@ public class WorkingFragment extends Fragment implements View.OnClickListener {
         hasReachable = false;
         isFullDay = false;
         isVerona = isBassona = false;
-        Log.d(TAG, "testo dei turni: "+ mText);
+        Log.d(TAG, "testo dei turni: " + mText);
         int fromIndex = 0;
-        Log.d(TAG,"surname vale   "+mSurname);
-        int i=1;
-        if(mSurname=="")        //TODO: fix surname
-            mSurname="null";
-
-        Log.d(TAG, "Surname = "+mSurname);
+        int i = 1;
+        Log.d(TAG, "Surname = " + mSurname);
         //un indice che permette di iterare (dopo vedi)
         //-1 è quel  valore che dice che non trova la substringa perche ha finito le iterazioni
         //fromIndex all'inizio è zero quindi cerca la substringa dall'inizio del testo
 
         while (mText.indexOf(mSurname, fromIndex) != -1) {
-            Log.d(TAG, "index: "+mText.indexOf(mSurname, fromIndex));
+            Log.d(TAG, "index: " + mText.indexOf(mSurname, fromIndex));
             int surNameIndex = mText.indexOf(mSurname, fromIndex);  //trovo la posizione del primo cognome
             int startLine = surNameIndex - 17;                     //Trovo la posizione dell'inizio della stringa che è 17 posti indietro l'inizio del cognome
-            //Per trovare la fine della riga:
-            //- trovo la posizione del cognome successivo. Per fare questo dico a indexOf di partire dalla fine del cognome precedente (surNameIndex+surName lenght)
-            //- successivamente tolgo 18 posizioni e quindi mi si mette prima della seconda data
-            //- faccio una verifica che il cognome che sto verificando ne abbia uno successivo o sia già l'ultimo
+                                                                     //Per trovare la fine della riga:
+                                                                     //- trovo la posizione del cognome successivo. Per fare questo dico a indexOf di partire dalla fine del cognome precedente (surNameIndex+surName lenght)
+                                                                     //- successivamente tolgo 18 posizioni e quindi mi si mette prima della seconda data
+                                                                     //- faccio una verifica che il cognome che sto verificando ne abbia uno successivo o sia già l'ultimo
             int endLine;
             if (mText.indexOf(mSurname, surNameIndex + mSurname.length()) != -1) {
                 endLine = mText.indexOf(mSurname, surNameIndex + mSurname.length()) - 17;
@@ -229,7 +228,7 @@ public class WorkingFragment extends Fragment implements View.OnClickListener {
 
             if (line.contains(RECUPERO) || line.contains(ASSENZA) || line.contains(ASSENZE)) {
                 hasToCreateEvent = false;
-                Log.d(TAG,"entro in assenza  riga "+i);
+                Log.d(TAG, "entro in assenza  riga " + i);
             }
             //Set the shift hours for each case
             if (line.contains(MATTINA)) {

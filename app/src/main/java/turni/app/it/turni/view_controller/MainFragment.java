@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.transition.TransitionInflater;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -142,6 +143,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         String tag = (String) v.getTag();
+        String surname = mEdittextSurname.getText().toString();
         boolean account_is_used = mSharedPref.getBoolean("ACCOUNT_IS_USED", false);
         if (TAG_FOWARD_BUTTON.equals(tag)) {
             if (account_is_used == false)
@@ -157,9 +159,23 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                         });
                 alertDialog.show();
             }
+            else if(surname.compareToIgnoreCase("")==0) {
+                Log.d(TAG, "entrato nel if del compare surname: "+surname);
+                AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+                alertDialog.setTitle("Attenzione");
+                alertDialog.setMessage("Inserisci il tuo cognome prima di continuare!");
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                alertDialog.show();
+            }
             else {
                 String text = mEditText.getText().toString();
                 String surnameText = mEdittextSurname.getText().toString();
+                Log.d(TAG, "Surname nel mainFragment: "+surnameText);
                 Intent intent = new Intent(getActivity(), WorkingActivity.class);
                 intent.putExtra(TURN_TEXT, text);
                 intent.putExtra(SURNAME_TEXT, surnameText);
