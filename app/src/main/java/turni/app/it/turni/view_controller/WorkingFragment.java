@@ -55,7 +55,7 @@ public class WorkingFragment extends Fragment implements View.OnClickListener {
     /**
      * Indicates that the day is a RECUPERO
      */
-    private final static String RECUPERO = "N.REC";
+    private final static String RECUPERO = "RECRECUPERO";
     /**
      * Indicates that the day you are Reachable
      */
