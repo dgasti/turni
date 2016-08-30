@@ -180,7 +180,6 @@ public class WorkingFragment extends Fragment implements View.OnClickListener {
         boolean hasReachable;
         boolean isVerona, isBassona;
         String titleMatt, titlePom, titleNott1, titleNott2, titleText, titleText_REP, placeText = "";
-        String recText = "RECUPERO";
         Calendar beginTime = null;
         Calendar endTime = null;
         Calendar allday = null;
@@ -219,6 +218,7 @@ public class WorkingFragment extends Fragment implements View.OnClickListener {
             }
             //Log.d(TAG, "valore stringa tirata fuori  " + line);
 
+            //TODO add holiday in calendar event
             titleText = "TURNO LAVORATIVO";
             titleMatt = "TURNO MATTINO";
             titleNott1 = "TURNO NOTTURNO 21";
