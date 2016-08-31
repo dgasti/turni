@@ -2,6 +2,7 @@ package turni.app.it.turni.view_controller;
 
 import android.app.ActivityOptions;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -16,6 +17,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -69,6 +71,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     private static final String TAG_IMPORT_TEXT_BUTTON = "import text button";
 
     private View mView;
+    private Context context;
     private FloatingActionButton mFowardButton;
     private EditText mEditText, mEdittextSurname;
     private String mText;
@@ -136,9 +139,39 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         //String text="";
         //mEditText.setText(text);
 
+        showSurnameDialog(mView);
+        String surnameString = null;
+        String surname = mSharedPref.getString(surnameString, "SURNAME");
+        mEdittextSurname.setText(surnameString);
+
         return mView;
     }
 
+    //TODO fix starting popup
+    public void showSurnameDialog(View view) {
+
+        final Dialog dialog = new Dialog(context);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.custom_dialog);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setCancelable(true);
+
+        TextView title = (TextView) dialog.findViewById(R.id.text_dialog);
+        EditText surnameText = (EditText) dialog.findViewById(R.id.edit_dialog);
+        Button okButton = (Button) dialog.findViewById(R.id.button_dialog);
+
+        String surname = surnameText.getText().toString();
+        mSharedPref.edit().putString("SURNAME", surname).commit();
+
+        okButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
+    }
 
     @Override
     public void onClick(View v) {
