@@ -4,7 +4,8 @@
     xmlns:fab="http://schemas.android.com/apk/res-auto"
     android:id="@+id/root"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:background="?android:attr/selectableItemBackground">
 
     <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/my_awesome_toolbar"
@@ -63,43 +64,6 @@
 
     </ScrollView>
 
-    <RelativeLayout
-        android:id="@+id/dialog_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="visible"
-        android:layout_above="@+id/linearLayout"
-        android:layout_alignEnd="@+id/surname_change">
-
-        <Button
-            android:id="@+id/import_text_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="20dp"
-            android:text="Importa testo"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginStart="43dp" />
-
-        <View
-            android:id="@+id/view2"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#BDBDBD"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true" />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="incolla"
-            android:id="@+id/paste_text"
-            android:layout_alignParentTop="true"
-            android:layout_toEndOf="@+id/import_text_button"
-            android:layout_marginStart="20dp" />
-
-    </RelativeLayout>
-
     <com.melnykov.fab.FloatingActionButton
         android:id="@+id/foward_button"
         android:layout_width="56dp"
@@ -124,32 +88,6 @@
         android:layout_alignParentEnd="true"
         android:layout_alignTop="@+id/surname" />
 
-    <Button
-        android:id="@+id/bassona_color_button"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/list_items_height"
-        android:background="?android:attr/selectableItemBackground"
-        android:drawableLeft="@drawable/circle_orange_24dp"
-        android:drawablePadding="@dimen/activity_horizontal_medium_margin"
-        android:gravity="left|center_vertical"
-        android:paddingLeft="@dimen/activity_horizontal_short_margin"
-        android:text="@string/bassona_event_color_string"
-        android:layout_above="@+id/foward_button"
-        android:layout_alignParentStart="true" />
-
-    <Button
-        android:id="@+id/verona_color_button"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/list_items_height"
-        android:background="@drawable/button_background"
-        android:drawableLeft="@drawable/circle_orange_24dp"
-        android:drawablePadding="@dimen/activity_horizontal_medium_margin"
-        android:gravity="left|center_vertical"
-        android:paddingLeft="@dimen/activity_horizontal_short_margin"
-        android:text="@string/verona_event_color_string"
-        android:layout_above="@+id/bassona_color_button"
-        android:layout_alignParentStart="true" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -159,20 +97,15 @@
         android:layout_alignParentStart="true"
         android:id="@+id/linearLayout">
 
-        <Button
-            android:id="@+id/account_button"
+        <View
+            android:id="@+id/divider3"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/list_items_height"
-            android:background="@drawable/button_background"
-            android:drawableLeft="@drawable/drawable_calendar_grey600_24dp"
-            android:singleLine="true"
-            android:text="@string/account_button_string"
-            android:textAllCaps="false"
-            android:drawablePadding="@dimen/activity_horizontal_medium_margin"
-            android:gravity="left|center_vertical"
-            android:paddingLeft="@dimen/activity_horizontal_short_margin"/>
+            android:layout_height="1dp"
+            android:background="#BDBDBD"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true" />
 
-        <EditText
+        <!--<EditText
             android:id="@+id/title_text"
             android:layout_width="match_parent"
             android:layout_height="@dimen/list_items_height"
@@ -192,7 +125,102 @@
             android:layout_marginLeft="@dimen/activity_horizontal_long_margin"
             android:gravity="left|center_vertical"
             android:text="Medium Text"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:textAppearance="?android:attr/textAppearanceMedium" /> -->
     </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/dialog_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        android:layout_below="@+id/edit_text"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="12dp">
+
+        <Button
+            android:id="@+id/import_text_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
+            android:text="Importa testo"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="43dp" />
+
+        <View
+            android:id="@+id/divider2"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#BDBDBD"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="incolla"
+            android:id="@+id/paste_text"
+            android:layout_alignParentTop="true"
+            android:layout_toEndOf="@+id/import_text_button"
+            android:layout_marginStart="20dp" />
+
+        <View
+            android:id="@+id/divider5"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/paste_text"
+            android:background="#BDBDBD" />
+
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/account_button"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/list_items_height"
+        android:background="@drawable/button_background"
+        android:drawableLeft="@drawable/drawable_calendar_grey600_24dp"
+        android:singleLine="true"
+        android:text="@string/account_button_string"
+        android:textAllCaps="false"
+        android:drawablePadding="@dimen/activity_horizontal_medium_margin"
+        android:gravity="left|center_vertical"
+        android:paddingLeft="@dimen/activity_horizontal_short_margin"
+        android:layout_below="@+id/dialog_container"
+        android:layout_alignParentStart="true" />
+
+    <View
+        android:id="@+id/divider4"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#BDBDBD"
+        android:layout_alignBottom="@+id/account_button"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:id="@+id/verona_color_button"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/list_items_height"
+        android:background="@drawable/button_background"
+        android:drawableLeft="@drawable/circle_orange_24dp"
+        android:drawablePadding="@dimen/activity_horizontal_medium_margin"
+        android:gravity="left|center_vertical"
+        android:paddingLeft="@dimen/activity_horizontal_short_margin"
+        android:text="@string/verona_event_color_string"
+        android:focusable="true"
+        android:layout_below="@+id/account_button"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:id="@+id/bassona_color_button"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/list_items_height"
+        android:background="?android:attr/selectableItemBackground"
+        android:drawableLeft="@drawable/circle_orange_24dp"
+        android:drawablePadding="@dimen/activity_horizontal_medium_margin"
+        android:gravity="left|center_vertical"
+        android:paddingLeft="@dimen/activity_horizontal_short_margin"
+        android:text="@string/bassona_event_color_string"
+        android:layout_below="@+id/verona_color_button"
+        android:layout_alignParentStart="true" />
 
 </RelativeLayout>

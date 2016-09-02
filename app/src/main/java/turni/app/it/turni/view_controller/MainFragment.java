@@ -176,7 +176,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.custom_dialog);
         dialog.setCanceledOnTouchOutside(false);
-        dialog.setCancelable(true);
+        dialog.setCancelable(false);
 
         dialog.show();
 
