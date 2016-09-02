@@ -5,6 +5,8 @@ import android.app.ActivityOptions;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Fragment;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -41,7 +43,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     private static final int COLOR_DIALOG_ACTIVITY_RESULT_CODE = 2;
     private static final String RESULT_COLOR_SELECTED = "result color selected";
     private static final String CALENDAR_ROW = "calendar row";
-    private static final String SURNAME_TEXT = "SURNAME";
+    private static final String SURNAME_TEXT = "surname";
     /**
      * Dialog Account is used?
      */
@@ -70,19 +72,23 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     private static final String BASSONA_COLOR_DEFAULT = "bassona color default";
     private static final String VERONA_COLOR_DEFAULT = "result color selected";
     private static final String TAG_IMPORT_TEXT_BUTTON = "import text button";
+    private static final String TAG_SURNAME_CHANGE = "change surname";
+    private static final String TAG_PASTE_TEXT = "paste text";
 
     private View mView;
     private Context context;
     private FloatingActionButton mFowardButton;
-    private EditText mEditText, mEdittextSurname;
+    private EditText mEditText;
     private String mText;
-    private TextView mTextView;
-    private Button mAccountButton;
+    private TextView mTextView, mSurnameText;
+    private Button mAccountButton, mSurnameChangeButton, mPasteButton;
     private SharedPreferences mSharedPref;
     private Button mVeronaColorButton;
     private Button mBassonaColorButton;
     private boolean openVerona = false;
     private Button mImportTextButton;
+    private String surname = null;
+    private String surname_check = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -97,26 +103,24 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         Toolbar toolbar = (Toolbar) mView.findViewById(R.id.my_awesome_toolbar);
         ((ActionBarActivity) getActivity()).setSupportActionBar(toolbar);
         ((ActionBarActivity) getActivity()).setTitle("VTS - Turni");
-        toolbar.setLogo(R.drawable.turni_di_lavoro_icon);
         mFowardButton = (FloatingActionButton) mView.findViewById(R.id.foward_button);
         mEditText = (EditText) mView.findViewById(R.id.edit_text);
-        mEdittextSurname = (EditText) mView.findViewById(R.id.surname);
         mAccountButton = (Button) mView.findViewById(R.id.account_button);
         mVeronaColorButton = (Button) mView.findViewById(R.id.verona_color_button);
         mBassonaColorButton = (Button) mView.findViewById(R.id.bassona_color_button);
         mImportTextButton = (Button) mView.findViewById(R.id.import_text_button);
+        mSurnameText = (TextView) mView.findViewById(R.id.surname);
+        mSurnameChangeButton = (Button) mView.findViewById(R.id.surname_change);
+        mPasteButton = (Button) mView.findViewById(R.id.paste_text);
 
 
         mFowardButton.setTag(TAG_FOWARD_BUTTON);
         mAccountButton.setTag(TAG_ACCOUNT_BUTTON);
-        mVeronaColorButton.setTag((TAG_VERONA_COLOR_BUTTON));
-        mBassonaColorButton.setTag((TAG_BASSONA_COLOR_BUTTON));
+        mVeronaColorButton.setTag(TAG_VERONA_COLOR_BUTTON);
+        mBassonaColorButton.setTag(TAG_BASSONA_COLOR_BUTTON);
         mImportTextButton.setTag(TAG_IMPORT_TEXT_BUTTON);
-
-        showSurnameDialog(getActivity());
-        String surnameString = null;
-        String surname = mSharedPref.getString(surnameString, "SURNAME");
-        mEdittextSurname.setText(surnameString);
+        mSurnameChangeButton.setTag(TAG_SURNAME_CHANGE);
+        mPasteButton.setTag(TAG_PASTE_TEXT);
 
         int drawableColor = ColorSelectorDialog.getColorDrawable(mSharedPref.getInt(VERONA_COLOR_DEFAULT, 1));
         Drawable d = getResources().getDrawable(drawableColor);
@@ -125,11 +129,28 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         d = getResources().getDrawable(drawableColor);
         mBassonaColorButton.setCompoundDrawablesWithIntrinsicBounds(d, null, null, null);
 
+        surname_check = mSharedPref.getString("SURNAME", null);
+
+        if (DEBUG) {
+            Log.d(TAG, "surname_check = " + surname_check);
+        }
+
+        if (surname_check == null) {
+            showSurnameDialog(getActivity());
+        } else {
+            surname_check = surname_check.trim();
+            mSurnameText.setText("Ciao " + surname_check + "!");
+        }
+
+
         mFowardButton.setOnClickListener(this);
         mAccountButton.setOnClickListener(this);
         mVeronaColorButton.setOnClickListener(this);
         mBassonaColorButton.setOnClickListener(this);
+        mSurnameChangeButton.setOnClickListener(this);
         mImportTextButton.setOnClickListener(this);
+        mPasteButton.setOnClickListener(this);
+
 
         String calendarName, accountName = null;
         calendarName = mSharedPref.getString(SP_CALENDAR_USED, null);
@@ -156,20 +177,47 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         dialog.setContentView(R.layout.custom_dialog);
         dialog.setCanceledOnTouchOutside(false);
         dialog.setCancelable(true);
+
         dialog.show();
 
-        TextView title = (TextView) dialog.findViewById(R.id.text_dialog);
-        EditText surnameText = (EditText) dialog.findViewById(R.id.edit_dialog);
-        Button okButton = (Button) dialog.findViewById(R.id.button_dialog);
-
-        String surname = surnameText.getText().toString();
-        mSharedPref.edit().putString("SURNAME", surname).commit();
+        final EditText surnameText = (EditText) dialog.findViewById(R.id.dialog_surname);
+        Button okButton = (Button) dialog.findViewById(R.id.dialog_ok);
 
         okButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
-                dialog.dismiss();
+
+                surname = surnameText.getText().toString();
+
+                if (DEBUG)
+                    Log.d(TAG, "surname = " + surname);
+
+                if (surname.isEmpty()) {
+                    AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+                    alertDialog.setTitle("Attenzione");
+                    alertDialog.setMessage("Non hai inserito il cognome!");
+                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                    alertDialog.show();
+                }
+
+                if (DEBUG)
+                    Log.d(TAG, "surname dopo if di controllo = " + surname);
+
+                surname = surname.trim();
+                mSharedPref.edit().putString("SURNAME", surname).commit();
+
+                if (surname.isEmpty() == false) {
+                    mSurnameText.setText("Ciao " + surname + "!");
+                    dialog.dismiss();
+                }
+                if (DEBUG)
+                    Log.d(TAG, "Surname dopo if del dismiss = " + surname);
             }
         });
 
@@ -178,8 +226,32 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         String tag = (String) v.getTag();
-        String surname = mEdittextSurname.getText().toString();
+        if(DEBUG)
+            Log.d(TAG, "tag selezionato = "+tag);
         boolean account_is_used = mSharedPref.getBoolean("ACCOUNT_IS_USED", false);
+        if (TAG_SURNAME_CHANGE.equals(tag)) {
+            surname_check = null;
+            if (surname_check == null) {
+                showSurnameDialog(getActivity());
+            } else {
+                surname_check = surname_check.trim();
+                mSurnameText.setText("Ciao " + surname_check + "!");
+            }        }
+        if (TAG_IMPORT_TEXT_BUTTON.equals(tag)) {
+            Toast.makeText(getActivity().getApplicationContext(), "Funzione ancora non attiva!", Toast.LENGTH_SHORT).show();
+        }
+        if (TAG_PASTE_TEXT.equals(tag)) {
+            if(DEBUG)
+                Log.d(TAG, "Ho cliccato il tasto dell'incolla");
+            //Toast.makeText(getActivity().getApplicationContext(), "Funzione ancora non attiva!", Toast.LENGTH_LONG).show();
+            String pasteData = "";
+            ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+            ClipData.Item item = clipboard.getPrimaryClip().getItemAt(0);
+            pasteData = (String) item.getText().toString();
+            mEditText.setText(pasteData);
+            Toast.makeText(getActivity().getApplicationContext(), "Incollato", Toast.LENGTH_SHORT).show();
+        }
+        String text = mEditText.getText().toString();
         if (TAG_FOWARD_BUTTON.equals(tag)) {
             if (account_is_used == false) {
                 AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
@@ -192,11 +264,10 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                             }
                         });
                 alertDialog.show();
-            } else if (surname.compareToIgnoreCase("") == 0) {
-                Log.d(TAG, "entrato nel if del compare surname: " + surname);
+            } else if (text.isEmpty()) {
                 AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
                 alertDialog.setTitle("Attenzione");
-                alertDialog.setMessage("Inserisci il tuo cognome prima di continuare!");
+                alertDialog.setMessage("Inserisci i turni prima di continuare!");
                 alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
@@ -205,20 +276,23 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                         });
                 alertDialog.show();
             } else {
-                String text = mEditText.getText().toString();
-                String surnameText = mEdittextSurname.getText().toString();
-                surnameText = surnameText.trim();
-                Log.d(TAG, "Surname nel mainFragment: " + surnameText);
                 Intent intent = new Intent(getActivity(), WorkingActivity.class);
                 intent.putExtra(TURN_TEXT, text);
-                intent.putExtra(SURNAME_TEXT, surnameText);
+                if (surname_check != null) {
+                    intent.putExtra(SURNAME_TEXT, surname_check);
+                } else {
+                    intent.putExtra(SURNAME_TEXT, surname);
+                }
                 getActivity().getWindow().setExitTransition(null);
                 getActivity().getWindow().setEnterTransition(TransitionInflater.from(getActivity()).inflateTransition(R.transition.enter_ma_dwa));
                 startActivity(intent,
                         ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
             }
         }
-        if (TAG_ACCOUNT_BUTTON.equals(tag)) {
+
+        if (TAG_ACCOUNT_BUTTON.equals(tag))
+
+        {
             Intent intent = new Intent(getActivity(), CalendarDialog.class);
             v.setTransitionName("snapshot");
             getActivity().getWindow().setExitTransition(null);
@@ -229,7 +303,10 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                     ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
             mAccountButton.animate().alpha(0).setDuration(250);
         }
-        if (TAG_VERONA_COLOR_BUTTON.equals(tag) || TAG_BASSONA_COLOR_BUTTON.equals(tag)) {
+
+        if (TAG_VERONA_COLOR_BUTTON.equals(tag) || TAG_BASSONA_COLOR_BUTTON.equals(tag))
+
+        {
             Intent intent = new Intent(getActivity(), ColorSelectorDialog.class);
             if (TAG_VERONA_COLOR_BUTTON.equals(tag)) {
                 intent.putExtra(COLOR_SELECTOR_BUNDLE, TAG_VERONA_COLOR_BUTTON);
@@ -251,9 +328,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
             if (TAG_BASSONA_COLOR_BUTTON.equals(tag))
                 mBassonaColorButton.animate().alpha(0).setDuration(250);
         }
-        if (TAG_IMPORT_TEXT_BUTTON.equals(tag)) {
-            Toast.makeText(getActivity().getApplicationContext(), "Funzione ancora non attiva!", Toast.LENGTH_LONG).show();
-        }
+
     }
 
     @Override

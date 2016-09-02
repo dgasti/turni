@@ -1,31 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="300dp"
+    android:layout_height="300dp"
+    android:layout_centerVertical="true"
+    android:layout_centerHorizontal="true">
 
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/text_dialog"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/dialog_surname_title"
+        android:id="@+id/dialog_title"
         android:layout_alignParentTop="true"
-        android:text="New Text"
-        android:textAlignment="center"/>
+        android:layout_centerHorizontal="true" />
 
     <EditText
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/edit_dialog"
-        android:layout_centerHorizontal="true"
+        android:inputType="textPersonName"
+        android:hint="@string/dialog_surname"
+        android:ems="30"
+        android:id="@+id/dialog_surname"
         android:layout_centerVertical="true"
-        android:textAlignment="center"
-        android:hint="New Text" />
+        android:layout_alignStart="@+id/dialog_title"
+        android:layout_alignEnd="@+id/dialog_title" />
+
     <Button
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/button_dialog"
-        android:text="Ok"
+        android:text="@string/dialog_surname_button"
+        android:id="@+id/dialog_ok"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true" />
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>

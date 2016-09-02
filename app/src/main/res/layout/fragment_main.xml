@@ -4,7 +4,7 @@
     xmlns:fab="http://schemas.android.com/apk/res-auto"
     android:id="@+id/root"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent" >
 
     <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/my_awesome_toolbar"
@@ -15,19 +15,20 @@
         android:minHeight="?attr/actionBarSize" >
     </android.support.v7.widget.Toolbar>
 
-    <EditText
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/surname"
-        android:layout_below="@+id/my_awesome_toolbar"
-        android:layout_alignParentStart="true"
         android:background="@color/transparent"
         android:elegantTextHeight="true"
-        android:hint="@string/edit_surname"
+        android:text="@string/welcome_surname"
+        android:textAppearance="?android:attr/textAppearanceLarge"
         android:maxHeight="150dp"
         android:paddingLeft="@dimen/activity_horizontal_short_margin"
         android:paddingTop="@dimen/activity_horizontal_short_margin"
-        android:visibility="visible" />
+        android:visibility="visible"
+        android:layout_below="@+id/my_awesome_toolbar"
+        android:layout_alignParentStart="true" />
 
     <View
         android:id="@+id/divider"
@@ -60,116 +61,42 @@
         android:layout_marginTop="-30dp"
         android:visibility="visible">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:orientation="vertical"
-            android:weightSum="1">
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="30dp" />
-
-            <Button
-                android:id="@+id/account_button"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/list_items_height"
-                android:background="@drawable/button_background_v21"
-                android:drawableLeft="@drawable/drawable_calendar_grey600_24dp"
-                android:singleLine="true"
-                android:text="@string/account_button_string"
-                android:textAllCaps="false"
-                android:drawablePadding="@dimen/activity_horizontal_medium_margin"
-                android:gravity="left|center_vertical"
-                android:paddingLeft="@dimen/activity_horizontal_short_margin"/>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginLeft="@dimen/activity_horizontal_long_margin"
-                android:background="#BDBDBD" />
-
-            <EditText
-                android:id="@+id/title_text"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/list_items_height"
-                android:layout_gravity="center_horizontal"
-                android:background="@color/transparent"
-                android:drawableLeft="@drawable/drawable_descr_24dp"
-                android:drawablePadding="@dimen/activity_horizontal_medium_margin"
-                android:elegantTextHeight="true"
-                android:hint="@string/title_editor_text"
-                android:maxLines="1"
-                android:paddingLeft="@dimen/activity_horizontal_short_margin" />
-
-            <TextView
-                android:id="@+id/title_example_text"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/list_items_height"
-                android:layout_marginLeft="@dimen/activity_horizontal_long_margin"
-                android:gravity="left|center_vertical"
-                android:text="Medium Text"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginLeft="@dimen/activity_horizontal_long_margin"
-                android:background="#BDBDBD" />
-
-            <Button
-                android:id="@+id/verona_color_button"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/list_items_height"
-                android:background="@drawable/button_background_v21"
-                android:drawableLeft="@drawable/circle_orange_24dp"
-                android:drawablePadding="@dimen/activity_horizontal_medium_margin"
-                android:gravity="left|center_vertical"
-                android:paddingLeft="@dimen/activity_horizontal_short_margin"
-                android:text="@string/verona_event_color_string" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginLeft="@dimen/activity_horizontal_long_margin"
-                android:background="#BDBDBD" />
-
-            <Button
-                android:id="@+id/bassona_color_button"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/list_items_height"
-                android:background="?android:attr/selectableItemBackground"
-                android:drawableLeft="@drawable/circle_orange_24dp"
-                android:drawablePadding="@dimen/activity_horizontal_medium_margin"
-                android:gravity="left|center_vertical"
-                android:paddingLeft="@dimen/activity_horizontal_short_margin"
-                android:text="@string/bassona_event_color_string" />
-
-        </LinearLayout>
     </ScrollView>
 
     <RelativeLayout
         android:id="@+id/dialog_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/edit_text"
-        android:visibility="visible">
+        android:visibility="visible"
+        android:layout_above="@+id/linearLayout"
+        android:layout_alignEnd="@+id/surname_change">
 
         <Button
             android:id="@+id/import_text_button"
-            android:layout_width="256dp"
-            android:layout_height="60dp"
-            android:layout_centerHorizontal="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginRight="20dp"
-            android:text="Importa testo" />
+            android:text="Importa testo"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="43dp" />
 
         <View
-            android:id="@+id/view"
+            android:id="@+id/view2"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_centerVertical="true"
-            android:background="#BDBDBD" />
+            android:background="#BDBDBD"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="incolla"
+            android:id="@+id/paste_text"
+            android:layout_alignParentTop="true"
+            android:layout_toEndOf="@+id/import_text_button"
+            android:layout_marginStart="20dp" />
 
     </RelativeLayout>
 
@@ -187,5 +114,85 @@
         fab:fab_colorRipple="@color/red_A700"
         fab:fab_shadow="true" />
 
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cambia cognome"
+        android:id="@+id/surname_change"
+        android:layout_alignBottom="@+id/divider"
+        android:layout_alignParentEnd="true"
+        android:layout_alignTop="@+id/surname" />
+
+    <Button
+        android:id="@+id/bassona_color_button"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/list_items_height"
+        android:background="?android:attr/selectableItemBackground"
+        android:drawableLeft="@drawable/circle_orange_24dp"
+        android:drawablePadding="@dimen/activity_horizontal_medium_margin"
+        android:gravity="left|center_vertical"
+        android:paddingLeft="@dimen/activity_horizontal_short_margin"
+        android:text="@string/bassona_event_color_string"
+        android:layout_above="@+id/foward_button"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:id="@+id/verona_color_button"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/list_items_height"
+        android:background="@drawable/button_background"
+        android:drawableLeft="@drawable/circle_orange_24dp"
+        android:drawablePadding="@dimen/activity_horizontal_medium_margin"
+        android:gravity="left|center_vertical"
+        android:paddingLeft="@dimen/activity_horizontal_short_margin"
+        android:text="@string/verona_event_color_string"
+        android:layout_above="@+id/bassona_color_button"
+        android:layout_alignParentStart="true" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:weightSum="1"
+        android:layout_above="@+id/verona_color_button"
+        android:layout_alignParentStart="true"
+        android:id="@+id/linearLayout">
+
+        <Button
+            android:id="@+id/account_button"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/list_items_height"
+            android:background="@drawable/button_background"
+            android:drawableLeft="@drawable/drawable_calendar_grey600_24dp"
+            android:singleLine="true"
+            android:text="@string/account_button_string"
+            android:textAllCaps="false"
+            android:drawablePadding="@dimen/activity_horizontal_medium_margin"
+            android:gravity="left|center_vertical"
+            android:paddingLeft="@dimen/activity_horizontal_short_margin"/>
+
+        <EditText
+            android:id="@+id/title_text"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/list_items_height"
+            android:layout_gravity="center_horizontal"
+            android:background="@color/transparent"
+            android:drawableLeft="@drawable/drawable_descr_24dp"
+            android:drawablePadding="@dimen/activity_horizontal_medium_margin"
+            android:elegantTextHeight="true"
+            android:hint="@string/title_editor_text"
+            android:maxLines="1"
+            android:paddingLeft="@dimen/activity_horizontal_short_margin" />
+
+        <TextView
+            android:id="@+id/title_example_text"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/list_items_height"
+            android:layout_marginLeft="@dimen/activity_horizontal_long_margin"
+            android:gravity="left|center_vertical"
+            android:text="Medium Text"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+    </LinearLayout>
 
 </RelativeLayout>
