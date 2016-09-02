@@ -1,5 +1,6 @@
 package turni.app.it.turni.view_controller;
 
+import android.app.Activity;
 import android.app.ActivityOptions;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -112,6 +113,11 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         mBassonaColorButton.setTag((TAG_BASSONA_COLOR_BUTTON));
         mImportTextButton.setTag(TAG_IMPORT_TEXT_BUTTON);
 
+        showSurnameDialog(getActivity());
+        String surnameString = null;
+        String surname = mSharedPref.getString(surnameString, "SURNAME");
+        mEdittextSurname.setText(surnameString);
+
         int drawableColor = ColorSelectorDialog.getColorDrawable(mSharedPref.getInt(VERONA_COLOR_DEFAULT, 1));
         Drawable d = getResources().getDrawable(drawableColor);
         mVeronaColorButton.setCompoundDrawablesWithIntrinsicBounds(d, null, null, null);
@@ -139,22 +145,18 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         //String text="";
         //mEditText.setText(text);
 
-        showSurnameDialog(mView);
-        String surnameString = null;
-        String surname = mSharedPref.getString(surnameString, "SURNAME");
-        mEdittextSurname.setText(surnameString);
-
         return mView;
     }
 
     //TODO fix starting popup
-    public void showSurnameDialog(View view) {
+    public void showSurnameDialog(Activity activity) {
 
-        final Dialog dialog = new Dialog(context);
+        final Dialog dialog = new Dialog(activity);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.custom_dialog);
         dialog.setCanceledOnTouchOutside(false);
         dialog.setCancelable(true);
+        dialog.show();
 
         TextView title = (TextView) dialog.findViewById(R.id.text_dialog);
         EditText surnameText = (EditText) dialog.findViewById(R.id.edit_dialog);
