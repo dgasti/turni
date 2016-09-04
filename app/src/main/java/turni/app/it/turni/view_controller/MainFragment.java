@@ -52,7 +52,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     private static final String RESULT_COLOR_SELECTED = "result color selected";
     private static final String CALENDAR_ROW = "calendar row";
     private static final String SURNAME_TEXT = "SURNAME";
-    private static final int FILE_SELECT_CODE = 3;
+    private static final int FILE_SELECT_RESULT_CODE = 3;
     /**
      * Dialog Account is used?
      */
@@ -62,7 +62,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
      */
     private static final String RESULT_CALENDAR = "result calendar";
     /**
-     * Activity resul code Ok
+     * Activity result code Ok
      */
     private static final int CODE_OK = 1;
     /**
@@ -248,7 +248,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
             showFileChooser();
 
             if (DEBUG)
-                Log.d(TAG, "Risultato dell'intent = " + FILE_SELECT_CODE);
+                Log.d(TAG, "Risultato dell'intent = " + FILE_SELECT_RESULT_CODE);
         }
         if (TAG_PASTE_TEXT.equals(tag)) {
 
@@ -332,7 +332,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                 getActivity().getWindow().setEnterTransition(TransitionInflater.from(getActivity()).inflateTransition(R.transition.enter_ma_dwa));
                 //startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
                 startActivity(intent);
-                Toast.makeText(getActivity().getApplicationContext(), "Caricamento dei turni effettuata", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity().getApplicationContext(), "Caricamento dei turni effettuata", Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -378,41 +378,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     }
 
     private void showFileChooser() {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("text/plain");
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
 
-        try {
-            startActivityForResult(
-                    Intent.createChooser(intent, "Select a File to Upload"),
-                    FILE_SELECT_CODE);
-        } catch (android.content.ActivityNotFoundException ex) {
-            // Potentially direct the user to the Market with a Dialog
-            Toast.makeText(getActivity(), "Please install a File Manager.", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    @Nullable
-    public static String getPath(Context context, Uri uri) throws URISyntaxException {
-        if ("content".equalsIgnoreCase(uri.getScheme())) {
-            String[] projection = {"_data"};
-            Cursor cursor = null;
-
-            try {
-                cursor = context.getContentResolver().query(uri, projection, null, null, null);
-                int column_index = cursor.getColumnIndexOrThrow("_data");
-                if (cursor.moveToFirst()) {
-                    return cursor.getString(column_index);
-                }
-            } catch (Exception e) {
-                // Eat it
-            }
-        } else if ("file".equalsIgnoreCase(uri.getScheme())) {
-            return uri.getPath();
-        }
-
-        return null;
-    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -461,13 +427,30 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                     mVeronaColorButton.animate().alpha(1f).setDuration(250);
                     mBassonaColorButton.animate().alpha(1f).setDuration(250);
                 }
-            case FILE_SELECT_CODE:
-                if (resultCode != CODE_OK) {
+            case (FILE_SELECT_RESULT_CODE):
+                if (resultCode == CODE_OK) {
                     // Get the Uri of the selected file
-                    Uri uri = data.getData();
+                    Uri uri;
+                    try {
+                        uri = data.getData();
+                    } catch (NullPointerException e) {
+                    /*    AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+                        alertDialog.setTitle("Attenzione");
+                        alertDialog.setMessage("File non trovato, riprovare!");
+                        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                        alertDialog.show();
+                        */
+                        uri = Uri.parse(" ");
+                    }
 
-                    if (DEBUG)
-                        Log.d(TAG, "File Uri: " + uri.toString());
+
+                   // if (DEBUG)
+                   //     Log.d(TAG, "File Uri: " + uri.toString());
 
                     //TODO check if it works
                     if (uri != null && "content".equals(uri.getScheme())) {
@@ -479,9 +462,12 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                         // Get the path
                         path = null;
                         try {
-                            path = getPath(getActivity().getApplicationContext(), uri);
+                            path = getPath(getActivity().getApplicationContext(), uri, getActivity());
                         } catch (URISyntaxException e) {
+                            Toast.makeText(getActivity().getApplicationContext(), "File non trovato", Toast.LENGTH_SHORT).show();
                             e.printStackTrace();
+                        } catch (NullPointerException e) {
+                            path = " ";
                         }
 
                         if (DEBUG)
@@ -489,7 +475,18 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                         // Get the file instance
                         // File file = new File(path);
                         // Initiate the upload
-
+                        if(path.isEmpty()) {
+                            AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+                            alertDialog.setTitle("Attenzione");
+                            alertDialog.setMessage("File non trovato, riprovare!");
+                            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+                            alertDialog.show();
+                        }
                         try {
                             //Read text from file
                             StringBuilder text = new StringBuilder();
@@ -508,8 +505,21 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                             mEditText.setText(text);
 
                         } catch (FileNotFoundException e) {
+                        /*    AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+                            alertDialog.setTitle("Attenzione");
+                            alertDialog.setMessage("File non trovato, riprovare!");
+                            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+                            alertDialog.show();
+                            */
+                            path = " ";
                             e.printStackTrace();
                         } catch (IOException e) {
+                            Toast.makeText(getActivity().getApplicationContext(), "Errore in lettura del file. Sicuro che sia quello giusto?", Toast.LENGTH_SHORT).show();
                             e.printStackTrace();
                         }
 
@@ -521,9 +531,6 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                         Log.d(TAG, "CODE OK = " + CODE_OK);
                 }
         }
-
-        super.
-
-                onActivityResult(requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }
