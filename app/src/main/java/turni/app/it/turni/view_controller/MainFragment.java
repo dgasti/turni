@@ -15,7 +15,6 @@ import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.transition.TransitionInflater;
@@ -380,7 +379,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
     private void showFileChooser() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("*/*");
+        intent.setType("text/plain");
         intent.addCategory(Intent.CATEGORY_OPENABLE);
 
         try {
@@ -470,50 +469,61 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                     if (DEBUG)
                         Log.d(TAG, "File Uri: " + uri.toString());
 
-                    // Get the path
-                    path = null;
-                    try {
-                        path = getPath(getActivity().getApplicationContext(), uri);
-                    } catch (URISyntaxException e) {
-                        e.printStackTrace();
-                    }
-
-                    if (DEBUG)
-                        Log.d(TAG, "File Path: " + path);
-                    // Get the file instance
-                    // File file = new File(path);
-                    // Initiate the upload
-
-                    try {
-                        //Read text from file
-                        StringBuilder text = new StringBuilder();
-                        String s = "";
-
-                        BufferedReader br = new BufferedReader(new FileReader(path));
-                        while ((s = br.readLine()) != null) {
-                            text.append(s);
-                            text.append('\n');
+                    //TODO check if it works
+                    if (uri != null && "content".equals(uri.getScheme())) {
+                        Cursor cursor = getActivity().getContentResolver().query(uri, new String[]{android.provider.MediaStore.Images.ImageColumns.DATA}, null, null, null);
+                        cursor.moveToFirst();
+                        path = cursor.getString(0);
+                        cursor.close();
+                    } else {
+                        // Get the path
+                        path = null;
+                        try {
+                            path = getPath(getActivity().getApplicationContext(), uri);
+                        } catch (URISyntaxException e) {
+                            e.printStackTrace();
                         }
 
                         if (DEBUG)
-                            Log.d(TAG, "String text = " + text);
+                            Log.d(TAG, "File Path: " + path);
+                        // Get the file instance
+                        // File file = new File(path);
+                        // Initiate the upload
 
-                        // Set TextView text here using tv.setText(s);
-                        mEditText.setText(text);
+                        try {
+                            //Read text from file
+                            StringBuilder text = new StringBuilder();
+                            String s = "";
 
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                            BufferedReader br = new BufferedReader(new FileReader(path));
+                            while ((s = br.readLine()) != null) {
+                                text.append(s);
+                                text.append('\n');
+                            }
+
+                            if (DEBUG)
+                                Log.d(TAG, "String text = " + text);
+
+                            // Set TextView text here using tv.setText(s);
+                            mEditText.setText(text);
+
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                        break;
                     }
-
-                    break;
                 } else {
 
                     if (DEBUG)
                         Log.d(TAG, "CODE OK = " + CODE_OK);
                 }
         }
-        super.onActivityResult(requestCode, resultCode, data);
+
+        super.
+
+                onActivityResult(requestCode, resultCode, data);
     }
 }
