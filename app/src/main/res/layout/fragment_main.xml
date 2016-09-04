@@ -13,8 +13,8 @@
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
         android:elevation="10dp"
-        android:minHeight="?attr/actionBarSize" >
-    </android.support.v7.widget.Toolbar>
+        android:minHeight="?attr/actionBarSize" />
+
 
     <TextView
         android:layout_width="match_parent"
@@ -78,16 +78,6 @@
         fab:fab_colorRipple="@color/red_A700"
         fab:fab_shadow="true" />
 
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Cambia cognome"
-        android:id="@+id/surname_change"
-        android:layout_alignBottom="@+id/divider"
-        android:layout_alignParentEnd="true"
-        android:layout_alignTop="@+id/surname" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -144,8 +134,7 @@
             android:layout_marginRight="20dp"
             android:text="Importa testo"
             android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginStart="43dp" />
+            android:layout_alignParentStart="true" />
 
         <View
             android:id="@+id/divider2"
@@ -170,6 +159,15 @@
             android:layout_height="1dp"
             android:layout_below="@+id/paste_text"
             android:background="#BDBDBD" />
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cancella"
+            android:id="@+id/delete_button"
+            android:layout_below="@+id/divider2"
+            android:layout_alignParentEnd="true" />
 
     </RelativeLayout>
 

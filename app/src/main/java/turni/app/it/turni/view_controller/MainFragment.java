@@ -11,14 +11,16 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.transition.TransitionInflater;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -29,6 +31,12 @@ import android.widget.Toast;
 
 import com.melnykov.fab.FloatingActionButton;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.net.URISyntaxException;
+
 import model.Util;
 import turni.app.it.turni.R;
 
@@ -38,13 +46,14 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     private static final boolean DEBUG = true;
     private static final String TAG = "MAINFRAGMENT";
     private static final String TURN_TEXT = "LAUNCH_WORKINGACTIVITY";
-    private static final String TAG_FOWARD_BUTTON = "foward button";
+    private static final String TAG_FORWARD_BUTTON = "forward button";
     private static final String TAG_ACCOUNT_BUTTON = "calendar button";
     private static final int CALENDAR_DIALOG_ACTIVITY_RESULT_CODE = 1;
     private static final int COLOR_DIALOG_ACTIVITY_RESULT_CODE = 2;
     private static final String RESULT_COLOR_SELECTED = "result color selected";
     private static final String CALENDAR_ROW = "calendar row";
-    private static final String SURNAME_TEXT = "surname";
+    private static final String SURNAME_TEXT = "SURNAME";
+    private static final int FILE_SELECT_CODE = 3;
     /**
      * Dialog Account is used?
      */
@@ -73,8 +82,8 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     private static final String BASSONA_COLOR_DEFAULT = "bassona color default";
     private static final String VERONA_COLOR_DEFAULT = "result color selected";
     private static final String TAG_IMPORT_TEXT_BUTTON = "import text button";
-    private static final String TAG_SURNAME_CHANGE = "change surname";
     private static final String TAG_PASTE_TEXT = "paste text";
+    private static final String TAG_DELETE_TEXT = "delete text";
 
     private View mView;
     private Context context;
@@ -82,7 +91,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     private EditText mEditText;
     private String mText;
     public static TextView mTextView, mSurnameText;
-    private Button mAccountButton, mSurnameChangeButton, mPasteButton;
+    private Button mAccountButton, mPasteButton, mDeleteButton;
     public static SharedPreferences mSharedPref;
     private Button mVeronaColorButton;
     private Button mBassonaColorButton;
@@ -91,6 +100,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     private String surname = null;
     private String surname_check = null;
     private boolean isSurnameDialogShow = false;
+    private String path;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -112,17 +122,16 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         mBassonaColorButton = (Button) mView.findViewById(R.id.bassona_color_button);
         mImportTextButton = (Button) mView.findViewById(R.id.import_text_button);
         mSurnameText = (TextView) mView.findViewById(R.id.surname);
-        mSurnameChangeButton = (Button) mView.findViewById(R.id.surname_change);
         mPasteButton = (Button) mView.findViewById(R.id.paste_text);
+        mDeleteButton = (Button) mView.findViewById(R.id.delete_button);
 
-
-        mFowardButton.setTag(TAG_FOWARD_BUTTON);
+        mFowardButton.setTag(TAG_FORWARD_BUTTON);
         mAccountButton.setTag(TAG_ACCOUNT_BUTTON);
         mVeronaColorButton.setTag(TAG_VERONA_COLOR_BUTTON);
         mBassonaColorButton.setTag(TAG_BASSONA_COLOR_BUTTON);
         mImportTextButton.setTag(TAG_IMPORT_TEXT_BUTTON);
-        mSurnameChangeButton.setTag(TAG_SURNAME_CHANGE);
         mPasteButton.setTag(TAG_PASTE_TEXT);
+        mDeleteButton.setTag(TAG_DELETE_TEXT);
 
         int drawableColor = ColorSelectorDialog.getColorDrawable(mSharedPref.getInt(VERONA_COLOR_DEFAULT, 1));
         Drawable d = getResources().getDrawable(drawableColor);
@@ -144,7 +153,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
             mSurnameText.setText("Ciao " + surname_check + "!");
         }
 
-        if(isSurnameDialogShow) {
+        if (isSurnameDialogShow) {
             mSurnameText.setText("Chi sei?");
         }
 
@@ -152,9 +161,9 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         mAccountButton.setOnClickListener(this);
         mVeronaColorButton.setOnClickListener(this);
         mBassonaColorButton.setOnClickListener(this);
-        mSurnameChangeButton.setOnClickListener(this);
         mImportTextButton.setOnClickListener(this);
         mPasteButton.setOnClickListener(this);
+        mDeleteButton.setOnClickListener(this);
 
 
         String calendarName, accountName = null;
@@ -174,7 +183,6 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         return mView;
     }
 
-    //TODO fix starting popup
     public boolean showSurnameDialog(Activity activity) {
 
         final Dialog dialog = new Dialog(activity);
@@ -187,7 +195,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
         final EditText surnameText = (EditText) dialog.findViewById(R.id.dialog_surname);
         Button okButton = (Button) dialog.findViewById(R.id.dialog_ok);
-        
+
         okButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -228,46 +236,26 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         return true;
     }
 
-    public boolean onTouchEvent(MotionEvent event) {
-        if(event.getAction() == MotionEvent.ACTION_OUTSIDE) {
-            if(surname_check.isEmpty()) {
-                AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
-                alertDialog.setTitle("Attenzione");
-                alertDialog.setMessage("Non hai inserito il cognome!");
-                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                                showSurnameDialog(getActivity());
-                            }
-                        });
-                alertDialog.show();
-            }
-        }
-        return false;
-    }
-
     @Override
     public void onClick(View v) {
         String tag = (String) v.getTag();
-        if(DEBUG)
-            Log.d(TAG, "tag selezionato = "+tag);
+
+        if (DEBUG)
+            Log.d(TAG, "tag selezionato = " + tag);
+
         boolean account_is_used = mSharedPref.getBoolean("ACCOUNT_IS_USED", false);
-        if (TAG_SURNAME_CHANGE.equals(tag)) {
-            surname_check = null;
-            if (surname_check == null) {
-                showSurnameDialog(getActivity());
-            } else {
-                surname_check = surname_check.trim();
-                mSurnameText.setText("Ciao " + surname_check + "!");
-            }        }
         if (TAG_IMPORT_TEXT_BUTTON.equals(tag)) {
-            Toast.makeText(getActivity().getApplicationContext(), "Funzione ancora non attiva!", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getActivity().getApplicationContext(), "Funzione ancora non attiva!", Toast.LENGTH_SHORT).show();
+            showFileChooser();
+
+            if (DEBUG)
+                Log.d(TAG, "Risultato dell'intent = " + FILE_SELECT_CODE);
         }
         if (TAG_PASTE_TEXT.equals(tag)) {
-            if(DEBUG)
+
+            if (DEBUG)
                 Log.d(TAG, "Ho cliccato il tasto dell'incolla");
-            //Toast.makeText(getActivity().getApplicationContext(), "Funzione ancora non attiva!", Toast.LENGTH_LONG).show();
+
             String pasteData = "";
             ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
             ClipData.Item item = clipboard.getPrimaryClip().getItemAt(0);
@@ -275,8 +263,19 @@ public class MainFragment extends Fragment implements View.OnClickListener {
             mEditText.setText(pasteData);
             Toast.makeText(getActivity().getApplicationContext(), "Incollato", Toast.LENGTH_SHORT).show();
         }
+        if (TAG_DELETE_TEXT.equals(tag)) {
+
+            if (DEBUG)
+                Log.d(TAG, "Ho cliccato il tasto del cancella");
+
+            mEditText.setText(null);
+        }
         String text = mEditText.getText().toString();
-        if (TAG_FOWARD_BUTTON.equals(tag)) {
+        if (TAG_FORWARD_BUTTON.equals(tag)) {
+
+            if (DEBUG)
+                Log.d(TAG, "Sono dentro all'if del Forward button nell'onclick");
+
             if (account_is_used == false) {
                 AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
                 alertDialog.setTitle("Attenzione");
@@ -310,20 +309,31 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                             }
                         });
                 alertDialog.show();
-            }
+            } else {
 
-            else {
+                if (DEBUG)
+                    Log.d(TAG, "Sono dentro all'else dell'intent del Forward button nell'onclick, ho superato tutti i test");
+
                 Intent intent = new Intent(getActivity(), WorkingActivity.class);
                 intent.putExtra(TURN_TEXT, text);
-                if (surname_check != null) {
+
+                Log.d(TAG, "text passato alla workingActivity = " + text);
+
+                if (!(surname_check.isEmpty())) {
                     intent.putExtra(SURNAME_TEXT, surname_check);
+                    if (DEBUG)
+                        Log.d(TAG, "Cognome passato alla workingActivity surname_check= " + surname_check);
                 } else {
                     intent.putExtra(SURNAME_TEXT, surname);
+                    if (DEBUG)
+                        Log.d(TAG, "Cognome passato alla workingActivity surname = " + surname);
                 }
+
                 getActivity().getWindow().setExitTransition(null);
                 getActivity().getWindow().setEnterTransition(TransitionInflater.from(getActivity()).inflateTransition(R.transition.enter_ma_dwa));
-                startActivity(intent,
-                        ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
+                //startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
+                startActivity(intent);
+                Toast.makeText(getActivity().getApplicationContext(), "Caricamento dei turni effettuata", Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -368,9 +378,51 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
     }
 
+    private void showFileChooser() {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("*/*");
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+
+        try {
+            startActivityForResult(
+                    Intent.createChooser(intent, "Select a File to Upload"),
+                    FILE_SELECT_CODE);
+        } catch (android.content.ActivityNotFoundException ex) {
+            // Potentially direct the user to the Market with a Dialog
+            Toast.makeText(getActivity(), "Please install a File Manager.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Nullable
+    public static String getPath(Context context, Uri uri) throws URISyntaxException {
+        if ("content".equalsIgnoreCase(uri.getScheme())) {
+            String[] projection = {"_data"};
+            Cursor cursor = null;
+
+            try {
+                cursor = context.getContentResolver().query(uri, projection, null, null, null);
+                int column_index = cursor.getColumnIndexOrThrow("_data");
+                if (cursor.moveToFirst()) {
+                    return cursor.getString(column_index);
+                }
+            } catch (Exception e) {
+                // Eat it
+            }
+        } else if ("file".equalsIgnoreCase(uri.getScheme())) {
+            return uri.getPath();
+        }
+
+        return null;
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         int req = requestCode;
+
+        if (DEBUG) {
+            Log.d(TAG, "request code = " + requestCode);
+            Log.d(TAG, "RESULT CODE = " + resultCode);
+        }
         switch (requestCode) {
             case (CALENDAR_DIALOG_ACTIVITY_RESULT_CODE):
                 if (resultCode == CODE_OK) {
@@ -410,7 +462,58 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                     mVeronaColorButton.animate().alpha(1f).setDuration(250);
                     mBassonaColorButton.animate().alpha(1f).setDuration(250);
                 }
-                super.onActivityResult(requestCode, resultCode, data);
+            case FILE_SELECT_CODE:
+                if (resultCode != CODE_OK) {
+                    // Get the Uri of the selected file
+                    Uri uri = data.getData();
+
+                    if (DEBUG)
+                        Log.d(TAG, "File Uri: " + uri.toString());
+
+                    // Get the path
+                    path = null;
+                    try {
+                        path = getPath(getActivity().getApplicationContext(), uri);
+                    } catch (URISyntaxException e) {
+                        e.printStackTrace();
+                    }
+
+                    if (DEBUG)
+                        Log.d(TAG, "File Path: " + path);
+                    // Get the file instance
+                    // File file = new File(path);
+                    // Initiate the upload
+
+                    try {
+                        //Read text from file
+                        StringBuilder text = new StringBuilder();
+                        String s = "";
+
+                        BufferedReader br = new BufferedReader(new FileReader(path));
+                        while ((s = br.readLine()) != null) {
+                            text.append(s);
+                            text.append('\n');
+                        }
+
+                        if (DEBUG)
+                            Log.d(TAG, "String text = " + text);
+
+                        // Set TextView text here using tv.setText(s);
+                        mEditText.setText(text);
+
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    break;
+                } else {
+
+                    if (DEBUG)
+                        Log.d(TAG, "CODE OK = " + CODE_OK);
+                }
         }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }
