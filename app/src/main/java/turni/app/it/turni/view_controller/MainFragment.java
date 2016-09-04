@@ -18,6 +18,7 @@ import android.support.v7.widget.Toolbar;
 import android.transition.TransitionInflater;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -80,15 +81,16 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     private FloatingActionButton mFowardButton;
     private EditText mEditText;
     private String mText;
-    private TextView mTextView, mSurnameText;
+    public static TextView mTextView, mSurnameText;
     private Button mAccountButton, mSurnameChangeButton, mPasteButton;
-    private SharedPreferences mSharedPref;
+    public static SharedPreferences mSharedPref;
     private Button mVeronaColorButton;
     private Button mBassonaColorButton;
     private boolean openVerona = false;
     private Button mImportTextButton;
     private String surname = null;
     private String surname_check = null;
+    private boolean isSurnameDialogShow = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -135,13 +137,16 @@ public class MainFragment extends Fragment implements View.OnClickListener {
             Log.d(TAG, "surname_check = " + surname_check);
         }
 
-        if (surname_check == null) {
-            showSurnameDialog(getActivity());
+        if (surname_check.isEmpty()) {
+            isSurnameDialogShow = showSurnameDialog(getActivity());
         } else {
             surname_check = surname_check.trim();
             mSurnameText.setText("Ciao " + surname_check + "!");
         }
 
+        if(isSurnameDialogShow) {
+            mSurnameText.setText("Chi sei?");
+        }
 
         mFowardButton.setOnClickListener(this);
         mAccountButton.setOnClickListener(this);
@@ -170,19 +175,19 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     }
 
     //TODO fix starting popup
-    public void showSurnameDialog(Activity activity) {
+    public boolean showSurnameDialog(Activity activity) {
 
         final Dialog dialog = new Dialog(activity);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.custom_dialog);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.setCancelable(false);
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.setCancelable(true);
 
         dialog.show();
 
         final EditText surnameText = (EditText) dialog.findViewById(R.id.dialog_surname);
         Button okButton = (Button) dialog.findViewById(R.id.dialog_ok);
-
+        
         okButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -220,7 +225,26 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                     Log.d(TAG, "Surname dopo if del dismiss = " + surname);
             }
         });
+        return true;
+    }
 
+    public boolean onTouchEvent(MotionEvent event) {
+        if(event.getAction() == MotionEvent.ACTION_OUTSIDE) {
+            if(surname_check.isEmpty()) {
+                AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+                alertDialog.setTitle("Attenzione");
+                alertDialog.setMessage("Non hai inserito il cognome!");
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                showSurnameDialog(getActivity());
+                            }
+                        });
+                alertDialog.show();
+            }
+        }
+        return false;
     }
 
     @Override
@@ -275,7 +299,20 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                             }
                         });
                 alertDialog.show();
-            } else {
+            } else if (surname_check.isEmpty()) {
+                AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+                alertDialog.setTitle("Attenzione");
+                alertDialog.setMessage("Impossibile continuare, nessun cognome inserito!");
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                alertDialog.show();
+            }
+
+            else {
                 Intent intent = new Intent(getActivity(), WorkingActivity.class);
                 intent.putExtra(TURN_TEXT, text);
                 if (surname_check != null) {
