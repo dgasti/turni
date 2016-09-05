@@ -21,7 +21,7 @@ import turni.app.it.turni.R;
 
 public class MainActivity extends ActionBarActivity {
     private static final boolean DEBUG = true;
-    private static final String TAG = "";
+    private static final String TAG = "MAIN ACTIVITY";
     private Context context;
     private SharedPreferences mSharedPref;
 
@@ -64,6 +64,7 @@ public class MainActivity extends ActionBarActivity {
         dialog.setContentView(R.layout.custom_dialog);
         dialog.setCanceledOnTouchOutside(true);
         dialog.setCancelable(true);
+
 
         dialog.show();
 

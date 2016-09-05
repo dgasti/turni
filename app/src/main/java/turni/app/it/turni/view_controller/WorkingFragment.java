@@ -82,6 +82,7 @@ public class WorkingFragment extends Fragment implements View.OnClickListener {
     private static final String CREATE_EVENTS = "create events";
     private static final CharSequence ASSENZA = "ASSENZA";
     private static final CharSequence ASSENZE = "ASSENZE";
+    private static final CharSequence FESTIVO_TARGET = "TARGET";
     private static boolean isCreated;
     private SharedPreferences mSharedPref;
     private static final String TAG = "WORKING FRAGMENT";
@@ -230,9 +231,9 @@ public class WorkingFragment extends Fragment implements View.OnClickListener {
             endTime = null;
             //Find the work place
 
-            if (line.contains(RECUPERO) || line.contains(ASSENZA) || line.contains(ASSENZE)) {
+            if (line.contains(RECUPERO) || line.contains(ASSENZA) || line.contains(ASSENZE) || line.contains(FESTIVO_TARGET)) {
                 hasToCreateEvent = false;
-                Log.d(TAG, "entro in assenza  riga " + i);
+                Log.d(TAG, "entro in assenza riga " + i);
             }
             //Set the shift hours for each case
             if (line.contains(MATTINA)) {
@@ -242,6 +243,7 @@ public class WorkingFragment extends Fragment implements View.OnClickListener {
                 endTime.set(Calendar.HOUR_OF_DAY, 14);
                 endTime.set(Calendar.MINUTE, 12);
                 hasToCreateEvent = true;
+                isFullDay = false;
                 titleText = titleMatt;
             }
             //                    if (DEBUG)
@@ -257,6 +259,7 @@ public class WorkingFragment extends Fragment implements View.OnClickListener {
                 endTime.set(Calendar.HOUR_OF_DAY, 21);
                 endTime.set(Calendar.MINUTE, 22);
                 hasToCreateEvent = true;
+                isFullDay = false;
                 titleText = titlePom;
             }
             if (line.contains(NOTTURNO_00)) {
@@ -266,6 +269,7 @@ public class WorkingFragment extends Fragment implements View.OnClickListener {
                 endTime.set(Calendar.HOUR_OF_DAY, 7);
                 endTime.set(Calendar.MINUTE, 13);
                 hasToCreateEvent = true;
+                isFullDay = false;
                 titleText = titleNott2;
             }
             if (line.contains(NOTTURNO_21)) {
@@ -277,6 +281,7 @@ public class WorkingFragment extends Fragment implements View.OnClickListener {
                 endTime.set(Calendar.HOUR_OF_DAY, 4);
                 endTime.set(Calendar.MINUTE, 27);
                 hasToCreateEvent = true;
+                isFullDay = false;
                 titleText = titleNott1;
             }
             if (line.contains(NOTTURNO_FESTIVO)) {
@@ -286,6 +291,7 @@ public class WorkingFragment extends Fragment implements View.OnClickListener {
                 endTime.set(Calendar.HOUR_OF_DAY, 8);
                 endTime.set(Calendar.MINUTE, 0);
                 hasToCreateEvent = true;
+                isFullDay = false;
                 titleText = titleNott2;
             }
             if (line.contains(MATTINA_FESTIVO)) {
@@ -295,6 +301,7 @@ public class WorkingFragment extends Fragment implements View.OnClickListener {
                 endTime.set(Calendar.HOUR_OF_DAY, 16);
                 endTime.set(Calendar.MINUTE, 0);
                 hasToCreateEvent = true;
+                isFullDay = false;
                 titleText = titleMatt;
             }
             if (line.contains(POMERIGGIO_FESTIVO)) {
@@ -304,6 +311,7 @@ public class WorkingFragment extends Fragment implements View.OnClickListener {
                 endTime.set(Calendar.HOUR_OF_DAY, 23);
                 endTime.set(Calendar.MINUTE, 59);
                 hasToCreateEvent = true;
+                isFullDay = false;
                 titleText = titlePom;
             }
             //TODO controllare evento creato all day
@@ -330,8 +338,10 @@ public class WorkingFragment extends Fragment implements View.OnClickListener {
 
             //If useful information has been found in the line create the event
             if (hasToCreateEvent) {
+
                 if (DEBUG)
                     Log.d(TAG, "create event " + beginTime);
+
                 startMillis = beginTime.getTimeInMillis();
                 endMillis = endTime.getTimeInMillis();
                 mContentResolver = getActivity().getContentResolver();

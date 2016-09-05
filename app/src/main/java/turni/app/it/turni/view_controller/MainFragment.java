@@ -39,6 +39,8 @@ import java.net.URISyntaxException;
 import model.Util;
 import turni.app.it.turni.R;
 
+import static android.app.Activity.RESULT_OK;
+
 public class MainFragment extends Fragment implements View.OnClickListener {
 
 
@@ -97,8 +99,8 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     private Button mBassonaColorButton;
     private boolean openVerona = false;
     private Button mImportTextButton;
-    private String surname = null;
-    private String surname_check = null;
+    private String surname = "";
+    private String surname_check = "";
     private boolean isSurnameDialogShow = false;
     private String path;
 
@@ -140,7 +142,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         d = getResources().getDrawable(drawableColor);
         mBassonaColorButton.setCompoundDrawablesWithIntrinsicBounds(d, null, null, null);
 
-        surname_check = mSharedPref.getString("SURNAME", null);
+        surname_check = mSharedPref.getString("SURNAME", "");
 
         if (DEBUG) {
             Log.d(TAG, "surname_check = " + surname_check);
@@ -190,6 +192,10 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         dialog.setContentView(R.layout.custom_dialog);
         dialog.setCanceledOnTouchOutside(true);
         dialog.setCancelable(true);
+        if(surname_check.isEmpty()) {
+            dialog.setCanceledOnTouchOutside(false);
+            dialog.setCancelable(false);
+        }
 
         dialog.show();
 
@@ -380,7 +386,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
     private void showFileChooser() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("*/*");
+        intent.setType("text/plain");
         intent.addCategory(Intent.CATEGORY_OPENABLE);
 
         try {
@@ -463,7 +469,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                     mBassonaColorButton.animate().alpha(1f).setDuration(250);
                 }
             case (FILE_SELECT_RESULT_CODE):
-                if (resultCode == CODE_OK) {
+                if (resultCode == RESULT_OK) {
                     // Get the Uri of the selected file
                     Uri uri;
                     try {
