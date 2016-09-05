@@ -16,7 +16,7 @@
         <activity
             android:name=".view_controller.MainActivity"
             android:label="@string/app_name"
-            android:windowSoftInputMode="adjustPan|stateHidden|adjustResize">
+            android:windowSoftInputMode="adjustPan|adjustResize|stateAlwaysHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -15,6 +15,8 @@ import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.transition.TransitionInflater;
@@ -23,6 +25,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -40,6 +43,7 @@ import model.Util;
 import turni.app.it.turni.R;
 
 import static android.app.Activity.RESULT_OK;
+import static android.content.Context.INPUT_METHOD_SERVICE;
 
 public class MainFragment extends Fragment implements View.OnClickListener {
 
@@ -103,6 +107,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     private String surname_check = "";
     private boolean isSurnameDialogShow = false;
     private String path;
+    private InputMethodManager imm;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -153,10 +158,18 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         } else {
             surname_check = surname_check.trim();
             mSurnameText.setText("Ciao " + surname_check + "!");
+            //hideSoftKeyboard();
+
+            //if (DEBUG)
+              //  Log.d(TAG, "Sono dopo il metodo della tastiera con surname_check ="+surname_check);
         }
 
         if (isSurnameDialogShow) {
             mSurnameText.setText("Chi sei?");
+          //  hideSoftKeyboard();
+
+            //if (DEBUG)
+            //    Log.d(TAG, "Sono dopo il metodo della tastiera con surname_check = "+surname_check);
         }
 
         mFowardButton.setOnClickListener(this);
@@ -192,7 +205,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         dialog.setContentView(R.layout.custom_dialog);
         dialog.setCanceledOnTouchOutside(true);
         dialog.setCancelable(true);
-        if(surname_check.isEmpty()) {
+        if (surname_check.isEmpty()) {
             dialog.setCanceledOnTouchOutside(false);
             dialog.setCancelable(false);
         }
@@ -230,9 +243,11 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
                 surname = surname.trim();
                 mSharedPref.edit().putString("SURNAME", surname).commit();
+                hideSoftKeyboard(getActivity());
 
                 if (surname.isEmpty() == false) {
                     mSurnameText.setText("Ciao " + surname + "!");
+                    hideSoftKeyboard(getActivity());
                     dialog.dismiss();
                 }
                 if (DEBUG)
@@ -241,6 +256,25 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         });
         return true;
     }
+
+    /**
+     * Hides the soft keyboard
+     */
+    public static void hideSoftKeyboard(Activity activity) {
+
+        if (DEBUG) {
+            Log.d(TAG, "Sono dentro al metodo della tastiera");
+            Log.d(TAG, "getActivity().getCurrentFocus() = " + activity.getCurrentFocus());
+        }
+
+        InputMethodManager inputManager = (InputMethodManager)
+                activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        inputManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(),
+                InputMethodManager.HIDE_NOT_ALWAYS);
+    }
+
+
 
     @Override
     public void onClick(View v) {
@@ -252,12 +286,18 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         boolean account_is_used = mSharedPref.getBoolean("ACCOUNT_IS_USED", false);
         if (TAG_IMPORT_TEXT_BUTTON.equals(tag)) {
             //Toast.makeText(getActivity().getApplicationContext(), "Funzione ancora non attiva!", Toast.LENGTH_SHORT).show();
+            imm = (InputMethodManager)getActivity().getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(mEditText.getWindowToken(), 0);
+
             showFileChooser();
 
             if (DEBUG)
                 Log.d(TAG, "Risultato dell'intent = " + FILE_SELECT_RESULT_CODE);
         }
         if (TAG_PASTE_TEXT.equals(tag)) {
+
+            imm = (InputMethodManager)getActivity().getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(mEditText.getWindowToken(), 0);
 
             if (DEBUG)
                 Log.d(TAG, "Ho cliccato il tasto dell'incolla");
@@ -271,6 +311,9 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         }
         if (TAG_DELETE_TEXT.equals(tag)) {
 
+            imm = (InputMethodManager)getActivity().getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(mEditText.getWindowToken(), 0);
+
             if (DEBUG)
                 Log.d(TAG, "Ho cliccato il tasto del cancella");
 
@@ -278,6 +321,9 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         }
         String text = mEditText.getText().toString();
         if (TAG_FORWARD_BUTTON.equals(tag)) {
+
+            imm = (InputMethodManager)getActivity().getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(mEditText.getWindowToken(), 0);
 
             if (DEBUG)
                 Log.d(TAG, "Sono dentro all'if del Forward button nell'onclick");
@@ -337,8 +383,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
                 getActivity().getWindow().setExitTransition(null);
                 getActivity().getWindow().setEnterTransition(TransitionInflater.from(getActivity()).inflateTransition(R.transition.enter_ma_dwa));
-                //startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
-                startActivity(intent);
+                startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
                 //Toast.makeText(getActivity().getApplicationContext(), "Caricamento dei turni effettuata", Toast.LENGTH_SHORT).show();
             }
         }
@@ -346,6 +391,9 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         if (TAG_ACCOUNT_BUTTON.equals(tag))
 
         {
+            imm = (InputMethodManager)getActivity().getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(mEditText.getWindowToken(), 0);
+
             Intent intent = new Intent(getActivity(), CalendarDialog.class);
             v.setTransitionName("snapshot");
             getActivity().getWindow().setExitTransition(null);
@@ -360,6 +408,9 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         if (TAG_VERONA_COLOR_BUTTON.equals(tag) || TAG_BASSONA_COLOR_BUTTON.equals(tag))
 
         {
+            imm = (InputMethodManager)getActivity().getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(mEditText.getWindowToken(), 0);
+
             Intent intent = new Intent(getActivity(), ColorSelectorDialog.class);
             if (TAG_VERONA_COLOR_BUTTON.equals(tag)) {
                 intent.putExtra(COLOR_SELECTOR_BUNDLE, TAG_VERONA_COLOR_BUTTON);
@@ -399,9 +450,10 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         }
     }
 
+    @Nullable
     public static String getPath(Context context, Uri uri, Activity activity) throws URISyntaxException {
         if ("content".equalsIgnoreCase(uri.getScheme())) {
-            String[] projection = { "_data" };
+            String[] projection = {"_data"};
             Cursor cursor = null;
 
             try {
@@ -413,8 +465,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
             } catch (Exception e) {
                 // Eat it
             }
-        }
-        else if ("file".equalsIgnoreCase(uri.getScheme())) {
+        } else if ("file".equalsIgnoreCase(uri.getScheme())) {
             return uri.getPath();
         }
 
@@ -490,8 +541,8 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                     }
 
 
-                   // if (DEBUG)
-                   //     Log.d(TAG, "File Uri: " + uri.toString());
+                    // if (DEBUG)
+                    //     Log.d(TAG, "File Uri: " + uri.toString());
 
                     //TODO check if it works
                     if (uri != null && "content".equals(uri.getScheme())) {
@@ -516,7 +567,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                         // Get the file instance
                         // File file = new File(path);
                         // Initiate the upload
-                        if(path.isEmpty()) {
+                        if (path.isEmpty()) {
                             AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
                             alertDialog.setTitle("Attenzione");
                             alertDialog.setMessage("File non trovato, riprovare!");
