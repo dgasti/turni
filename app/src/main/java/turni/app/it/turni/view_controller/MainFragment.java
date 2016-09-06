@@ -158,18 +158,10 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         } else {
             surname_check = surname_check.trim();
             mSurnameText.setText(surname_check);
-            //hideSoftKeyboard();
-
-            //if (DEBUG)
-              //  Log.d(TAG, "Sono dopo il metodo della tastiera con surname_check ="+surname_check);
         }
 
         if (isSurnameDialogShow) {
             mSurnameText.setText("Chi sei?");
-          //  hideSoftKeyboard();
-
-            //if (DEBUG)
-            //    Log.d(TAG, "Sono dopo il metodo della tastiera con surname_check = "+surname_check);
         }
 
         mFowardButton.setOnClickListener(this);
