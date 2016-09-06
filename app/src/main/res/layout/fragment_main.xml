@@ -16,17 +16,18 @@
         android:minHeight="?attr/actionBarSize" />
 
 
-    <TextView
+    <Button
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/list_items_height"
         android:id="@+id/surname"
         android:background="@color/transparent"
         android:elegantTextHeight="true"
+        android:drawableLeft="@drawable/ic_account_circle_black_24dp"
         android:text="@string/welcome_surname"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:maxHeight="150dp"
+        android:textAllCaps="false"
+        android:drawablePadding="@dimen/activity_horizontal_medium_margin"
+        android:gravity="left|center_vertical"
         android:paddingLeft="@dimen/activity_horizontal_short_margin"
-        android:paddingTop="@dimen/activity_horizontal_short_margin"
         android:visibility="visible"
         android:layout_below="@+id/my_awesome_toolbar"
         android:layout_alignParentStart="true" />
@@ -127,15 +128,6 @@
         android:layout_alignParentStart="true"
         android:layout_marginTop="12dp">
 
-        <Button
-            android:id="@+id/import_text_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="20dp"
-            android:text="Importa testo"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true" />
-
         <View
             android:id="@+id/divider2"
             android:layout_width="match_parent"
@@ -143,15 +135,6 @@
             android:background="#BDBDBD"
             android:layout_alignParentTop="true"
             android:layout_alignParentStart="true" />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="incolla"
-            android:id="@+id/paste_text"
-            android:layout_alignParentTop="true"
-            android:layout_toEndOf="@+id/import_text_button"
-            android:layout_marginStart="20dp" />
 
         <View
             android:id="@+id/divider5"
@@ -162,12 +145,40 @@
 
         <Button
             style="?android:attr/buttonStyleSmall"
+            android:id="@+id/import_text_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Cancella"
+            android:background="@color/transparent"
+            android:drawableLeft="@drawable/ic_note_add_black_36dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:layout_centerInParent="true"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="100dp" />
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/paste_text"
+            android:drawableLeft="@drawable/ic_content_paste_black_36dp"
+            android:background="@color/transparent"
+            android:layout_marginStart="60dp"
+            android:layout_centerInParent="true"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true" />
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:id="@+id/delete_button"
-            android:layout_below="@+id/divider2"
-            android:layout_alignParentEnd="true" />
+            android:background="@color/transparent"
+            android:drawableLeft="@drawable/ic_clear_all_black_36dp"
+            android:layout_marginStart="25dp"
+            android:layout_alignParentTop="true"
+            android:layout_toEndOf="@+id/paste_text" />
 
     </RelativeLayout>
 

@@ -101,11 +101,10 @@ public class MainActivity extends ActionBarActivity {
 
                 surname = surname.trim();
                 if (surname.isEmpty() == false) {
-                    MainFragment.mSurnameText.setText("Ciao " + surname + "!");
+                    MainFragment.mSurnameText.setText(surname);
                     MainFragment.mSharedPref.edit().putString("SURNAME", surname).commit();
                     dialog.dismiss();
                 } else {
-                    MainFragment.mSurnameText.setText("Chi sei?");
                     dialog.dismiss();
                 }
             }

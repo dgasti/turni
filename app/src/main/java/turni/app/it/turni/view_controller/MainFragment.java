@@ -157,7 +157,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
             isSurnameDialogShow = showSurnameDialog(getActivity());
         } else {
             surname_check = surname_check.trim();
-            mSurnameText.setText("Ciao " + surname_check + "!");
+            mSurnameText.setText(surname_check);
             //hideSoftKeyboard();
 
             //if (DEBUG)
@@ -179,7 +179,9 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         mImportTextButton.setOnClickListener(this);
         mPasteButton.setOnClickListener(this);
         mDeleteButton.setOnClickListener(this);
-
+        mImportTextButton.setOnLongClickListener((View.OnLongClickListener) this);
+        mPasteButton.setOnLongClickListener((View.OnLongClickListener) this);
+        mDeleteButton.setOnLongClickListener((View.OnLongClickListener) this);
 
         String calendarName, accountName = null;
         calendarName = mSharedPref.getString(SP_CALENDAR_USED, null);
@@ -246,7 +248,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                 hideSoftKeyboard(getActivity());
 
                 if (surname.isEmpty() == false) {
-                    mSurnameText.setText("Ciao " + surname + "!");
+                    mSurnameText.setText(surname);
                     hideSoftKeyboard(getActivity());
                     dialog.dismiss();
                 }
@@ -434,6 +436,21 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         }
 
     }
+
+    public boolean onLongClick(View v)  {
+        String tag = (String) v.getTag();
+
+        if(DEBUG)
+            Log.d(TAG, "Sono dentro al Long Click");
+
+        if(TAG_IMPORT_TEXT_BUTTON.equals(tag)) {
+            Toast.makeText(getActivity().getApplicationContext(), "Importa i turni", Toast.LENGTH_SHORT).show();
+        }
+
+
+        return true;
+    }
+
 
     private void showFileChooser() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
