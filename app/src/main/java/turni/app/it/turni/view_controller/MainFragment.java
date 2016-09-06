@@ -179,9 +179,27 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         mImportTextButton.setOnClickListener(this);
         mPasteButton.setOnClickListener(this);
         mDeleteButton.setOnClickListener(this);
-        mImportTextButton.setOnLongClickListener((View.OnLongClickListener) this);
-        mPasteButton.setOnLongClickListener((View.OnLongClickListener) this);
-        mDeleteButton.setOnLongClickListener((View.OnLongClickListener) this);
+
+        View.OnLongClickListener listener = new View.OnLongClickListener() {
+            public boolean onLongClick(View v) {
+                Button clickedButton = (Button) v;
+                String buttonText = clickedButton.getTag().toString();
+                if(buttonText.equals(TAG_IMPORT_TEXT_BUTTON)) {
+                    Toast.makeText(getActivity().getApplicationContext(), "Importa i turni", Toast.LENGTH_SHORT).show();
+                }
+                if(buttonText.equals(TAG_PASTE_TEXT)) {
+                    Toast.makeText(getActivity().getApplicationContext(), "Incolla", Toast.LENGTH_SHORT).show();
+                }
+                if(buttonText.equals(TAG_DELETE_TEXT)) {
+                    Toast.makeText(getActivity().getApplicationContext(), "Cancella tutto", Toast.LENGTH_SHORT).show();
+                }
+                return true;
+            }
+        };
+
+        mImportTextButton.setOnLongClickListener(listener);
+        mPasteButton.setOnLongClickListener(listener);
+        mDeleteButton.setOnLongClickListener(listener);
 
         String calendarName, accountName = null;
         calendarName = mSharedPref.getString(SP_CALENDAR_USED, null);
