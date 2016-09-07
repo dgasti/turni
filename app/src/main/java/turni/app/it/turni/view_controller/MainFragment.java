@@ -549,7 +549,13 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                     mBassonaColorButton.animate().alpha(1f).setDuration(250);
                 }
             case (FILE_SELECT_RESULT_CODE):
+                if(DEBUG)
+                    Log.d(TAG, "Result ok: "+RESULT_OK);
                 if (resultCode == RESULT_OK) {
+
+                    if(DEBUG)
+                        Log.d(TAG, "Sono dentro all'if del SELECT FILE");
+
                     // Get the Uri of the selected file
                     Uri uri;
                     try {
@@ -570,8 +576,8 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                     }
 
 
-                    // if (DEBUG)
-                    //     Log.d(TAG, "File Uri: " + uri.toString());
+                    if (DEBUG)
+                         Log.d(TAG, "File Uri: " + uri.toString());
 
                     //TODO check if it works
                     if (uri != null && "content".equals(uri.getScheme())) {

@@ -372,6 +372,7 @@ public class WorkingFragment extends Fragment implements View.OnClickListener {
                     values.put(CalendarContract.Events.EVENT_COLOR_KEY, mSharedPref.getInt(VERONA_COLOR_DEFAULT, 1));
                     values.put(CalendarContract.Events.EVENT_LOCATION, "Via Monte Bianco, 18\n" +
                             "37132 Verona VR");
+                    isVerona=false;
                 }
                 if (isBassona) {
 
@@ -381,6 +382,7 @@ public class WorkingFragment extends Fragment implements View.OnClickListener {
                     values.put(CalendarContract.Events.EVENT_COLOR_KEY, mSharedPref.getInt(BASSONA_COLOR_DEFAULT, 1));
                     values.put(CalendarContract.Events.EVENT_LOCATION, "Via della Meccanica, 1\n" +
                             "37139 Verona VR");
+                    isBassona=false;
                 }
                 values.put(CalendarContract.Events.CALENDAR_ID, mCalID);
                 TimeZone tz = TimeZone.getDefault();
