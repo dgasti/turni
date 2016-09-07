@@ -15,7 +15,6 @@ import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
@@ -43,7 +42,6 @@ import model.Util;
 import turni.app.it.turni.R;
 
 import static android.app.Activity.RESULT_OK;
-import static android.content.Context.INPUT_METHOD_SERVICE;
 
 public class MainFragment extends Fragment implements View.OnClickListener {
 
@@ -108,6 +106,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     private boolean isSurnameDialogShow = false;
     private String path;
     private InputMethodManager imm;
+    private ClipData.Item item;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -155,6 +154,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
         if (surname_check.isEmpty()) {
             isSurnameDialogShow = showSurnameDialog(getActivity());
+            surname_check = mSharedPref.getString("SURNAME", "");
         } else {
             surname_check = surname_check.trim();
             mSurnameText.setText(surname_check);
@@ -176,13 +176,13 @@ public class MainFragment extends Fragment implements View.OnClickListener {
             public boolean onLongClick(View v) {
                 Button clickedButton = (Button) v;
                 String buttonText = clickedButton.getTag().toString();
-                if(buttonText.equals(TAG_IMPORT_TEXT_BUTTON)) {
+                if (buttonText.equals(TAG_IMPORT_TEXT_BUTTON)) {
                     Toast.makeText(getActivity().getApplicationContext(), "Importa i turni", Toast.LENGTH_SHORT).show();
                 }
-                if(buttonText.equals(TAG_PASTE_TEXT)) {
+                if (buttonText.equals(TAG_PASTE_TEXT)) {
                     Toast.makeText(getActivity().getApplicationContext(), "Incolla", Toast.LENGTH_SHORT).show();
                 }
-                if(buttonText.equals(TAG_DELETE_TEXT)) {
+                if (buttonText.equals(TAG_DELETE_TEXT)) {
                     Toast.makeText(getActivity().getApplicationContext(), "Cancella tutto", Toast.LENGTH_SHORT).show();
                 }
                 return true;
@@ -287,7 +287,6 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     }
 
 
-
     @Override
     public void onClick(View v) {
         String tag = (String) v.getTag();
@@ -298,17 +297,17 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         boolean account_is_used = mSharedPref.getBoolean("ACCOUNT_IS_USED", false);
         if (TAG_IMPORT_TEXT_BUTTON.equals(tag)) {
             //Toast.makeText(getActivity().getApplicationContext(), "Funzione ancora non attiva!", Toast.LENGTH_SHORT).show();
-            imm = (InputMethodManager)getActivity().getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm = (InputMethodManager) getActivity().getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(mEditText.getWindowToken(), 0);
 
             showFileChooser();
 
             if (DEBUG)
-                Log.d(TAG, "Risultato dell'intent = " + FILE_SELECT_RESULT_CODE);
+                Log.d(TAG, "Risultato dell'intent import button = " + FILE_SELECT_RESULT_CODE);
         }
         if (TAG_PASTE_TEXT.equals(tag)) {
 
-            imm = (InputMethodManager)getActivity().getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm = (InputMethodManager) getActivity().getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(mEditText.getWindowToken(), 0);
 
             if (DEBUG)
@@ -316,14 +315,16 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
             String pasteData = "";
             ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-            ClipData.Item item = clipboard.getPrimaryClip().getItemAt(0);
-            pasteData = (String) item.getText().toString();
+            if (clipboard != null) {
+                item = clipboard.getPrimaryClip().getItemAt(0);
+            }
+            pasteData = item.getText().toString();
             mEditText.setText(pasteData);
             Toast.makeText(getActivity().getApplicationContext(), "Incollato", Toast.LENGTH_SHORT).show();
         }
         if (TAG_DELETE_TEXT.equals(tag)) {
 
-            imm = (InputMethodManager)getActivity().getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm = (InputMethodManager) getActivity().getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(mEditText.getWindowToken(), 0);
 
             if (DEBUG)
@@ -334,7 +335,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         String text = mEditText.getText().toString();
         if (TAG_FORWARD_BUTTON.equals(tag)) {
 
-            imm = (InputMethodManager)getActivity().getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm = (InputMethodManager) getActivity().getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(mEditText.getWindowToken(), 0);
 
             if (DEBUG)
@@ -362,18 +363,20 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                             }
                         });
                 alertDialog.show();
-            } else if (surname_check.isEmpty()) {
-                AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
-                alertDialog.setTitle("Attenzione");
-                alertDialog.setMessage("Impossibile continuare, nessun cognome inserito!");
-                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        });
-                alertDialog.show();
-            } else {
+            }
+            //else if (surname_check.isEmpty()) {
+            //    AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+            //   alertDialog.setTitle("Attenzione");
+            //  alertDialog.setMessage("Impossibile continuare, nessun cognome inserito!");
+            //  alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+            //          new DialogInterface.OnClickListener() {
+            //              public void onClick(DialogInterface dialog, int which) {
+            //                  dialog.dismiss();
+            //              }
+            //          });
+            //  alertDialog.show();
+            //    }
+            else {
 
                 if (DEBUG)
                     Log.d(TAG, "Sono dentro all'else dell'intent del Forward button nell'onclick, ho superato tutti i test");
@@ -403,7 +406,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         if (TAG_ACCOUNT_BUTTON.equals(tag))
 
         {
-            imm = (InputMethodManager)getActivity().getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm = (InputMethodManager) getActivity().getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(mEditText.getWindowToken(), 0);
 
             Intent intent = new Intent(getActivity(), CalendarDialog.class);
@@ -420,7 +423,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         if (TAG_VERONA_COLOR_BUTTON.equals(tag) || TAG_BASSONA_COLOR_BUTTON.equals(tag))
 
         {
-            imm = (InputMethodManager)getActivity().getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm = (InputMethodManager) getActivity().getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(mEditText.getWindowToken(), 0);
 
             Intent intent = new Intent(getActivity(), ColorSelectorDialog.class);
@@ -447,13 +450,13 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
     }
 
-    public boolean onLongClick(View v)  {
+    public boolean onLongClick(View v) {
         String tag = (String) v.getTag();
 
-        if(DEBUG)
+        if (DEBUG)
             Log.d(TAG, "Sono dentro al Long Click");
 
-        if(TAG_IMPORT_TEXT_BUTTON.equals(tag)) {
+        if (TAG_IMPORT_TEXT_BUTTON.equals(tag)) {
             Toast.makeText(getActivity().getApplicationContext(), "Importa i turni", Toast.LENGTH_SHORT).show();
         }
 
@@ -469,8 +472,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
         try {
             startActivityForResult(
-                    Intent.createChooser(intent, "Select a File to Upload"),
-                    FILE_SELECT_RESULT_CODE);
+                    Intent.createChooser(intent, "Select a File to Upload"), FILE_SELECT_RESULT_CODE);
         } catch (android.content.ActivityNotFoundException ex) {
             // Potentially direct the user to the Market with a Dialog
             Toast.makeText(getActivity().getApplicationContext(), "Please install a File Manager.", Toast.LENGTH_SHORT).show();

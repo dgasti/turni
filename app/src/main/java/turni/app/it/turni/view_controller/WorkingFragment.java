@@ -1,37 +1,17 @@
 package turni.app.it.turni.view_controller;
 
 
-import android.app.AlertDialog;
-import android.content.ContentResolver;
-import android.content.ContentValues;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.net.Uri;
-import android.os.IBinder;
-import android.provider.CalendarContract;
-import android.util.Log;
-import android.widget.Toast;
-
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Scanner;
-import java.util.TimeZone;
-
-import model.Util;
-import turni.app.it.turni.R;
-
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.Fragment;
-import android.content.ComponentName;
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
-import android.os.Debug;
-import android.transition.TransitionInflater;
+import android.provider.CalendarContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,6 +20,11 @@ import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.Toast;
 
+import java.util.Calendar;
+import java.util.Scanner;
+import java.util.TimeZone;
+
+import model.Util;
 import turni.app.it.turni.R;
 
 /**
@@ -200,11 +185,11 @@ public class WorkingFragment extends Fragment implements View.OnClickListener {
             Log.d(TAG, "index: " + mText.indexOf(mSurname, fromIndex));
             int surNameIndex = mText.indexOf(mSurname, fromIndex);  //trovo la posizione del primo cognome
             int startLine = surNameIndex - 17;                     //Trovo la posizione dell'inizio della stringa che è 17 posti indietro l'inizio del cognome
-                                                                     //Per trovare la fine della riga:
-                                                                     //- trovo la posizione del cognome successivo. Per fare questo dico a indexOf di partire dalla fine del cognome precedente (surNameIndex+surName lenght)
-                                                                     //- successivamente tolgo 18 posizioni e quindi mi si mette prima della seconda data
-                                                                     //- faccio una verifica che il cognome che sto verificando ne abbia uno successivo o sia già l'ultimo
-            Log.d(TAG, "startline = "+startLine);
+            //Per trovare la fine della riga:
+            //- trovo la posizione del cognome successivo. Per fare questo dico a indexOf di partire dalla fine del cognome precedente (surNameIndex+surName lenght)
+            //- successivamente tolgo 18 posizioni e quindi mi si mette prima della seconda data
+            //- faccio una verifica che il cognome che sto verificando ne abbia uno successivo o sia già l'ultimo
+            Log.d(TAG, "startline = " + startLine);
 
             int endLine;
             if (mText.indexOf(mSurname, surNameIndex + mSurname.length()) != -1) {
@@ -327,10 +312,18 @@ public class WorkingFragment extends Fragment implements View.OnClickListener {
             }
 
             if (line.contains(VERONA)) {
+
+                if (DEBUG)
+                    Log.d(TAG, "Nella stringa c'è VR1 - Verona");
+
                 isVerona = true;
                 placeText = "a San Michele";
             }
             if (line.contains(BASSONA)) {
+
+                if (DEBUG)
+                    Log.d(TAG, "Nella stringa c'è VR2 - Bassona");
+
                 isBassona = true;
                 placeText = "in Bassona";
             }
@@ -341,6 +334,11 @@ public class WorkingFragment extends Fragment implements View.OnClickListener {
 
                 if (DEBUG)
                     Log.d(TAG, "create event " + beginTime);
+
+                if (DEBUG) {
+                    Log.d(TAG, "isVerona = " + isVerona);
+                    Log.d(TAG, "isBassona = "+isBassona);
+                }
 
                 startMillis = beginTime.getTimeInMillis();
                 endMillis = endTime.getTimeInMillis();
@@ -362,14 +360,24 @@ public class WorkingFragment extends Fragment implements View.OnClickListener {
                     values.put(CalendarContract.Events.DTSTART, startMillis);
                     values.put(CalendarContract.Events.DTEND, endMillis);
                 }
+
                 //TODO opzione modifica descrizione
                 values.put(CalendarContract.Events.DESCRIPTION, "Group workout");
+
                 if (isVerona) {
+
+                    if(DEBUG)
+                        Log.d(TAG, "Sono entrato nell'if di verona");
+
                     values.put(CalendarContract.Events.EVENT_COLOR_KEY, mSharedPref.getInt(VERONA_COLOR_DEFAULT, 1));
                     values.put(CalendarContract.Events.EVENT_LOCATION, "Via Monte Bianco, 18\n" +
                             "37132 Verona VR");
                 }
                 if (isBassona) {
+
+                    if(DEBUG)
+                        Log.d(TAG, "Sono entrato nell'if di bassona");
+
                     values.put(CalendarContract.Events.EVENT_COLOR_KEY, mSharedPref.getInt(BASSONA_COLOR_DEFAULT, 1));
                     values.put(CalendarContract.Events.EVENT_LOCATION, "Via della Meccanica, 1\n" +
                             "37139 Verona VR");
@@ -383,12 +391,12 @@ public class WorkingFragment extends Fragment implements View.OnClickListener {
             }
             i++;
         }
-        if(events == -1) {
-            Toast.makeText(getActivity().getApplicationContext(), "NESSUN EVENTO CREATO", Toast.LENGTH_LONG).show();
-        }
-        else {
-            Toast.makeText(getActivity().getApplicationContext(), "EVENTI CREATI", Toast.LENGTH_LONG).show();
-        }
+        //if(events == -1) {
+        //    Toast.makeText(getActivity().getApplicationContext(), "NESSUN EVENTO CREATO", Toast.LENGTH_LONG).show();
+        //}
+        //else {
+        //    Toast.makeText(getActivity().getApplicationContext(), "EVENTI CREATI", Toast.LENGTH_LONG).show();
+        // }
     }
 
     @Override
