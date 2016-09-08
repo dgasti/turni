@@ -20,7 +20,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/list_items_height"
         android:id="@+id/surname"
-        android:background="@color/transparent"
+        android:background="?android:attr/selectableItemBackground"
         android:elegantTextHeight="true"
         android:drawableLeft="@drawable/ic_account_circle_black_24dp"
         android:text="@string/welcome_surname"
@@ -145,19 +145,16 @@
 
         <Button
             style="?android:attr/buttonStyleSmall"
-            android:id="@+id/import_text_button"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
-            android:drawableLeft="@drawable/ic_note_add_black_36dp"
+            android:id="@+id/delete_button"
+            android:drawableLeft="@drawable/ic_clear_all_black_36dp"
             android:gravity="center"
+            android:background="?android:attr/selectableItemBackground"
             android:minHeight="0dp"
             android:minWidth="0dp"
             android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true"
-            android:layout_centerInParent="true"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginStart="90dp" />
+            android:layout_toEndOf="@+id/paste_text" />
 
         <Button
             style="?android:attr/buttonStyleSmall"
@@ -165,25 +162,26 @@
             android:layout_height="50dp"
             android:id="@+id/paste_text"
             android:drawableLeft="@drawable/ic_content_paste_black_36dp"
-            android:layout_marginStart="60dp"
-            android:gravity="center"
-            android:minHeight="0dp"
-            android:minWidth="0dp"
-            android:layout_centerInParent="true"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true" />
-
-        <Button
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:id="@+id/delete_button"
-            android:drawableLeft="@drawable/ic_clear_all_black_36dp"
+            android:background="?android:attr/selectableItemBackground"
             android:gravity="center"
             android:minHeight="0dp"
             android:minWidth="0dp"
             android:layout_alignParentTop="true"
-            android:layout_toEndOf="@+id/paste_text" />
+            android:layout_toEndOf="@+id/import_text_button" />
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:id="@+id/import_text_button"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:drawableLeft="@drawable/ic_note_add_black_36dp"
+            android:gravity="center"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:layout_marginStart="136dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true" />
 
     </RelativeLayout>
 
@@ -191,7 +189,7 @@
         android:id="@+id/account_button"
         android:layout_width="match_parent"
         android:layout_height="@dimen/list_items_height"
-        android:background="@drawable/button_background"
+        android:background="?android:attr/selectableItemBackground"
         android:drawableLeft="@drawable/drawable_calendar_grey600_24dp"
         android:singleLine="true"
         android:text="@string/account_button_string"
@@ -214,7 +212,7 @@
         android:id="@+id/verona_color_button"
         android:layout_width="match_parent"
         android:layout_height="@dimen/list_items_height"
-        android:background="@drawable/button_background"
+        android:background="?android:attr/selectableItemBackground"
         android:drawableLeft="@drawable/circle_orange_24dp"
         android:drawablePadding="@dimen/activity_horizontal_medium_margin"
         android:gravity="left|center_vertical"
