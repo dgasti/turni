@@ -9,6 +9,8 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.CalendarContract;
@@ -21,6 +23,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import java.util.Calendar;
+import java.util.List;
 import java.util.Scanner;
 import java.util.TimeZone;
 
@@ -424,9 +427,19 @@ public class WorkingFragment extends Fragment implements View.OnClickListener {
                 break;
 
             case R.id.calendar:
-                Intent launchIntent = getActivity().getPackageManager().getLaunchIntentForPackage("com.google.android.calendar");
-                if (launchIntent != null) {
-                    startActivity(launchIntent);//null pointer check in case package name was not found
+                PackageManager packmngr = getActivity().getApplicationContext().getPackageManager();
+                Intent intent = new Intent(Intent.ACTION_MAIN);
+                intent.addCategory(Intent.CATEGORY_LAUNCHER);
+                List<ResolveInfo> list = packmngr.queryIntentActivities(intent, PackageManager.PERMISSION_GRANTED);
+                ResolveInfo Resolvebest = null;
+                for (final ResolveInfo info : list){
+                    if (info.activityInfo.packageName.endsWith(".calendar"))
+                        Resolvebest = info;
+                }
+                if (Resolvebest != null){
+                    intent.setClassName(Resolvebest.activityInfo.packageName,
+                            Resolvebest.activityInfo.name);
+                    startActivity(intent);
                 }
                 break;
         }

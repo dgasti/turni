@@ -1,6 +1,5 @@
 package turni.app.it.turni.view_controller;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityOptions;
 import android.app.AlertDialog;
@@ -21,7 +20,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
-import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.transition.TransitionInflater;
@@ -42,7 +40,6 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.net.URISyntaxException;
 
 import model.Util;
 import turni.app.it.turni.R;
@@ -321,17 +318,22 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                 Log.d(TAG, "Ho cliccato il tasto dell'incolla");
 
             String pasteData = "";
-            ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-            if (clipboard != null) {
-                item = clipboard.getPrimaryClip().getItemAt(0);
-                pasteData = item.getText().toString();
-            }
-            else {
+            try {
+                ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+                if (clipboard != null) {
+
+                    if (DEBUG)
+                        Log.d(TAG, "sono dentro a if clipboard != null");
+
+                    item = clipboard.getPrimaryClip().getItemAt(0);
+                    pasteData = item.getText().toString();
+                }
+                mEditText.setText(pasteData);
+            } catch (NullPointerException e) {
                 Toast.makeText(getActivity().getApplicationContext(), "Nulla da incollare", Toast.LENGTH_SHORT).show();
-                pasteData = "";
+
             }
-            mEditText.setText(pasteData);
-            Toast.makeText(getActivity().getApplicationContext(), "Incollato", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getActivity().getApplicationContext(), "Incollato", Toast.LENGTH_SHORT).show();
         }
         if (TAG_DELETE_TEXT.equals(tag)) {
 
@@ -486,7 +488,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
             startActivityForResult(
                     Intent.createChooser(intent, "Select a File to Upload"), FILE_SELECT_RESULT_CODE);
         } catch (android.content.ActivityNotFoundException ex) {
-        // Potentially direct the user to the Market with a Dialog
+            // Potentially direct the user to the Market with a Dialog
             Toast.makeText(getActivity().getApplicationContext(), "Please install a File Manager.", Toast.LENGTH_SHORT).show();
         }
     }
@@ -531,7 +533,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                 }
 
                 final String selection = "_id=?";
-                final String[] selectionArgs = new String[] {
+                final String[] selectionArgs = new String[]{
                         split[1]
                 };
 
@@ -669,54 +671,54 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
                     //TODO check if it works
                     //if (uri != null && "content".equals(uri.getScheme())) {
-                     //   Cursor cursor = getActivity().getContentResolver().query(uri, new String[]{MediaStore.Images.Media.DATA}, null, null, null);
-                     //   cursor.moveToFirst();
+                    //   Cursor cursor = getActivity().getContentResolver().query(uri, new String[]{MediaStore.Images.Media.DATA}, null, null, null);
+                    //   cursor.moveToFirst();
                     //    path = cursor.getString(0);
                     //    cursor.close();
                     //} else {
-                        // Get the path
+                    // Get the path
                     //    path = " ";
-                        try {
-                            path = getPath(getActivity().getApplicationContext(), uri);
-                        } catch (NullPointerException e) {
-                            Toast.makeText(getActivity().getApplicationContext(), "Path del file non trovato", Toast.LENGTH_SHORT).show();
+                    try {
+                        path = getPath(getActivity().getApplicationContext(), uri);
+                    } catch (NullPointerException e) {
+                        Toast.makeText(getActivity().getApplicationContext(), "Path del file non trovato", Toast.LENGTH_SHORT).show();
+                    }
+
+                    if (DEBUG)
+                        Log.d(TAG, "File Path: " + path);
+                    // Get the file instance
+                    // File file = new File(path);
+                    // Initiate the upload
+                    if (path.isEmpty()) {
+                        AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+                        alertDialog.setTitle("Attenzione");
+                        alertDialog.setMessage("File non trovato, riprovare!");
+                        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                        alertDialog.show();
+                    }
+                    try {
+                        //Read text from file
+                        StringBuilder text = new StringBuilder();
+                        String s = "";
+
+                        BufferedReader br = new BufferedReader(new FileReader(path));
+                        while ((s = br.readLine()) != null) {
+                            text.append(s);
+                            text.append('\n');
                         }
 
                         if (DEBUG)
-                            Log.d(TAG, "File Path: " + path);
-                        // Get the file instance
-                        // File file = new File(path);
-                        // Initiate the upload
-                        if (path.isEmpty()) {
-                            AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
-                            alertDialog.setTitle("Attenzione");
-                            alertDialog.setMessage("File non trovato, riprovare!");
-                            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                                    new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            dialog.dismiss();
-                                        }
-                                    });
-                            alertDialog.show();
-                        }
-                        try {
-                            //Read text from file
-                            StringBuilder text = new StringBuilder();
-                            String s = "";
+                            Log.d(TAG, "String text = " + text);
 
-                            BufferedReader br = new BufferedReader(new FileReader(path));
-                            while ((s = br.readLine()) != null) {
-                                text.append(s);
-                                text.append('\n');
-                            }
+                        // Set TextView text here using tv.setText(s);
+                        mEditText.setText(text);
 
-                            if (DEBUG)
-                                Log.d(TAG, "String text = " + text);
-
-                            // Set TextView text here using tv.setText(s);
-                            mEditText.setText(text);
-
-                        } catch (FileNotFoundException e) {
+                    } catch (FileNotFoundException e) {
                         /*    AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
                             alertDialog.setTitle("Attenzione");
                             alertDialog.setMessage("File non trovato, riprovare!");
@@ -728,14 +730,14 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                                     });
                             alertDialog.show();
                             */
-                            path = " ";
-                            e.printStackTrace();
-                        } catch (IOException e) {
-                            Toast.makeText(getActivity().getApplicationContext(), "Errore in lettura del file. Sicuro che sia quello giusto?", Toast.LENGTH_SHORT).show();
-                            e.printStackTrace();
-                        }
+                        path = " ";
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        Toast.makeText(getActivity().getApplicationContext(), "Errore in lettura del file. Sicuro che sia quello giusto?", Toast.LENGTH_SHORT).show();
+                        e.printStackTrace();
+                    }
 
-                        break;
+                    break;
                     //}
                 } else {
 
