@@ -37,6 +37,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     private static final int COLOR_DIALOG_ACTIVITY_RESULT_CODE = 2;
     private static final String RESULT_COLOR_SELECTED = "result color selected";
     private static final String CALENDAR_ROW = "calendar row";
+    //prova
     /**
      * Dialog Account is used?
      */
