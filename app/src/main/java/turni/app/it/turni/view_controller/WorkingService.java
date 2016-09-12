@@ -164,7 +164,7 @@ public class WorkingService extends Service {
             boolean hasToCreateEvent;
             boolean hasReachable;
             boolean isVerona, isBassona;
-            String titleMatt, titlePom, titleNott1, titleNott2, titleText, titleText_REP, placeText = "";
+            String titleText, titleText_REP, placeText = "";
             String recText = "RECUPERO";
             Calendar beginTime = null;
             Calendar endTime = null;
@@ -177,10 +177,6 @@ public class WorkingService extends Service {
                 isVerona = isBassona = false;
                 line = sc.nextLine();
                 titleText = "TURNO LAVORATIVO";
-                titleMatt = "TURNO MATTINO";
-                titleNott1 = "TURNO NOTTURNO 21";
-                titleNott2 = "TURNO NOTTURNO 00";
-                titlePom = "TURNO POMERIGGIO";
                 titleText_REP = "REPERIBILITA'";
                 //Get the date for this event (year,month,day)
                 beginTime = Util.getEventDate(line);
@@ -198,7 +194,6 @@ public class WorkingService extends Service {
                     endTime.set(Calendar.HOUR_OF_DAY, 14);
                     endTime.set(Calendar.MINUTE, 12);
                     hasToCreateEvent = true;
-                    titleText = titleMatt;
                 }
                 //                    if (DEBUG)
 //                        Log.d(TAG, "get timezone  after timemillis"+beginTime.getTimeZone());
@@ -213,7 +208,6 @@ public class WorkingService extends Service {
                     endTime.set(Calendar.HOUR_OF_DAY, 21);
                     endTime.set(Calendar.MINUTE, 22);
                     hasToCreateEvent = true;
-                    titleText = titlePom;
                 }
                 if (line.contains(NOTTURNO_00)) {
                     beginTime.set(Calendar.HOUR_OF_DAY, 0);
@@ -222,7 +216,6 @@ public class WorkingService extends Service {
                     endTime.set(Calendar.HOUR_OF_DAY, 7);
                     endTime.set(Calendar.MINUTE, 13);
                     hasToCreateEvent = true;
-                    titleText = titleNott2;
                 }
                 //TODO controllare add day
                 if (line.contains(NOTTURNO_21)) {
@@ -234,7 +227,6 @@ public class WorkingService extends Service {
                     endTime.set(Calendar.HOUR_OF_DAY, 4);
                     endTime.set(Calendar.MINUTE, 27);
                     hasToCreateEvent = true;
-                    titleText = titleNott1;
                 }
                 if (line.contains(NOTTURNO_FESTIVO)) {
                     beginTime.set(Calendar.HOUR_OF_DAY, 0);
@@ -243,7 +235,6 @@ public class WorkingService extends Service {
                     endTime.set(Calendar.HOUR_OF_DAY, 8);
                     endTime.set(Calendar.MINUTE, 0);
                     hasToCreateEvent = true;
-                    titleText = titleNott2;
                 }
                 if (line.contains(MATTINA_FESTIVO)) {
                     beginTime.set(Calendar.HOUR_OF_DAY, 8);
@@ -252,7 +243,6 @@ public class WorkingService extends Service {
                     endTime.set(Calendar.HOUR_OF_DAY, 16);
                     endTime.set(Calendar.MINUTE, 0);
                     hasToCreateEvent = true;
-                    titleText = titleMatt;
                 }
                 if (line.contains(POMERIGGIO_FESTIVO)) {
                     beginTime.set(Calendar.HOUR_OF_DAY, 16);
@@ -261,7 +251,6 @@ public class WorkingService extends Service {
                     endTime.set(Calendar.HOUR_OF_DAY, 23);
                     endTime.set(Calendar.MINUTE, 59);
                     hasToCreateEvent = true;
-                    titleText = titlePom;
                 }
                 if (line.contains(REPERIBILE)) {
                     beginTime.set(Calendar.HOUR_OF_DAY, 0);
@@ -293,26 +282,17 @@ public class WorkingService extends Service {
                     mContentResolver = thisService.getContentResolver();
                     ContentValues values = new ContentValues();
                     values.put(CalendarContract.Events.DTSTART, startMillis);
-                    values.put(CalendarContract.Events.DTEND, endMillis);
                     //Set the event for the all day if necessary
-                    //TODO opzione modifica titolo
-                    //TODO fix all day events
-                    if (isFullDay) {
+                    if (isFullDay)
                         values.put(CalendarContract.Events.ALL_DAY, true);
-                        //values.put(CalendarContract.Events.DTSTART, startMillis);
+                    values.put(CalendarContract.Events.DTEND, endMillis);
+                    //TODO opzione modifica titolo
+                    if (isFullDay) {
                         values.put(CalendarContract.Events.TITLE, recText);
                         if (DEBUG)
                             Log.d(TAG, "Full day SET");
-                        if (hasReachable) {
-                            values.put(CalendarContract.Events.TITLE, titleText_REP);
-                        }
-                        else {
-                            values.put(CalendarContract.Events.TITLE, titleText);
-                        }
-                    }
-                    else {
+                    } else
                         values.put(CalendarContract.Events.TITLE, titleText);
-                    }
                     //TODO opzione modifica descrizione
                     values.put(CalendarContract.Events.DESCRIPTION, "Group workout");
                     if (isVerona) {
