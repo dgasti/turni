@@ -4,16 +4,18 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.ComponentName;
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.CalendarContract;
 import android.support.v7.app.ActionBarActivity;
 import android.transition.TransitionInflater;
@@ -58,9 +60,9 @@ public class WorkingDialog extends ActionBarActivity {
         //up
         surname = getIntent().getStringExtra(SURNAME);
 
-        if(DEBUG) {
-            Log.d(TAG, "testo turni passato in WorkingDialog: " +text);
-            Log.d(TAG, "Cognome passato in WorkingDialog: " +surname);
+        if (DEBUG) {
+            Log.d(TAG, "testo turni passato in WorkingDialog: " + text);
+            Log.d(TAG, "Cognome passato in WorkingDialog: " + surname);
         }
 
         Bundle bundle = new Bundle();
@@ -143,6 +145,8 @@ public class WorkingDialog extends ActionBarActivity {
         private ContentResolver mContentResolver;
         private SharedPreferences wSharedPrefs;
         private boolean isActivityCalled = false;
+        private boolean hasToCreateEvent;
+        private String titleMatt, titlePom, titleNott1, titleNott2, titleText, titleText_REP, placeText = "";
 
 
         public PlaceholderFragment() {
@@ -156,9 +160,9 @@ public class WorkingDialog extends ActionBarActivity {
             mText = this.getArguments().getString(LAUNCH_ACTIVITY, "");
             mSurname = this.getArguments().getString(SURNAME, "");
 
-            if(DEBUG) {
-                Log.d(TAG, "Testo turni all'interno del PlaceFragemnt: "+ mText);
-                Log.d(TAG, "Cognome all'intenro del PlaceFragment: "+mSurname);
+            if (DEBUG) {
+                Log.d(TAG, "Testo turni all'interno del PlaceFragemnt: " + mText);
+                Log.d(TAG, "Cognome all'intenro del PlaceFragment: " + mSurname);
             }
 
             if (mText != null && mSurname != null)
@@ -181,7 +185,7 @@ public class WorkingDialog extends ActionBarActivity {
                 }
             });
 
-            mBackground = (RelativeLayout)rootView.findViewById(R.id.working_dialog_fragment_background);
+            mBackground = (RelativeLayout) rootView.findViewById(R.id.working_dialog_fragment_background);
             sync_calendar = (Button) rootView.findViewById(R.id.sync_button);
             get_calendar = (Button) rootView.findViewById(R.id.calendar_button);
 
@@ -208,10 +212,8 @@ public class WorkingDialog extends ActionBarActivity {
             long startMillis = 0;
             long endMillis = 0;
             boolean isFullDay;
-            boolean hasToCreateEvent;
             boolean hasReachable;
             boolean isVerona, isBassona;
-            String titleMatt, titlePom, titleNott1, titleNott2, titleText, titleText_REP, placeText = "";
             Calendar beginTime = null;
             Calendar endTime = null;
             Calendar allday = null;
@@ -383,7 +385,7 @@ public class WorkingDialog extends ActionBarActivity {
 
                     if (DEBUG) {
                         Log.d(TAG, "isVerona = " + isVerona);
-                        Log.d(TAG, "isBassona = "+isBassona);
+                        Log.d(TAG, "isBassona = " + isBassona);
                     }
 
                     startMillis = beginTime.getTimeInMillis();
@@ -412,28 +414,36 @@ public class WorkingDialog extends ActionBarActivity {
 
                     if (isVerona) {
 
-                        if(DEBUG)
+                        if (DEBUG)
                             Log.d(TAG, "Sono entrato nell'if di verona");
 
                         values.put(CalendarContract.Events.EVENT_COLOR_KEY, wSharedPrefs.getInt(VERONA_COLOR_DEFAULT, 1));
                         values.put(CalendarContract.Events.EVENT_LOCATION, "Via Monte Bianco, 18\n" +
                                 "37132 Verona VR");
-                        isVerona=false;
+                        isVerona = false;
                     }
                     if (isBassona) {
 
-                        if(DEBUG)
+                        if (DEBUG)
                             Log.d(TAG, "Sono entrato nell'if di bassona");
 
                         values.put(CalendarContract.Events.EVENT_COLOR_KEY, wSharedPrefs.getInt(BASSONA_COLOR_DEFAULT, 1));
                         values.put(CalendarContract.Events.EVENT_LOCATION, "Via della Meccanica, 1\n" +
                                 "37139 Verona VR");
-                        isBassona=false;
+                        isBassona = false;
                     }
                     values.put(CalendarContract.Events.CALENDAR_ID, mCalID);
                     TimeZone tz = TimeZone.getDefault();
                     values.put(CalendarContract.Events.EVENT_TIMEZONE, tz.getID());
+                    String eventTitle = values.get(CalendarContract.Events.TITLE).toString();
+                    if ((eventTitle == titleMatt) || (eventTitle == titleNott1) || (eventTitle == titleNott2) || (eventTitle == titlePom) || (eventTitle == titleText_REP))
+                        isAlreadyCreate(startMillis, endMillis, mContentResolver, mCalID, eventTitle);
+
+                    if (DEBUG)
+                        Log.d(TAG, "sono dentro all'if dell'alreadyCreate");
+
                     Uri uri1 = mContentResolver.insert(CalendarContract.Events.CONTENT_URI, values);
+                    //}
                     // get the event ID that is the last element in the
                     //  Uri  long eventID = Long.parseLong(uri1.getLastPathSegment());
                 }
@@ -473,21 +483,78 @@ public class WorkingDialog extends ActionBarActivity {
                 Toast.makeText(getActivity().getApplicationContext(), "Sincronizzazione effettuata", Toast.LENGTH_SHORT).show();
             }
             if (GET_CALENDAR.equals(tag)) {
-                PackageManager packmngr = getActivity().getApplicationContext().getPackageManager();
-                Intent intent = new Intent(Intent.ACTION_MAIN);
-                intent.addCategory(Intent.CATEGORY_LAUNCHER);
-                List<ResolveInfo> list = packmngr.queryIntentActivities(intent, PackageManager.PERMISSION_GRANTED);
-                ResolveInfo Resolvebest = null;
-                for (final ResolveInfo info : list){
-                    if (info.activityInfo.packageName.endsWith(".calendar"))
-                        Resolvebest = info;
-                }
-                if (Resolvebest != null){
-                    intent.setClassName(Resolvebest.activityInfo.packageName,
-                            Resolvebest.activityInfo.name);
-                    startActivity(intent);
+                if (Build.VERSION.SDK_INT >= 8) {
+                    Intent i = new Intent();
+                    ComponentName cn = new ComponentName("com.google.android.calendar", "com.android.calendar.LaunchActivity");
+                    i.setComponent(cn);
+                    startActivity(i);
+
+                } else {
+                    PackageManager packmngr = getActivity().getApplicationContext().getPackageManager();
+                    Intent intent = new Intent(Intent.ACTION_MAIN);
+                    intent.addCategory(Intent.CATEGORY_LAUNCHER);
+                    List<ResolveInfo> list = packmngr.queryIntentActivities(intent, PackageManager.PERMISSION_GRANTED);
+                    ResolveInfo Resolvebest = null;
+                    for (final ResolveInfo info : list) {
+                        if (info.activityInfo.packageName.endsWith(".calendar"))
+                            Resolvebest = info;
+                    }
+                    if (Resolvebest != null) {
+                        intent.setClassName(Resolvebest.activityInfo.packageName,
+                                Resolvebest.activityInfo.name);
+                        startActivity(intent);
+                    }
                 }
             }
+        }
+
+        private void isAlreadyCreate(long begin, long end, ContentResolver content, int calID, String title) {
+            int calendarID = calID;
+            boolean isCreate = false;
+            Cursor cursor = null;
+            String[] titleEvent = new String[]{titleMatt, titlePom, titleNott1, titleNott2, titleText_REP};
+            String[] proj =
+                    new String[]{
+                            CalendarContract.Instances._ID,
+                            CalendarContract.Instances.BEGIN,
+                            CalendarContract.Instances.END,
+                            CalendarContract.Instances.EVENT_ID};
+            int i;
+            for (i = 0; i < titleEvent.length; i++) {
+                cursor = CalendarContract.Instances.query(content, proj, begin, end, titleEvent[i]);
+                if (cursor.getCount() > 0) {
+                    Uri eventsUri;
+                    int osVersion = android.os.Build.VERSION.SDK_INT;
+                    if (osVersion <= 7) { //up-to Android 2.1
+                        eventsUri = Uri.parse("content://calendar/events");
+                    } else { //8 is Android 2.2 (Froyo) (http://developer.android.com/reference/android/os/Build.VERSION_CODES.html)
+                        eventsUri = Uri.parse("content://com.android.calendar/events");
+                    }
+                    ContentResolver resolver = content;
+                    deleteEvent(resolver, eventsUri, calendarID);
+                    isCreate = true;
+                } else {
+                    isCreate = false;
+                }
+                cursor.close();
+            }
+
+            if (DEBUG)
+                Log.d(TAG, "isAlreadyCreate = " + isCreate);
+        }
+
+        private void deleteEvent(ContentResolver resolver, Uri eventsUri, int calendarId) {
+            Cursor cursor;
+            if (android.os.Build.VERSION.SDK_INT <= 7) { //up-to Android 2.1
+                cursor = resolver.query(eventsUri, new String[]{"_id"}, "Calendars._id=" + calendarId, null, null);
+            } else { //8 is Android 2.2 (Froyo) (http://developer.android.com/reference/android/os/Build.VERSION_CODES.html)
+                cursor = resolver.query(eventsUri, new String[]{"_id"}, "calendar_id=" + calendarId, null, null);
+            }
+            while (cursor.moveToNext()) {
+                long eventId = cursor.getLong(cursor.getColumnIndex("_id"));
+                resolver.delete(ContentUris.withAppendedId(eventsUri, eventId), null, null);
+            }
+            cursor.close();
         }
     }
 
