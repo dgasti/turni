@@ -55,6 +55,7 @@ public class WorkingDialog extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_working_dialog);
         text = getIntent().getStringExtra(LAUNCH_ACTIVITY);
+        //up
         surname = getIntent().getStringExtra(SURNAME);
 
         if(DEBUG) {
