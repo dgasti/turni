@@ -440,10 +440,9 @@ public class WorkingDialog extends ActionBarActivity {
                         isAlreadyCreate(startMillis, endMillis, mContentResolver, mCalID, eventTitle);
 
                     if (DEBUG)
-                        Log.d(TAG, "sono dentro all'if dell'alreadyCreate");
+                        Log.d(TAG, "sono dopo l'alreadyCreate");
 
                     Uri uri1 = mContentResolver.insert(CalendarContract.Events.CONTENT_URI, values);
-                    //}
                     // get the event ID that is the last element in the
                     //  Uri  long eventID = Long.parseLong(uri1.getLastPathSegment());
                 }
@@ -500,8 +499,7 @@ public class WorkingDialog extends ActionBarActivity {
                             Resolvebest = info;
                     }
                     if (Resolvebest != null) {
-                        intent.setClassName(Resolvebest.activityInfo.packageName,
-                                Resolvebest.activityInfo.name);
+                        intent.setClassName(Resolvebest.activityInfo.packageName, Resolvebest.activityInfo.name);
                         startActivity(intent);
                     }
                 }
@@ -509,13 +507,17 @@ public class WorkingDialog extends ActionBarActivity {
         }
 
         private void isAlreadyCreate(long begin, long end, ContentResolver content, int calID, String title) {
+
+            if(DEBUG)
+                Log.d(TAG, "Sono dentro all'isAlreadyCreate");
+
             int calendarID = calID;
             boolean isCreate = false;
             Cursor cursor = null;
             String[] titleEvent = new String[]{titleMatt, titlePom, titleNott1, titleNott2, titleText_REP};
             String[] proj =
                     new String[]{
-                            CalendarContract.Instances._ID,
+                            CalendarContract.Instances.CALENDAR_ID,
                             CalendarContract.Instances.BEGIN,
                             CalendarContract.Instances.END,
                             CalendarContract.Instances.EVENT_ID};
@@ -523,6 +525,10 @@ public class WorkingDialog extends ActionBarActivity {
             for (i = 0; i < titleEvent.length; i++) {
                 cursor = CalendarContract.Instances.query(content, proj, begin, end, titleEvent[i]);
                 if (cursor.getCount() > 0) {
+
+                    if(DEBUG)
+                        Log.d(TAG, "Con i = "+i+" siamo dentro il cursor.getcount(), con titolo = "+titleEvent[i]);
+
                     Uri eventsUri;
                     int osVersion = android.os.Build.VERSION.SDK_INT;
                     if (osVersion <= 7) { //up-to Android 2.1
@@ -532,6 +538,10 @@ public class WorkingDialog extends ActionBarActivity {
                     }
                     ContentResolver resolver = content;
                     deleteEvent(resolver, eventsUri, calendarID);
+
+                    if(DEBUG)
+                        Log.d(TAG, "Sono dopo il deleteEvent con title ="+titleEvent[i]);
+
                     isCreate = true;
                 } else {
                     isCreate = false;
@@ -539,8 +549,10 @@ public class WorkingDialog extends ActionBarActivity {
                 cursor.close();
             }
 
-            if (DEBUG)
-                Log.d(TAG, "isAlreadyCreate = " + isCreate);
+            if (DEBUG) {
+                Log.d(TAG, "Uscito dal for, isAlreadyCreate = " + isCreate);
+                Log.d(TAG, "i = " + i);
+            }
         }
 
         private void deleteEvent(ContentResolver resolver, Uri eventsUri, int calendarId) {
