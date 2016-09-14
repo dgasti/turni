@@ -1,0 +1,68 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/working_dialog_fragment_background"
+    tools:context="turni.app.it.turni.view_controller.WorkingDialog$PlaceholderFragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/color_dialog_llayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@android:color/white"
+        android:orientation="vertical"
+        android:layout_centerVertical="true"
+        android:layout_gravity="center"
+        android:transitionName="@string/transition_dialog_llayout">
+
+        <TextView
+            android:id="@+id/done"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="FATTO"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <TextView
+            android:id="@+id/sync_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:hint="Sincronizza" />
+
+        <Button
+            android:id="@+id/sync_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_alignBaseline="@+id/sync_text"
+            android:layout_alignBottom="@+id/sync_text"
+            android:layout_alignStart="@+id/calendar_button"
+            android:text="sincronizza" />
+
+        <TextView
+            android:id="@+id/calendar_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/done"
+            android:hint="Vai al calendario" />
+
+        <Button
+            android:id="@+id/calendar_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_alignBaseline="@+id/calendar_text"
+            android:layout_alignBottom="@+id/calendar_text"
+            android:layout_alignStart="@+id/done"
+            android:text="calendario" />
+
+    </LinearLayout>
+
+</RelativeLayout>

@@ -35,7 +35,6 @@
                 android:paddingTop="16dp"
                 android:paddingBottom="10dp"
                 android:text="Lavanda"
-
                 android:textAppearance="?android:attr/textAppearanceListItem" />
 
             <Button

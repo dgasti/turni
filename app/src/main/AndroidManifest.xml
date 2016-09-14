@@ -24,23 +24,15 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".view_controller.WorkingActivity"
-            android:label="@string/title_activity_working"
-            android:parentActivityName=".view_controller.MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="turni.app.it.turni.view_controller.MainActivity" />
-        </activity>
+            android:name=".view_controller.WorkingDialog"
+            android:label="WorkingDialog"
+            android:theme="@style/DialogTheme" />
         <activity
             android:name=".view_controller.CalendarDialog"
             android:label="@string/title_activity_calendar_dialog"
             android:theme="@style/DialogTheme" />
 
         <!-- suppress AndroidDomInspection -->
-        <service
-            android:name=".view_controller.WorkingService"
-            android:enabled="true"
-            android:exported="true" />
 
         <activity
             android:name=".view_controller.ColorSelectorDialog"
