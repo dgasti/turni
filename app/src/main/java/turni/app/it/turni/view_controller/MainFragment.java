@@ -5,6 +5,7 @@ import android.app.ActivityOptions;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Fragment;
+import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.ContentUris;
@@ -112,6 +113,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     private InputMethodManager imm;
     private ClipData.Item item;
     private Bundle bundle;
+    private ProgressDialog progress;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
