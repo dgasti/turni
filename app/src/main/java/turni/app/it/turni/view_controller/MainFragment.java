@@ -302,6 +302,8 @@ public class MainFragment extends Fragment implements View.OnClickListener {
             Log.d(TAG, "tag selezionato = " + tag);
 
         boolean account_is_used = mSharedPref.getBoolean("ACCOUNT_IS_USED", false);
+        String text = mEditText.getText().toString();
+
         if (TAG_IMPORT_TEXT_BUTTON.equals(tag)) {
             //Toast.makeText(getActivity().getApplicationContext(), "Funzione ancora non attiva!", Toast.LENGTH_SHORT).show();
             imm = (InputMethodManager) getActivity().getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -348,8 +350,12 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
             mEditText.setText(null);
         }
-        String text = mEditText.getText().toString();
+
+
         if (TAG_FORWARD_BUTTON.equals(tag)) {
+
+            if(DEBUG)
+                Log.d(TAG, "text passato dall'edittext = " + text);
 
             imm = (InputMethodManager) getActivity().getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(mEditText.getWindowToken(), 0);
@@ -409,7 +415,8 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                 //bundle = new Bundle();
                 //bundle .putString(TURN_TEXT, text);
 
-                Log.d(TAG, "text passato alla workingDialog = " + text);
+                if(DEBUG)
+                    Log.d(TAG, "text passato alla workingDialog = " + text);
 
                 if (!(surname_check.isEmpty())) {
                     intent.putExtra(SURNAME_TEXT, surname_check);

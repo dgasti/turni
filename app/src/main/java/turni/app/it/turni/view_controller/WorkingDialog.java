@@ -211,17 +211,23 @@ public class WorkingDialog extends ActionBarActivity {
             mCalID = Util.getCalendarID(getActivity(), wSharedPrefs.getString(SP_CALENDAR_USED, null), wSharedPrefs.getString(SP_ACCOUNT_USED, null));
             long startMillis = 0;
             long endMillis = 0;
+            long checkStartMillis = 0;
+            long checkEndMillis = 0;
             boolean isFullDay;
             boolean hasReachable;
             boolean isVerona, isBassona;
             Calendar beginTime = null;
             Calendar endTime = null;
-            Calendar allday = null;
+            Calendar checkEventBegin = null;
+            Calendar checkEventEnd = null;
             hasToCreateEvent = false;
             hasReachable = false;
             isFullDay = false;
             isVerona = isBassona = false;
-            Log.d(TAG, "testo dei turni: " + mText);
+
+            if (DEBUG)
+                Log.d(TAG, "testo dei turni: " + mText);
+
             int fromIndex = 0;
             int i = 1;
             events = mText.indexOf(mSurname, fromIndex);
@@ -260,10 +266,16 @@ public class WorkingDialog extends ActionBarActivity {
                 titlePom = "TURNO POMERIGGIO";
                 titleText_REP = "REPERIBILITA'";
                 //Get the date for this event (year,month,day)
-                beginTime = Util.getEventDate(line);
-                endTime = null;
-                //Find the work place
 
+                if (DEBUG)
+                    Log.d(TAG, "turno = " + line);
+
+                beginTime = Util.getEventDate(line);
+                checkEventBegin = Util.getEventDate(line);
+                endTime = null;
+                checkEventEnd = null;
+
+                //Find the work place
                 if (line.contains(RECUPERO) || line.contains(ASSENZA) || line.contains(ASSENZE) || line.contains(FESTIVO_TARGET)) {
                     hasToCreateEvent = false;
                     Log.d(TAG, "entro in assenza riga " + i);
@@ -275,9 +287,15 @@ public class WorkingDialog extends ActionBarActivity {
                     endTime = (Calendar) beginTime.clone();
                     endTime.set(Calendar.HOUR_OF_DAY, 14);
                     endTime.set(Calendar.MINUTE, 12);
+                    checkEventBegin.set(Calendar.HOUR_OF_DAY, 0);
+                    checkEventBegin.set(Calendar.MINUTE, 1);
+                    checkEventEnd = (Calendar) checkEventBegin.clone();
+                    checkEventEnd.set(Calendar.HOUR_OF_DAY, 23);
+                    checkEventEnd.set(Calendar.MINUTE, 59);
                     hasToCreateEvent = true;
                     isFullDay = false;
                     titleText = titleMatt;
+
                 }
                 //                    if (DEBUG)
 //                        Log.d(TAG, "get timezone  after timemillis"+beginTime.getTimeZone());
@@ -291,6 +309,11 @@ public class WorkingDialog extends ActionBarActivity {
                     endTime = (Calendar) beginTime.clone();
                     endTime.set(Calendar.HOUR_OF_DAY, 21);
                     endTime.set(Calendar.MINUTE, 22);
+                    checkEventBegin.set(Calendar.HOUR_OF_DAY, 0);
+                    checkEventBegin.set(Calendar.MINUTE, 1);
+                    checkEventEnd = (Calendar) checkEventBegin.clone();
+                    checkEventEnd.set(Calendar.HOUR_OF_DAY, 23);
+                    checkEventEnd.set(Calendar.MINUTE, 59);
                     hasToCreateEvent = true;
                     isFullDay = false;
                     titleText = titlePom;
@@ -301,6 +324,11 @@ public class WorkingDialog extends ActionBarActivity {
                     endTime = (Calendar) beginTime.clone();
                     endTime.set(Calendar.HOUR_OF_DAY, 7);
                     endTime.set(Calendar.MINUTE, 13);
+                    checkEventBegin.set(Calendar.HOUR_OF_DAY, 0);
+                    checkEventBegin.set(Calendar.MINUTE, 1);
+                    checkEventEnd = (Calendar) checkEventBegin.clone();
+                    checkEventEnd.set(Calendar.HOUR_OF_DAY, 23);
+                    checkEventEnd.set(Calendar.MINUTE, 59);
                     hasToCreateEvent = true;
                     isFullDay = false;
                     titleText = titleNott2;
@@ -313,6 +341,12 @@ public class WorkingDialog extends ActionBarActivity {
                     endTime.add(Calendar.DAY_OF_YEAR, 1);
                     endTime.set(Calendar.HOUR_OF_DAY, 4);
                     endTime.set(Calendar.MINUTE, 27);
+                    checkEventBegin.set(Calendar.HOUR_OF_DAY, 0);
+                    checkEventBegin.set(Calendar.MINUTE, 1);
+                    checkEventEnd = (Calendar) checkEventBegin.clone();
+                    checkEventEnd.add(Calendar.DAY_OF_YEAR, 1);
+                    checkEventEnd.set(Calendar.HOUR_OF_DAY, 23);
+                    checkEventEnd.set(Calendar.MINUTE, 59);
                     hasToCreateEvent = true;
                     isFullDay = false;
                     titleText = titleNott1;
@@ -323,6 +357,11 @@ public class WorkingDialog extends ActionBarActivity {
                     endTime = (Calendar) beginTime.clone();
                     endTime.set(Calendar.HOUR_OF_DAY, 8);
                     endTime.set(Calendar.MINUTE, 0);
+                    checkEventBegin.set(Calendar.HOUR_OF_DAY, 0);
+                    checkEventBegin.set(Calendar.MINUTE, 1);
+                    checkEventEnd = (Calendar) checkEventBegin.clone();
+                    checkEventEnd.set(Calendar.HOUR_OF_DAY, 23);
+                    checkEventEnd.set(Calendar.MINUTE, 59);
                     hasToCreateEvent = true;
                     isFullDay = false;
                     titleText = titleNott2;
@@ -333,6 +372,11 @@ public class WorkingDialog extends ActionBarActivity {
                     endTime = (Calendar) beginTime.clone();
                     endTime.set(Calendar.HOUR_OF_DAY, 16);
                     endTime.set(Calendar.MINUTE, 0);
+                    checkEventBegin.set(Calendar.HOUR_OF_DAY, 0);
+                    checkEventBegin.set(Calendar.MINUTE, 1);
+                    checkEventEnd = (Calendar) checkEventBegin.clone();
+                    checkEventEnd.set(Calendar.HOUR_OF_DAY, 23);
+                    checkEventEnd.set(Calendar.MINUTE, 59);
                     hasToCreateEvent = true;
                     isFullDay = false;
                     titleText = titleMatt;
@@ -343,6 +387,11 @@ public class WorkingDialog extends ActionBarActivity {
                     endTime = (Calendar) beginTime.clone();
                     endTime.set(Calendar.HOUR_OF_DAY, 23);
                     endTime.set(Calendar.MINUTE, 59);
+                    checkEventBegin.set(Calendar.HOUR_OF_DAY, 0);
+                    checkEventBegin.set(Calendar.MINUTE, 1);
+                    checkEventEnd = (Calendar) checkEventBegin.clone();
+                    checkEventEnd.set(Calendar.HOUR_OF_DAY, 23);
+                    checkEventEnd.set(Calendar.MINUTE, 59);
                     hasToCreateEvent = true;
                     isFullDay = false;
                     titleText = titlePom;
@@ -354,6 +403,11 @@ public class WorkingDialog extends ActionBarActivity {
                     endTime = (Calendar) beginTime.clone();
                     endTime.set(Calendar.HOUR_OF_DAY, 23);
                     endTime.set(Calendar.MINUTE, 0);
+                    checkEventBegin.set(Calendar.HOUR_OF_DAY, 0);
+                    checkEventBegin.set(Calendar.MINUTE, 1);
+                    checkEventEnd = (Calendar) checkEventBegin.clone();
+                    checkEventEnd.set(Calendar.HOUR_OF_DAY, 23);
+                    checkEventEnd.set(Calendar.MINUTE, 59);
                     isFullDay = true;
                     hasToCreateEvent = true;
                     hasReachable = true;
@@ -380,16 +434,23 @@ public class WorkingDialog extends ActionBarActivity {
                 //If useful information has been found in the line create the event
                 if (hasToCreateEvent) {
 
-                    if (DEBUG)
-                        Log.d(TAG, "create event " + beginTime);
-
                     if (DEBUG) {
+                        Log.d(TAG, "Sono dentro all'if che crea gli eventi");
                         Log.d(TAG, "isVerona = " + isVerona);
+
                         Log.d(TAG, "isBassona = " + isBassona);
                     }
 
                     startMillis = beginTime.getTimeInMillis();
                     endMillis = endTime.getTimeInMillis();
+                    checkStartMillis = checkEventBegin.getTimeInMillis();
+                    checkEndMillis = checkEventEnd.getTimeInMillis();
+
+                    if (DEBUG) {
+                        Log.d(TAG, "startMillis = " + startMillis);
+                        Log.d(TAG, "endMillis = " + endMillis);
+                    }
+
                     mContentResolver = getActivity().getContentResolver();
                     ContentValues values = new ContentValues();
                     if (isFullDay) {
@@ -436,8 +497,15 @@ public class WorkingDialog extends ActionBarActivity {
                     TimeZone tz = TimeZone.getDefault();
                     values.put(CalendarContract.Events.EVENT_TIMEZONE, tz.getID());
                     String eventTitle = values.get(CalendarContract.Events.TITLE).toString();
-                    if ((eventTitle == titleMatt) || (eventTitle == titleNott1) || (eventTitle == titleNott2) || (eventTitle == titlePom) || (eventTitle == titleText_REP))
-                        isAlreadyCreate(startMillis, endMillis, mContentResolver, mCalID, eventTitle);
+                    if ((eventTitle == titleMatt) || (eventTitle == titleNott1) || (eventTitle == titleNott2) || (eventTitle == titlePom) || (eventTitle == titleText_REP)) {
+                        int eventID = ListSelectedCalendars(eventTitle, mContentResolver);
+                        int iNumRowsDeleted = DeleteCalendarEntry(eventID, mContentResolver);
+
+                        if (DEBUG)
+                            Log.d(TAG, "numero di eventi deletati = " + iNumRowsDeleted);
+
+                    }
+                    //isAlreadyCreate(checkStartMillis, checkEndMillis, mContentResolver, mCalID, eventTitle);
 
                     if (DEBUG)
                         Log.d(TAG, "sono dopo l'alreadyCreate");
@@ -506,9 +574,77 @@ public class WorkingDialog extends ActionBarActivity {
             }
         }
 
+        private int ListSelectedCalendars(String eventtitle, ContentResolver content) {
+
+
+            Uri eventUri;
+            if (android.os.Build.VERSION.SDK_INT <= 7) {
+                // the old way
+
+                eventUri = Uri.parse("content://calendar/events");
+            } else {
+                // the new way
+
+                eventUri = Uri.parse("content://com.android.calendar/events");
+            }
+
+            int result = 0;
+            String projection[] = {"_id", "title"};
+            Cursor cursor = content.query(eventUri, null, null, null,
+                    null);
+
+            if (cursor.moveToFirst()) {
+
+                String calName;
+                String calID;
+
+                int nameCol = cursor.getColumnIndex(projection[1]);
+                int idCol = cursor.getColumnIndex(projection[0]);
+                do {
+                    calName = cursor.getString(nameCol);
+                    calID = cursor.getString(idCol);
+
+                    if (calName != null &&  (!calName.contains(eventtitle)))
+                    {
+                        result = Integer.parseInt(calID);
+                    }
+
+                } while (cursor.moveToNext());
+                cursor.close();
+            }
+
+            return result;
+
+        }
+
+        private int DeleteCalendarEntry(int entryID, ContentResolver content) {
+            int iNumRowsDeleted = 0;
+
+            Uri eventUri = ContentUris
+                    .withAppendedId(getCalendarUriBase(), entryID);
+            iNumRowsDeleted = content.delete(eventUri, null, null);
+
+            return iNumRowsDeleted;
+        }
+
+        private Uri getCalendarUriBase() {
+            Uri eventUri;
+            if (android.os.Build.VERSION.SDK_INT <= 7) {
+                // the old way
+
+                eventUri = Uri.parse("content://calendar/events");
+            } else {
+                // the new way
+
+                eventUri = Uri.parse("content://com.android.calendar/events");
+            }
+
+            return eventUri;
+        }
+
         private void isAlreadyCreate(long begin, long end, ContentResolver content, int calID, String title) {
 
-            if(DEBUG)
+            if (DEBUG)
                 Log.d(TAG, "Sono dentro all'isAlreadyCreate");
 
             int calendarID = calID;
@@ -523,11 +659,11 @@ public class WorkingDialog extends ActionBarActivity {
                             CalendarContract.Instances.EVENT_ID};
             int i;
             for (i = 0; i < titleEvent.length; i++) {
-                cursor = CalendarContract.Instances.query(content, proj, begin, end, titleEvent[i]);
+                cursor = CalendarContract.Instances.query(content, proj, begin, end);
                 if (cursor.getCount() > 0) {
 
-                    if(DEBUG)
-                        Log.d(TAG, "Con i = "+i+" siamo dentro il cursor.getcount(), con titolo = "+titleEvent[i]);
+                    if (DEBUG)
+                        Log.d(TAG, "Con i = " + i + " siamo dentro il cursor.getcount(), con titolo = " + titleEvent[i]);
 
                     Uri eventsUri;
                     int osVersion = android.os.Build.VERSION.SDK_INT;
@@ -536,11 +672,16 @@ public class WorkingDialog extends ActionBarActivity {
                     } else { //8 is Android 2.2 (Froyo) (http://developer.android.com/reference/android/os/Build.VERSION_CODES.html)
                         eventsUri = Uri.parse("content://com.android.calendar/events");
                     }
-                    ContentResolver resolver = content;
-                    deleteEvent(resolver, eventsUri, calendarID);
+                    int eventId = Integer.parseInt(proj[3]);
+                    Uri eventUri = ContentUris.withAppendedId(eventsUri, eventId);
+                    int iNumRowsDeleted = content.delete(eventUri, null, null);
+                    //ContentResolver resolver = content;
+                    //deleteEvent(resolver, eventsUri, eventId);
 
-                    if(DEBUG)
-                        Log.d(TAG, "Sono dopo il deleteEvent con title ="+titleEvent[i]);
+                    if (DEBUG) {
+                        Log.d(TAG, "Sono dopo il deleteEvent con title =" + titleEvent[i]);
+                        Log.d(TAG, "numero di eventi deletati = " + iNumRowsDeleted);
+                    }
 
                     isCreate = true;
                 } else {
@@ -555,16 +696,16 @@ public class WorkingDialog extends ActionBarActivity {
             }
         }
 
-        private void deleteEvent(ContentResolver resolver, Uri eventsUri, int calendarId) {
+        private void deleteEvent(ContentResolver resolver, Uri eventsUri, int eventID) {
             Cursor cursor;
             if (android.os.Build.VERSION.SDK_INT <= 7) { //up-to Android 2.1
-                cursor = resolver.query(eventsUri, new String[]{"_id"}, "Calendars._id=" + calendarId, null, null);
+                cursor = resolver.query(eventsUri, new String[]{"_id"}, "Calendars._id=" + eventID, null, null);
             } else { //8 is Android 2.2 (Froyo) (http://developer.android.com/reference/android/os/Build.VERSION_CODES.html)
-                cursor = resolver.query(eventsUri, new String[]{"_id"}, "calendar_id=" + calendarId, null, null);
+                cursor = resolver.query(eventsUri, new String[]{"_id"}, "calendar_id=" + eventID, null, null);
             }
             while (cursor.moveToNext()) {
                 long eventId = cursor.getLong(cursor.getColumnIndex("_id"));
-                resolver.delete(ContentUris.withAppendedId(eventsUri, eventId), null, null);
+                resolver.delete(eventsUri, null, null);
             }
             cursor.close();
         }
