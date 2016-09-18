@@ -19,6 +19,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
@@ -62,6 +63,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     private static final String SURNAME_TEXT = "SURNAME";
     private static final int FILE_SELECT_RESULT_CODE = 3;
     private static final int FORWARD_SELECT_BUTTON = 4;
+    private static final String TAG_SURNAME = "Surname text";
 
     /**
      * Dialog Account is used?
@@ -114,6 +116,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     private ClipData.Item item;
     private Bundle bundle;
     private ProgressDialog progress;
+    private Activity activity;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -145,6 +148,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         mImportTextButton.setTag(TAG_IMPORT_TEXT_BUTTON);
         mPasteButton.setTag(TAG_PASTE_TEXT);
         mDeleteButton.setTag(TAG_DELETE_TEXT);
+        mSurnameText.setTag(TAG_SURNAME);
 
         int drawableColor = ColorSelectorDialog.getColorDrawable(mSharedPref.getInt(VERONA_COLOR_DEFAULT, 1));
         Drawable d = getResources().getDrawable(drawableColor);
@@ -178,6 +182,8 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         mImportTextButton.setOnClickListener(this);
         mPasteButton.setOnClickListener(this);
         mDeleteButton.setOnClickListener(this);
+        mSurnameText.setOnClickListener(this);
+
 
         View.OnLongClickListener listener = new View.OnLongClickListener() {
             public boolean onLongClick(View v) {
@@ -304,6 +310,14 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         boolean account_is_used = mSharedPref.getBoolean("ACCOUNT_IS_USED", false);
         String text = mEditText.getText().toString();
 
+        if (TAG_SURNAME.equals(tag)) {
+            if (DEBUG) {
+                Log.d(TAG, "Cognome inserito nelle sharedpref è = " + mSharedPref.getString("SURNAME", "non c'è nulla"));
+                Log.d(TAG, "Cognome all'interno della stringa text = " + text);
+            }
+        }
+
+
         if (TAG_IMPORT_TEXT_BUTTON.equals(tag)) {
             //Toast.makeText(getActivity().getApplicationContext(), "Funzione ancora non attiva!", Toast.LENGTH_SHORT).show();
             imm = (InputMethodManager) getActivity().getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -354,7 +368,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
         if (TAG_FORWARD_BUTTON.equals(tag)) {
 
-            if(DEBUG)
+            if (DEBUG)
                 Log.d(TAG, "text passato dall'edittext = " + text);
 
             imm = (InputMethodManager) getActivity().getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -386,18 +400,6 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                         });
                 alertDialog.show();
             }
-            //else if (surname_check.isEmpty()) {
-            //    AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
-            //   alertDialog.setTitle("Attenzione");
-            //  alertDialog.setMessage("Impossibile continuare, nessun cognome inserito!");
-            //  alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-            //          new DialogInterface.OnClickListener() {
-            //              public void onClick(DialogInterface dialog, int which) {
-            //                  dialog.dismiss();
-            //              }
-            //          });
-            //  alertDialog.show();
-            //    }
             else {
 
                 if (DEBUG)
@@ -407,35 +409,43 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                 v.setTransitionName("snapshot");
                 getActivity().getWindow().setExitTransition(null);
                 getActivity().getWindow().setEnterTransition(TransitionInflater.from(getActivity()).inflateTransition(R.transition.enter_ma_da));
-                //         getActivity().getWindow().setSharedElementEnterTransition(TransitionInflater.from(getActivity())
-                //               .inflateTransition(R.transition.circular_reveal_shared_transition));
+                         getActivity().getWindow().setSharedElementEnterTransition(TransitionInflater.from(getActivity())
+                               .inflateTransition(R.transition.circular_reveal_shared_transition));
 
-                //Intent intent = new Intent(getActivity(), WorkingDialog.class);
                 intent.putExtra(TURN_TEXT, text);
-                //bundle = new Bundle();
-                //bundle .putString(TURN_TEXT, text);
 
-                if(DEBUG)
+                if (DEBUG)
                     Log.d(TAG, "text passato alla workingDialog = " + text);
 
                 if (!(surname_check.isEmpty())) {
+                    surname_check = mSharedPref.getString("SURNAME", "nessun cognome");
                     intent.putExtra(SURNAME_TEXT, surname_check);
-                    //bundle.putString(SURNAME_TEXT, surname_check);
                     if (DEBUG)
                         Log.d(TAG, "Cognome passato alla workingDialog surname_check= " + surname_check);
                 } else {
                     intent.putExtra(SURNAME_TEXT, surname);
-                    //bundle.putString(SURNAME_TEXT, surname);
                     if (DEBUG)
                         Log.d(TAG, "Cognome passato alla workingDialog surname = " + surname);
                 }
 
                 startActivityForResult(intent, FORWARD_SELECT_BUTTON, ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
                 mFowardButton.animate().alpha(0).setDuration(250);
-                //getActivity().getWindow().setExitTransition(null);
-                //getActivity().getWindow().setEnterTransition(TransitionInflater.from(getActivity()).inflateTransition(R.transition.enter_ma_dwa));
-                //startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
-                //Toast.makeText(getActivity().getApplicationContext(), "Caricamento dei turni effettuata", Toast.LENGTH_SHORT).show();
+
+                final ProgressDialog progress = new ProgressDialog(getActivity());
+                progress.setTitle("Caricando");
+                progress.setMessage("Un momento di pazienza mentre carico i turni nel calendario...");
+                progress.show();
+
+                Runnable progressRunnable = new Runnable() {
+
+                    @Override
+                    public void run() {
+                        progress.cancel();
+                    }
+                };
+
+                Handler pdCanceller = new Handler();
+                pdCanceller.postDelayed(progressRunnable, 3000);
             }
         }
 
@@ -768,7 +778,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                         Log.d(TAG, "CODE OK = " + CODE_OK);
                 }
             case (FORWARD_SELECT_BUTTON):
-                if(resultCode == CODE_NOT_OK) {
+                if (resultCode == CODE_NOT_OK) {
                     mFowardButton.animate().alpha(1f).setDuration(250);
                 }
         }

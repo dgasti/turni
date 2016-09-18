@@ -2,12 +2,14 @@ package turni.app.it.turni.view_controller;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -229,7 +231,7 @@ public class WorkingDialog extends ActionBarActivity {
                 Log.d(TAG, "testo dei turni: " + mText);
 
             int fromIndex = 0;
-            int i = 1;
+            int i = 0;
             events = mText.indexOf(mSurname, fromIndex);
             //un indice che permette di iterare (dopo vedi)
             //-1 è quel  valore che dice che non trova la substringa perche ha finito le iterazioni
@@ -517,12 +519,24 @@ public class WorkingDialog extends ActionBarActivity {
                 }
                 i++;
             }
-            //if(events == -1) {
-            //    Toast.makeText(getActivity().getApplicationContext(), "NESSUN EVENTO CREATO", Toast.LENGTH_LONG).show();
-            //}
-            //else {
-            //    Toast.makeText(getActivity().getApplicationContext(), "EVENTI CREATI", Toast.LENGTH_LONG).show();
-            // }
+
+            if (DEBUG)
+                Log.d(TAG, "Eventi creati = " + i);
+
+            if (i == 0) {
+                Toast.makeText(getActivity().getApplicationContext(), "NESSUN EVENTO CREATO", Toast.LENGTH_LONG).show();
+                AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+                alertDialog.setTitle("Attenzione");
+                alertDialog.setMessage("Nessun evento creato! Controlla il cognome inserito!");
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                getActivity().onBackPressed();
+                            }
+                        });
+                alertDialog.show();
+            }
         }
 
 
@@ -573,62 +587,6 @@ public class WorkingDialog extends ActionBarActivity {
                     }
                 }
             }
-        }
-
-        private int ListSelectedCalendars(String eventtitle, ContentResolver content) {
-
-            if (DEBUG)
-                Log.d(TAG, "Sono dentro al metodo ListSelectedCalendars");
-
-            Uri eventUri = getCalendarUriBase();
-            int result = 0;
-            String projection[] = {"_id", "title"};
-            Cursor cursor = content.query(eventUri, null, null, null,
-                    null);
-
-            if (cursor.moveToFirst()) {
-
-                String calName;
-                String calID;
-
-                int nameCol = cursor.getColumnIndex(projection[1]);
-                int idCol = cursor.getColumnIndex(projection[0]);
-
-                if (DEBUG) {
-                    Log.d(TAG, "nameCol = " + nameCol);
-                    Log.d(TAG, "idCol = " + idCol);
-                }
-
-                do {
-                    calName = cursor.getString(nameCol);
-                    calID = cursor.getString(idCol);
-
-                    if (calName != null && (!calName.contains(eventtitle))) {
-                        result = Integer.parseInt(calID);
-                    }
-
-                } while (cursor.moveToNext());
-                cursor.close();
-            }
-
-            if (DEBUG)
-                Log.d(TAG, "resultato calID ridato da ListSelectedCalendars = " + result);
-
-            return result;
-
-        }
-
-        private int deleteCalendarEntry(int entryID, ContentResolver content) {
-            int iNumRowsDeleted = 0;
-
-            if(DEBUG)
-                Log.d(TAG, "Sono dentro al deleteCalendarEntry");
-
-            Uri eventsUri = Uri.parse(getCalendarUriBase()+"");
-            Uri eventUri = ContentUris.withAppendedId(eventsUri, entryID);
-            iNumRowsDeleted = content.delete(eventUri, null, null);
-
-            return iNumRowsDeleted;
         }
 
         private Uri getCalendarUriBase() {
@@ -700,7 +658,7 @@ public class WorkingDialog extends ActionBarActivity {
                             Log.d(TAG, "Sono dentro all'if dell'isAlreadyCreate");
 
                         eventID = Integer.parseInt(idColString);
-                        Uri eventsUri = Uri.parse(getCalendarUriBase()+"");
+                        Uri eventsUri = Uri.parse(getCalendarUriBase() + "");
                         Uri eventUri = ContentUris.withAppendedId(eventsUri, eventID);
                         numEventiEliminati = content.delete(eventUri, null, null);
 
@@ -709,20 +667,6 @@ public class WorkingDialog extends ActionBarActivity {
                 cursor.close();
             }
             return numEventiEliminati;
-        }
-
-        private void deleteEvent(ContentResolver resolver, Uri eventsUri, int eventID) {
-            Cursor cursor;
-            if (android.os.Build.VERSION.SDK_INT <= 7) { //up-to Android 2.1
-                cursor = resolver.query(eventsUri, new String[]{"_id"}, "Calendars._id=" + eventID, null, null);
-            } else { //8 is Android 2.2 (Froyo) (http://developer.android.com/reference/android/os/Build.VERSION_CODES.html)
-                cursor = resolver.query(eventsUri, new String[]{"_id"}, "calendar_id=" + eventID, null, null);
-            }
-            while (cursor.moveToNext()) {
-                long eventId = cursor.getLong(cursor.getColumnIndex("_id"));
-                resolver.delete(eventsUri, null, null);
-            }
-            cursor.close();
         }
 
     }

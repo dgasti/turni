@@ -23,7 +23,6 @@ public class MainActivity extends ActionBarActivity {
     private static final boolean DEBUG = true;
     private static final String TAG = "MAIN ACTIVITY";
     public Context context;
-    private SharedPreferences mSharedPref;
     public IBinder windowToken;
 
     @Override
@@ -103,6 +102,10 @@ public class MainActivity extends ActionBarActivity {
                 if (surname.isEmpty() == false) {
                     MainFragment.mSurnameText.setText(surname);
                     MainFragment.mSharedPref.edit().putString("SURNAME", surname).commit();
+
+                    if(DEBUG)
+                        Log.d(TAG, "COGNOME INSERITO NELLE SHAREDPREF = "+MainFragment.mSharedPref.getString("SURNAME", "nessun cognome"));
+
                     dialog.dismiss();
                 } else {
                     dialog.dismiss();
