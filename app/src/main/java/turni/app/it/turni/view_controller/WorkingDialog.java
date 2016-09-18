@@ -327,8 +327,8 @@ public class WorkingDialog extends ActionBarActivity {
                     checkEventBegin.set(Calendar.HOUR_OF_DAY, 0);
                     checkEventBegin.set(Calendar.MINUTE, 1);
                     checkEventEnd = (Calendar) checkEventBegin.clone();
-                    checkEventEnd.set(Calendar.HOUR_OF_DAY, 7);
-                    checkEventEnd.set(Calendar.MINUTE, 13);
+                    checkEventEnd.set(Calendar.HOUR_OF_DAY, 23);
+                    checkEventEnd.set(Calendar.MINUTE, 59);
                     hasToCreateEvent = true;
                     isFullDay = false;
                     titleText = titleNott2;
@@ -341,12 +341,12 @@ public class WorkingDialog extends ActionBarActivity {
                     endTime.add(Calendar.DAY_OF_YEAR, 1);
                     endTime.set(Calendar.HOUR_OF_DAY, 4);
                     endTime.set(Calendar.MINUTE, 27);
-                    checkEventBegin.set(Calendar.HOUR_OF_DAY, 0);
-                    checkEventBegin.set(Calendar.MINUTE, 1);
+                    checkEventBegin.set(Calendar.HOUR_OF_DAY, 6);
+                    checkEventBegin.set(Calendar.MINUTE, 0);
                     checkEventEnd = (Calendar) checkEventBegin.clone();
                     checkEventEnd.add(Calendar.DAY_OF_YEAR, 1);
-                    checkEventEnd.set(Calendar.HOUR_OF_DAY, 23);
-                    checkEventEnd.set(Calendar.MINUTE, 59);
+                    checkEventEnd.set(Calendar.HOUR_OF_DAY, 6);
+                    checkEventEnd.set(Calendar.MINUTE, 1);
                     hasToCreateEvent = true;
                     isFullDay = false;
                     titleText = titleNott1;
@@ -498,11 +498,9 @@ public class WorkingDialog extends ActionBarActivity {
                     values.put(CalendarContract.Events.EVENT_TIMEZONE, tz.getID());
                     String eventTitle = values.get(CalendarContract.Events.TITLE).toString();
                     if ((eventTitle == titleMatt) || (eventTitle == titleNott1) || (eventTitle == titleNott2) || (eventTitle == titlePom) || (eventTitle == titleText_REP)) {
-                        int eventID = isAlreadyCreate(checkStartMillis, checkEndMillis, mContentResolver);
-                        int iNumRowsDeleted = deleteCalendarEntry(eventID, mContentResolver);
+                        int iNumRowsDeleted = isAlreadyCreate(checkStartMillis, checkEndMillis, mContentResolver);
 
                         if (DEBUG) {
-                            Log.d(TAG, "eventID = " + eventID);
                             Log.d(TAG, "numero di eventi deletati = " + iNumRowsDeleted);
                         }
 
@@ -623,7 +621,10 @@ public class WorkingDialog extends ActionBarActivity {
         private int deleteCalendarEntry(int entryID, ContentResolver content) {
             int iNumRowsDeleted = 0;
 
-            Uri eventsUri = Uri.parse(getCalendarUriBase() + "events");
+            if(DEBUG)
+                Log.d(TAG, "Sono dentro al deleteCalendarEntry");
+
+            Uri eventsUri = Uri.parse(getCalendarUriBase()+"");
             Uri eventUri = ContentUris.withAppendedId(eventsUri, entryID);
             iNumRowsDeleted = content.delete(eventUri, null, null);
 
@@ -662,8 +663,9 @@ public class WorkingDialog extends ActionBarActivity {
                 Log.d(TAG, "proj[1] = " + proj[1].toString());
             }
 
-            int eventID = 0;
-            if (cursor.getCount() > 0) {
+            int eventID;
+            int numEventiEliminati = 0;
+            if (cursor.moveToFirst()) {
 
                 String idColString;
                 String titleCursor;
@@ -681,7 +683,7 @@ public class WorkingDialog extends ActionBarActivity {
                     Log.d(TAG, "titleColonna numero di colonna = " + titleCol);
                 }
 
-                while (cursor.moveToNext()) {
+                do {
                     idColString = cursor.getString(idCol);
 
                     if (DEBUG)
@@ -692,17 +694,21 @@ public class WorkingDialog extends ActionBarActivity {
                     if (DEBUG)
                         Log.d(TAG, "id Colonna del titolo in Stringa  = " + idColString);
 
-                    if ((titleCursor == titleMatt) || (titleCursor == titleNott1) || (titleCursor == titleNott2) || (titleCursor == titlePom) || (titleCursor == titleText_REP)) {
+                    if ((titleCursor.equals(titleMatt)) || (titleCursor.equals(titleNott1)) || (titleCursor.equals(titleNott2)) || (titleCursor.equals(titlePom)) || (titleCursor.equals(titleText_REP))) {
 
                         if (DEBUG)
                             Log.d(TAG, "Sono dentro all'if dell'isAlreadyCreate");
 
                         eventID = Integer.parseInt(idColString);
+                        Uri eventsUri = Uri.parse(getCalendarUriBase()+"");
+                        Uri eventUri = ContentUris.withAppendedId(eventsUri, eventID);
+                        numEventiEliminati = content.delete(eventUri, null, null);
+
                     }
-                }
+                } while (cursor.moveToNext());
                 cursor.close();
             }
-            return eventID;
+            return numEventiEliminati;
         }
 
         private void deleteEvent(ContentResolver resolver, Uri eventsUri, int eventID) {
