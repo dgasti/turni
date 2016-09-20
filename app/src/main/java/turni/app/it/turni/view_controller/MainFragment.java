@@ -16,6 +16,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -42,6 +43,8 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import model.Util;
 import turni.app.it.turni.R;
@@ -115,8 +118,8 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     private InputMethodManager imm;
     private ClipData.Item item;
     private Bundle bundle;
-    private ProgressDialog progress;
     private Activity activity;
+    private ProgressDialog progressDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -399,8 +402,28 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                             }
                         });
                 alertDialog.show();
-            }
-            else {
+            } else {
+
+                final ProgressDialog progress = new ProgressDialog(getActivity());
+                progress.setTitle("Caricando");
+                progress.setMessage("Un momento di pazienza mentre carico i turni nel calendario...");
+                progress.show();
+
+                final Runnable progressRunnable = new Runnable() {
+
+                    @Override
+                    public void run() {
+                        if (isFinishing()) {
+                            progress.hide();
+                            progress.dismiss();
+                        }
+                    }
+                };
+
+                Handler pdCanceller = new Handler();
+                pdCanceller.postDelayed(progressRunnable, 3000);
+
+                //new LoadData().execute(null, null, null);
 
                 if (DEBUG)
                     Log.d(TAG, "Sono dentro all'else dell'intent del Forward button nell'onclick, ho superato tutti i test");
@@ -409,8 +432,8 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                 v.setTransitionName("snapshot");
                 getActivity().getWindow().setExitTransition(null);
                 getActivity().getWindow().setEnterTransition(TransitionInflater.from(getActivity()).inflateTransition(R.transition.enter_ma_da));
-                         getActivity().getWindow().setSharedElementEnterTransition(TransitionInflater.from(getActivity())
-                               .inflateTransition(R.transition.circular_reveal_shared_transition));
+                getActivity().getWindow().setSharedElementEnterTransition(TransitionInflater.from(getActivity())
+                        .inflateTransition(R.transition.circular_reveal_shared_transition));
 
                 intent.putExtra(TURN_TEXT, text);
 
@@ -431,67 +454,53 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                 startActivityForResult(intent, FORWARD_SELECT_BUTTON, ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
                 mFowardButton.animate().alpha(0).setDuration(250);
 
-                final ProgressDialog progress = new ProgressDialog(getActivity());
-                progress.setTitle("Caricando");
-                progress.setMessage("Un momento di pazienza mentre carico i turni nel calendario...");
-                progress.show();
-
-                Runnable progressRunnable = new Runnable() {
-
-                    @Override
-                    public void run() {
-                        progress.cancel();
-                    }
-                };
-
-                Handler pdCanceller = new Handler();
-                pdCanceller.postDelayed(progressRunnable, 3000);
             }
-        }
 
-        if (TAG_ACCOUNT_BUTTON.equals(tag))
+            if (TAG_ACCOUNT_BUTTON.equals(tag))
 
-        {
-            imm = (InputMethodManager) getActivity().getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(mEditText.getWindowToken(), 0);
+            {
+                imm = (InputMethodManager) getActivity().getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(mEditText.getWindowToken(), 0);
 
-            Intent intent = new Intent(getActivity(), CalendarDialog.class);
-            v.setTransitionName("snapshot");
-            getActivity().getWindow().setExitTransition(null);
-            getActivity().getWindow().setEnterTransition(TransitionInflater.from(getActivity()).inflateTransition(R.transition.enter_ma_da));
-            //         getActivity().getWindow().setSharedElementEnterTransition(TransitionInflater.from(getActivity())
-            //               .inflateTransition(R.transition.circular_reveal_shared_transition));
-            startActivityForResult(intent, CALENDAR_DIALOG_ACTIVITY_RESULT_CODE,
-                    ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
-            mAccountButton.animate().alpha(0).setDuration(250);
-        }
-
-        if (TAG_VERONA_COLOR_BUTTON.equals(tag) || TAG_BASSONA_COLOR_BUTTON.equals(tag))
-
-        {
-            imm = (InputMethodManager) getActivity().getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(mEditText.getWindowToken(), 0);
-
-            Intent intent = new Intent(getActivity(), ColorSelectorDialog.class);
-            if (TAG_VERONA_COLOR_BUTTON.equals(tag)) {
-                intent.putExtra(COLOR_SELECTOR_BUNDLE, TAG_VERONA_COLOR_BUTTON);
-                openVerona = true;
+                Intent intent = new Intent(getActivity(), CalendarDialog.class);
+                v.setTransitionName("snapshot");
+                getActivity().getWindow().setExitTransition(null);
+                getActivity().getWindow().setEnterTransition(TransitionInflater.from(getActivity()).inflateTransition(R.transition.enter_ma_da));
+                //         getActivity().getWindow().setSharedElementEnterTransition(TransitionInflater.from(getActivity())
+                //               .inflateTransition(R.transition.circular_reveal_shared_transition));
+                startActivityForResult(intent, CALENDAR_DIALOG_ACTIVITY_RESULT_CODE,
+                        ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
+                mAccountButton.animate().alpha(0).setDuration(250);
             }
-            if (TAG_BASSONA_COLOR_BUTTON.equals(tag)) {
-                intent.putExtra(COLOR_SELECTOR_BUNDLE, TAG_BASSONA_COLOR_BUTTON);
-                openVerona = false;
+
+            if (TAG_VERONA_COLOR_BUTTON.equals(tag) || TAG_BASSONA_COLOR_BUTTON.equals(tag))
+
+            {
+                imm = (InputMethodManager) getActivity().getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(mEditText.getWindowToken(), 0);
+
+                Intent intent = new Intent(getActivity(), ColorSelectorDialog.class);
+                if (TAG_VERONA_COLOR_BUTTON.equals(tag)) {
+                    intent.putExtra(COLOR_SELECTOR_BUNDLE, TAG_VERONA_COLOR_BUTTON);
+                    openVerona = true;
+                }
+                if (TAG_BASSONA_COLOR_BUTTON.equals(tag)) {
+                    intent.putExtra(COLOR_SELECTOR_BUNDLE, TAG_BASSONA_COLOR_BUTTON);
+                    openVerona = false;
+                }
+                v.setTransitionName("snapshot");
+                getActivity().getWindow().setExitTransition(null);
+                getActivity().getWindow().setEnterTransition(TransitionInflater.from(getActivity()).inflateTransition(R.transition.enter_ma_da));
+                //         getActivity().getWindow().setSharedElementEnterTransition(TransitionInflater.from(getActivity())
+                //               .inflateTransition(R.transition.circular_reveal_shared_transition));
+                startActivityForResult(intent, COLOR_DIALOG_ACTIVITY_RESULT_CODE,
+                        ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
+                if (TAG_VERONA_COLOR_BUTTON.equals(tag))
+                    mVeronaColorButton.animate().alpha(0).setDuration(250);
+                if (TAG_BASSONA_COLOR_BUTTON.equals(tag))
+                    mBassonaColorButton.animate().alpha(0).setDuration(250);
             }
-            v.setTransitionName("snapshot");
-            getActivity().getWindow().setExitTransition(null);
-            getActivity().getWindow().setEnterTransition(TransitionInflater.from(getActivity()).inflateTransition(R.transition.enter_ma_da));
-            //         getActivity().getWindow().setSharedElementEnterTransition(TransitionInflater.from(getActivity())
-            //               .inflateTransition(R.transition.circular_reveal_shared_transition));
-            startActivityForResult(intent, COLOR_DIALOG_ACTIVITY_RESULT_CODE,
-                    ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
-            if (TAG_VERONA_COLOR_BUTTON.equals(tag))
-                mVeronaColorButton.animate().alpha(0).setDuration(250);
-            if (TAG_BASSONA_COLOR_BUTTON.equals(tag))
-                mBassonaColorButton.animate().alpha(0).setDuration(250);
+
         }
 
     }
@@ -618,6 +627,57 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
     public static boolean isMediaDocument(Uri uri) {
         return "com.android.providers.media.documents".equals(uri.getAuthority());
+    }
+
+    /*private class ProcessUpdateProfile extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            return null;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            Timer t = new Timer();
+            t.schedule(new TimerTask() {
+
+                @Override
+                public void run() {
+                    progressDialog = ProgressDialog.show(getActivity(), "In progress", "Loading");
+                }
+            }, 3000);
+
+        }
+    }*/
+
+    public class LoadData extends AsyncTask<Void, Void, Void> {
+        ProgressDialog progressDialog;
+        //declare other objects as per your need
+        @Override
+        protected void onPreExecute()
+        {
+            progressDialog = ProgressDialog.show(getActivity(), "Progress Dialog Title Text","Process Description Text", true);
+
+            //do initialization of required objects objects here
+        };
+        @Override
+        protected Void doInBackground(Void... params)
+        {
+
+            //do loading operation here
+            return null;
+        }
+        @Override
+        protected void onPostExecute(Void result)
+        {
+            super.onPostExecute(result);
+            progressDialog.dismiss();
+        };
+    }
+
+    private boolean isFinishing() {
+
+        return WorkingDialog.isFinishing;
     }
 
     @Override

@@ -53,6 +53,7 @@ public class WorkingDialog extends ActionBarActivity {
      * Activity resul code not Ok
      */
     private static final int CODE_NOT_OK = 0;
+    public static boolean isFinishing = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,7 +151,6 @@ public class WorkingDialog extends ActionBarActivity {
         private boolean hasToCreateEvent;
         private String titleMatt, titlePom, titleNott1, titleNott2, titleText, titleText_REP, placeText = "";
 
-
         public PlaceholderFragment() {
         }
 
@@ -164,7 +164,7 @@ public class WorkingDialog extends ActionBarActivity {
 
             if (DEBUG) {
                 Log.d(TAG, "Testo turni all'interno del PlaceFragemnt: " + mText);
-                Log.d(TAG, "Cognome all'intenro del PlaceFragment: " + mSurname);
+                Log.d(TAG, "Cognome all'interno del PlaceFragment: " + mSurname);
             }
 
             if (mText != null && mSurname != null)
@@ -198,6 +198,8 @@ public class WorkingDialog extends ActionBarActivity {
             mBackground.setOnClickListener(this);
             sync_calendar.setOnClickListener(this);
             get_calendar.setOnClickListener(this);
+
+            isFinishing = true;
 
             return rootView;
         }
