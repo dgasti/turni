@@ -409,19 +409,26 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                 progress.setMessage("Un momento di pazienza mentre carico i turni nel calendario...");
                 progress.show();
 
-                final Runnable progressRunnable = new Runnable() {
-
+                Thread thread = new Thread(new Runnable() {
                     @Override
                     public void run() {
                         if (isFinishing()) {
-                            progress.hide();
-                            progress.dismiss();
+                            //try {
+                            //    Thread.sleep(3000);
+                                progress.hide();
+                                progress.dismiss();
+                            //} catch (InterruptedException e) {
+                            //    e.printStackTrace();
+                           // }
                         }
                     }
-                };
+                });
 
-                Handler pdCanceller = new Handler();
-                pdCanceller.postDelayed(progressRunnable, 3000);
+                thread.start();
+
+
+                //Handler pdCanceller = new Handler();
+                //pdCanceller.postDelayed(progressRunnable, 3000);
 
                 //new LoadData().execute(null, null, null);
 
@@ -455,70 +462,51 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                 mFowardButton.animate().alpha(0).setDuration(250);
 
             }
+        }
+        if (TAG_ACCOUNT_BUTTON.equals(tag)) {
 
-            if (TAG_ACCOUNT_BUTTON.equals(tag))
+            imm = (InputMethodManager) getActivity().getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(mEditText.getWindowToken(), 0);
 
-            {
-                imm = (InputMethodManager) getActivity().getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(mEditText.getWindowToken(), 0);
+            Intent intent = new Intent(getActivity(), CalendarDialog.class);
+            v.setTransitionName("snapshot");
+            getActivity().getWindow().setExitTransition(null);
+            getActivity().getWindow().setEnterTransition(TransitionInflater.from(getActivity()).inflateTransition(R.transition.enter_ma_da));
+            //        getActivity().getWindow().setSharedElementEnterTransition(TransitionInflater.from(getActivity())
+            //              .inflateTransition(R.transition.circular_reveal_shared_transition));
+            startActivityForResult(intent, CALENDAR_DIALOG_ACTIVITY_RESULT_CODE,
+                    ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
+            mAccountButton.animate().alpha(0).setDuration(250);
+        }
 
-                Intent intent = new Intent(getActivity(), CalendarDialog.class);
-                v.setTransitionName("snapshot");
-                getActivity().getWindow().setExitTransition(null);
-                getActivity().getWindow().setEnterTransition(TransitionInflater.from(getActivity()).inflateTransition(R.transition.enter_ma_da));
-                //         getActivity().getWindow().setSharedElementEnterTransition(TransitionInflater.from(getActivity())
-                //               .inflateTransition(R.transition.circular_reveal_shared_transition));
-                startActivityForResult(intent, CALENDAR_DIALOG_ACTIVITY_RESULT_CODE,
-                        ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
-                mAccountButton.animate().alpha(0).setDuration(250);
+        if (TAG_VERONA_COLOR_BUTTON.equals(tag) || TAG_BASSONA_COLOR_BUTTON.equals(tag)) {
+
+            imm = (InputMethodManager) getActivity().getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(mEditText.getWindowToken(), 0);
+
+            Intent intent = new Intent(getActivity(), ColorSelectorDialog.class);
+            if (TAG_VERONA_COLOR_BUTTON.equals(tag)) {
+                intent.putExtra(COLOR_SELECTOR_BUNDLE, TAG_VERONA_COLOR_BUTTON);
+                openVerona = true;
             }
-
-            if (TAG_VERONA_COLOR_BUTTON.equals(tag) || TAG_BASSONA_COLOR_BUTTON.equals(tag))
-
-            {
-                imm = (InputMethodManager) getActivity().getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(mEditText.getWindowToken(), 0);
-
-                Intent intent = new Intent(getActivity(), ColorSelectorDialog.class);
-                if (TAG_VERONA_COLOR_BUTTON.equals(tag)) {
-                    intent.putExtra(COLOR_SELECTOR_BUNDLE, TAG_VERONA_COLOR_BUTTON);
-                    openVerona = true;
-                }
-                if (TAG_BASSONA_COLOR_BUTTON.equals(tag)) {
-                    intent.putExtra(COLOR_SELECTOR_BUNDLE, TAG_BASSONA_COLOR_BUTTON);
-                    openVerona = false;
-                }
-                v.setTransitionName("snapshot");
-                getActivity().getWindow().setExitTransition(null);
-                getActivity().getWindow().setEnterTransition(TransitionInflater.from(getActivity()).inflateTransition(R.transition.enter_ma_da));
-                //         getActivity().getWindow().setSharedElementEnterTransition(TransitionInflater.from(getActivity())
-                //               .inflateTransition(R.transition.circular_reveal_shared_transition));
-                startActivityForResult(intent, COLOR_DIALOG_ACTIVITY_RESULT_CODE,
-                        ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
-                if (TAG_VERONA_COLOR_BUTTON.equals(tag))
-                    mVeronaColorButton.animate().alpha(0).setDuration(250);
-                if (TAG_BASSONA_COLOR_BUTTON.equals(tag))
-                    mBassonaColorButton.animate().alpha(0).setDuration(250);
+            if (TAG_BASSONA_COLOR_BUTTON.equals(tag)) {
+                intent.putExtra(COLOR_SELECTOR_BUNDLE, TAG_BASSONA_COLOR_BUTTON);
+                openVerona = false;
             }
-
+            v.setTransitionName("snapshot");
+            getActivity().getWindow().setExitTransition(null);
+            getActivity().getWindow().setEnterTransition(TransitionInflater.from(getActivity()).inflateTransition(R.transition.enter_ma_da));
+            //         getActivity().getWindow().setSharedElementEnterTransition(TransitionInflater.from(getActivity())
+            //               .inflateTransition(R.transition.circular_reveal_shared_transition));
+            startActivityForResult(intent, COLOR_DIALOG_ACTIVITY_RESULT_CODE,
+                    ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
+            if (TAG_VERONA_COLOR_BUTTON.equals(tag))
+                mVeronaColorButton.animate().alpha(0).setDuration(250);
+            if (TAG_BASSONA_COLOR_BUTTON.equals(tag))
+                mBassonaColorButton.animate().alpha(0).setDuration(250);
         }
 
     }
-
-    public boolean onLongClick(View v) {
-        String tag = (String) v.getTag();
-
-        if (DEBUG)
-            Log.d(TAG, "Sono dentro al Long Click");
-
-        if (TAG_IMPORT_TEXT_BUTTON.equals(tag)) {
-            Toast.makeText(getActivity().getApplicationContext(), "Importa i turni", Toast.LENGTH_SHORT).show();
-        }
-
-
-        return true;
-    }
-
 
     private void showFileChooser() {
 
@@ -652,27 +640,31 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
     public class LoadData extends AsyncTask<Void, Void, Void> {
         ProgressDialog progressDialog;
+
         //declare other objects as per your need
         @Override
-        protected void onPreExecute()
-        {
-            progressDialog = ProgressDialog.show(getActivity(), "Progress Dialog Title Text","Process Description Text", true);
+        protected void onPreExecute() {
+            progressDialog = ProgressDialog.show(getActivity(), "Progress Dialog Title Text", "Process Description Text", true);
 
             //do initialization of required objects objects here
-        };
+        }
+
+        ;
+
         @Override
-        protected Void doInBackground(Void... params)
-        {
+        protected Void doInBackground(Void... params) {
 
             //do loading operation here
             return null;
         }
+
         @Override
-        protected void onPostExecute(Void result)
-        {
+        protected void onPostExecute(Void result) {
             super.onPostExecute(result);
             progressDialog.dismiss();
-        };
+        }
+
+        ;
     }
 
     private boolean isFinishing() {
