@@ -25,7 +25,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".view_controller.WorkingDialog"
+            android:name=".view_controller.DoneDialog"
             android:label="WorkingDialog"
             android:theme="@style/DialogTheme" />
         <activity

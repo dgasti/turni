@@ -2,13 +2,16 @@ package turni.app.it.turni.view_controller;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -41,12 +44,12 @@ import java.util.TimeZone;
 import model.Util;
 import turni.app.it.turni.R;
 
-public class WorkingDialog extends ActionBarActivity {
+public class DoneDialog extends ActionBarActivity {
 
     private static final String LAUNCH_ACTIVITY = "LAUNCH_WORKINGACTIVITY";
     private static final String SURNAME = "SURNAME";
     private static final boolean DEBUG = true;
-    private static final String TAG = "WORKING ACTIVITY";
+    private static final String TAG = "WORKINGDIALOG";
     private static String text, surname;
     private static final int CODE_OK = 1;
     /**
@@ -54,21 +57,27 @@ public class WorkingDialog extends ActionBarActivity {
      */
     private static final int CODE_NOT_OK = 0;
     public static boolean isFinishing = false;
+    private ProgressDialog pDialog;
+    private Activity activity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_working_dialog);
         text = getIntent().getStringExtra(LAUNCH_ACTIVITY);
-        //up
         surname = getIntent().getStringExtra(SURNAME);
 
         if (DEBUG) {
-            Log.d(TAG, "testo turni passato in WorkingDialog: " + text);
-            Log.d(TAG, "Cognome passato in WorkingDialog: " + surname);
+            Log.d(TAG, "testo turni passato in DoneDialog: " + text);
+            Log.d(TAG, "Cognome passato in DoneDialog: " + surname);
         }
 
-        Bundle bundle = new Bundle();
+        final ProgressDialog progress = new ProgressDialog(this);
+        progress.setTitle("Caricando");
+        progress.setMessage("Un momento di pazienza mentre carico i turni nel calendario...");
+        progress.show();
+
+        final Bundle bundle = new Bundle();
         bundle.putString(LAUNCH_ACTIVITY, text);
         bundle.putString(SURNAME, surname);
 
@@ -80,6 +89,7 @@ public class WorkingDialog extends ActionBarActivity {
             ft.add(R.id.container, newFragment).commit();
         }
 
+        progress.dismiss();
     }
 
 
@@ -161,7 +171,6 @@ public class WorkingDialog extends ActionBarActivity {
             wSharedPrefs = getActivity().getSharedPreferences(getString(R.string.preference_file_key), getActivity().MODE_PRIVATE);
             mText = this.getArguments().getString(LAUNCH_ACTIVITY, "");
             mSurname = this.getArguments().getString(SURNAME, "");
-
             if (DEBUG) {
                 Log.d(TAG, "Testo turni all'interno del PlaceFragemnt: " + mText);
                 Log.d(TAG, "Cognome all'interno del PlaceFragment: " + mSurname);
@@ -171,21 +180,29 @@ public class WorkingDialog extends ActionBarActivity {
                 isActivityCalled = true;
 
             //Inflate the views
-            View rootView = inflater.inflate(R.layout.fragment_working_dialog, container, false);
+            final View rootView = inflater.inflate(R.layout.fragment_working_dialog, container, false);
             getActivity().getWindow().setEnterTransition(TransitionInflater.from(getActivity()).inflateTransition(R.transition.enter_ma_da));
 
-            rootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            /*new Thread(new Runnable() {
                 @Override
-                public void onGlobalLayout() {
-                    if (isActivityCalled) {
-                        createEvent();
-                        isActivityCalled = false;
-                        mText = null;
-                        mSurname = null;
-                        getActivity().startPostponedEnterTransition();
-                    }
+                public void run() {
+                    rootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                        @Override
+                        public void onGlobalLayout() {
+                            if (isActivityCalled) {
+                                createEvent();
+                                isActivityCalled = false;
+                                mText = null;
+                                mSurname = null;
+                                getActivity().startPostponedEnterTransition();
+                            }
+                        }
+                    });
                 }
-            });
+            }).start();*/
+
+            new LoadingEventsTask(getActivity(), mText, mSurname, isActivityCalled).execute();
+
 
             mBackground = (RelativeLayout) rootView.findViewById(R.id.working_dialog_fragment_background);
             sync_calendar = (Button) rootView.findViewById(R.id.sync_button);
@@ -204,7 +221,7 @@ public class WorkingDialog extends ActionBarActivity {
             return rootView;
         }
 
-        private final void createEvent() {
+        /*private final void createEvent() {
             //Put all the string to upper case to avoid errors reading the string
             mText = mText.toUpperCase();
             mSurname = mSurname.toUpperCase();
@@ -502,7 +519,7 @@ public class WorkingDialog extends ActionBarActivity {
                     values.put(CalendarContract.Events.EVENT_TIMEZONE, tz.getID());
                     String eventTitle = values.get(CalendarContract.Events.TITLE).toString();
                     if ((eventTitle == titleMatt) || (eventTitle == titleNott1) || (eventTitle == titleNott2) || (eventTitle == titlePom) || (eventTitle == titleText_REP)) {
-                        int iNumRowsDeleted = isAlreadyCreate(checkStartMillis, checkEndMillis, mContentResolver);
+                        int iNumRowsDeleted = Util.isAlreadyCreate(checkStartMillis, checkEndMillis, mContentResolver);
 
                         if (DEBUG) {
                             Log.d(TAG, "numero di eventi deletati = " + iNumRowsDeleted);
@@ -539,7 +556,7 @@ public class WorkingDialog extends ActionBarActivity {
                         });
                 alertDialog.show();
             }
-        }
+        }*/
 
 
         @Override
@@ -590,87 +607,6 @@ public class WorkingDialog extends ActionBarActivity {
                 }
             }
         }
-
-        private Uri getCalendarUriBase() {
-            Uri eventUri;
-            if (android.os.Build.VERSION.SDK_INT <= 7) {
-                // the old way
-
-                eventUri = Uri.parse("content://calendar/events");
-            } else {
-                // the new way
-
-                eventUri = Uri.parse("content://com.android.calendar/events");
-            }
-
-            return eventUri;
-        }
-
-        private int isAlreadyCreate(long begin, long end, ContentResolver content) {
-
-            if (DEBUG)
-                Log.d(TAG, "Sono dentro all'isAlreadyCreate");
-
-            String[] proj =
-                    new String[]{
-                            CalendarContract.Instances.EVENT_ID,
-                            CalendarContract.Instances.TITLE};
-            Cursor cursor =
-                    CalendarContract.Instances.query(content, proj, begin, end);
-
-            if (DEBUG) {
-                Log.d(TAG, "proj[0] = " + proj[0].toString());
-                Log.d(TAG, "proj[1] = " + proj[1].toString());
-            }
-
-            int eventID;
-            int numEventiEliminati = 0;
-            if (cursor.moveToFirst()) {
-
-                String idColString;
-                String titleCursor;
-
-                if (DEBUG) {
-                    Log.d(TAG, "cursor.getCount = " + cursor.getCount());
-                    Log.d(TAG, "Nomi delle colonne = " + cursor.getColumnNames());
-                }
-
-                int idCol = cursor.getColumnIndex(proj[0]);
-                int titleCol = cursor.getColumnIndex(proj[1]);
-
-                if (DEBUG) {
-                    Log.d(TAG, "idColonna = " + idCol);
-                    Log.d(TAG, "titleColonna numero di colonna = " + titleCol);
-                }
-
-                do {
-                    idColString = cursor.getString(idCol);
-
-                    if (DEBUG)
-                        Log.d(TAG, "id Colonna dell'eventID in Stringa  = " + idColString);
-
-                    titleCursor = cursor.getString(titleCol);
-
-                    if (DEBUG)
-                        Log.d(TAG, "id Colonna del titolo in Stringa  = " + idColString);
-
-                    if ((titleCursor.equals(titleMatt)) || (titleCursor.equals(titleNott1)) || (titleCursor.equals(titleNott2)) || (titleCursor.equals(titlePom)) || (titleCursor.equals(titleText_REP))) {
-
-                        if (DEBUG)
-                            Log.d(TAG, "Sono dentro all'if dell'isAlreadyCreate");
-
-                        eventID = Integer.parseInt(idColString);
-                        Uri eventsUri = Uri.parse(getCalendarUriBase() + "");
-                        Uri eventUri = ContentUris.withAppendedId(eventsUri, eventID);
-                        numEventiEliminati = content.delete(eventUri, null, null);
-
-                    }
-                } while (cursor.moveToNext());
-                cursor.close();
-            }
-            return numEventiEliminati;
-        }
-
     }
 
     @Override

@@ -20,7 +20,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
@@ -43,8 +42,6 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import model.Util;
 import turni.app.it.turni.R;
@@ -304,14 +301,14 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
 
     @Override
-    public void onClick(View v) {
+    public void onClick(final View v) {
         String tag = (String) v.getTag();
 
         if (DEBUG)
             Log.d(TAG, "tag selezionato = " + tag);
 
         boolean account_is_used = mSharedPref.getBoolean("ACCOUNT_IS_USED", false);
-        String text = mEditText.getText().toString();
+        final String text = mEditText.getText().toString();
 
         if (TAG_SURNAME.equals(tag)) {
             if (DEBUG) {
@@ -404,7 +401,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                 alertDialog.show();
             } else {
 
-                final ProgressDialog progress = new ProgressDialog(getActivity());
+               /* final ProgressDialog progress = new ProgressDialog(getActivity());
                 progress.setTitle("Caricando");
                 progress.setMessage("Un momento di pazienza mentre carico i turni nel calendario...");
                 progress.show();
@@ -424,7 +421,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                     }
                 });
 
-                thread.start();
+                thread.start(); */
 
 
                 //Handler pdCanceller = new Handler();
@@ -432,10 +429,13 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
                 //new LoadData().execute(null, null, null);
 
+                //new LoadingTask(getActivity()).execute();
+
+
                 if (DEBUG)
                     Log.d(TAG, "Sono dentro all'else dell'intent del Forward button nell'onclick, ho superato tutti i test");
 
-                Intent intent = new Intent(getActivity(), WorkingDialog.class);
+                Intent intent = new Intent(getActivity(), DoneDialog.class);
                 v.setTransitionName("snapshot");
                 getActivity().getWindow().setExitTransition(null);
                 getActivity().getWindow().setEnterTransition(TransitionInflater.from(getActivity()).inflateTransition(R.transition.enter_ma_da));
@@ -459,6 +459,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                 }
 
                 startActivityForResult(intent, FORWARD_SELECT_BUTTON, ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
+                //startActivityForResult(intent, FORWARD_SELECT_BUTTON);
                 mFowardButton.animate().alpha(0).setDuration(250);
 
             }
@@ -669,7 +670,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
     private boolean isFinishing() {
 
-        return WorkingDialog.isFinishing;
+        return DoneDialog.isFinishing;
     }
 
     @Override

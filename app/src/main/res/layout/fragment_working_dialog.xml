@@ -1,7 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/working_dialog_fragment_background"
-    tools:context="turni.app.it.turni.view_controller.WorkingDialog$PlaceholderFragment"
+    tools:context="turni.app.it.turni.view_controller.DoneDialog$PlaceholderFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
