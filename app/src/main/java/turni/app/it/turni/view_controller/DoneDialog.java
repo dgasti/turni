@@ -72,11 +72,6 @@ public class DoneDialog extends ActionBarActivity {
             Log.d(TAG, "Cognome passato in DoneDialog: " + surname);
         }
 
-        final ProgressDialog progress = new ProgressDialog(this);
-        progress.setTitle("Caricando");
-        progress.setMessage("Un momento di pazienza mentre carico i turni nel calendario...");
-        progress.show();
-
         final Bundle bundle = new Bundle();
         bundle.putString(LAUNCH_ACTIVITY, text);
         bundle.putString(SURNAME, surname);
@@ -89,7 +84,6 @@ public class DoneDialog extends ActionBarActivity {
             ft.add(R.id.container, newFragment).commit();
         }
 
-        progress.dismiss();
     }
 
 

@@ -2,6 +2,7 @@ package turni.app.it.turni.view_controller;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -88,6 +89,7 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
     private boolean isActivityCalled = false;
     private boolean hasToCreateEvent;
     private String titleMatt, titlePom, titleNott1, titleNott2, titleText, titleText_REP, placeText = "";
+    private ProgressDialog progress;
 
     public LoadingEventsTask(Activity activity, String text, String surname, boolean isActivityCalled) {
         this.activity = activity;
@@ -104,6 +106,11 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
             Log.d(TAG, "Calendario usato = " + wSharedPrefs.getString(SP_CALENDAR_USED, "nessun calendario").toString());
             Log.d(TAG, "Account usato = " + wSharedPrefs.getString(SP_ACCOUNT_USED, "nessun account").toString());
         }
+
+        progress = new ProgressDialog(activity);
+        progress.setTitle("Caricando");
+        progress.setMessage("Un momento di pazienza mentre carico i turni nel calendario...");
+        progress.show();
     }
 
     protected Void doInBackground(Void... unused) {
@@ -126,6 +133,7 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
 
     protected void onPostExecute(Void unused) {
         DoneDialog.isFinishing = true;
+        progress.dismiss();
     }
 
     private final void createEvent() {

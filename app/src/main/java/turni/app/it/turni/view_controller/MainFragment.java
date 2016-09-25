@@ -1,5 +1,7 @@
 package turni.app.it.turni.view_controller;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.app.ActivityOptions;
 import android.app.AlertDialog;
@@ -28,11 +30,13 @@ import android.transition.TransitionInflater;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -117,6 +121,8 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     private Bundle bundle;
     private Activity activity;
     private ProgressDialog progressDialog;
+    private Toolbar toolbar;
+    private RelativeLayout mBackground;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -128,7 +134,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_main, null, false);
-        Toolbar toolbar = (Toolbar) mView.findViewById(R.id.my_awesome_toolbar);
+        toolbar = (Toolbar) mView.findViewById(R.id.my_awesome_toolbar);
         ((ActionBarActivity) getActivity()).setSupportActionBar(toolbar);
         ((ActionBarActivity) getActivity()).setTitle("VTS - Turni");
         mFowardButton = (FloatingActionButton) mView.findViewById(R.id.foward_button);
@@ -190,7 +196,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                 Button clickedButton = (Button) v;
                 String buttonText = clickedButton.getTag().toString();
                 if (buttonText.equals(TAG_IMPORT_TEXT_BUTTON)) {
-                    Toast.makeText(getActivity().getApplicationContext(), "Importa i turni", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity().getApplicationContext(), "Importa i turni da file", Toast.LENGTH_SHORT).show();
                 }
                 if (buttonText.equals(TAG_PASTE_TEXT)) {
                     Toast.makeText(getActivity().getApplicationContext(), "Incolla", Toast.LENGTH_SHORT).show();
@@ -497,8 +503,8 @@ public class MainFragment extends Fragment implements View.OnClickListener {
             v.setTransitionName("snapshot");
             getActivity().getWindow().setExitTransition(null);
             getActivity().getWindow().setEnterTransition(TransitionInflater.from(getActivity()).inflateTransition(R.transition.enter_ma_da));
-            //         getActivity().getWindow().setSharedElementEnterTransition(TransitionInflater.from(getActivity())
-            //               .inflateTransition(R.transition.circular_reveal_shared_transition));
+                     getActivity().getWindow().setSharedElementEnterTransition(TransitionInflater.from(getActivity())
+                           .inflateTransition(R.transition.circular_reveal_shared_transition));
             startActivityForResult(intent, COLOR_DIALOG_ACTIVITY_RESULT_CODE,
                     ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
             if (TAG_VERONA_COLOR_BUTTON.equals(tag))
