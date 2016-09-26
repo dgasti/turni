@@ -90,6 +90,7 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
     private boolean hasToCreateEvent;
     private String titleMatt, titlePom, titleNott1, titleNott2, titleText, titleText_REP, placeText = "";
     private ProgressDialog progress;
+    private String calendarName;
 
     public LoadingEventsTask(Activity activity, String text, String surname, boolean isActivityCalled) {
         this.activity = activity;
@@ -145,6 +146,11 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
         String line = "";
         //Get the calendar ID where the events should be put
         mCalID = Util.getCalendarID(activity, wSharedPrefs.getString(SP_CALENDAR_USED, null), wSharedPrefs.getString(SP_ACCOUNT_USED, null));
+
+
+        if(DEBUG)
+            Log.d(TAG, "Id del calendario = "+ mCalID);
+
         long startMillis = 0;
         long endMillis = 0;
         long checkStartMillis = 0;

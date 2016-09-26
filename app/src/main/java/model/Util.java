@@ -223,46 +223,74 @@ public class Util {
         String[] proj =
                 new String[]{
                         CalendarContract.Instances._ID,
+                        CalendarContract.Instances.CALENDAR_ID,
                         CalendarContract.Instances.EVENT_ID,
-                        CalendarContract.Instances.TITLE};
+                        CalendarContract.Instances.TITLE,
+                        CalendarContract.Instances.CALENDAR_DISPLAY_NAME};
         Cursor cursor =
                 CalendarContract.Instances.query(content, proj, begin, end);
 
         if (DEBUG) {
+            Log.d(TAG, "proj[1] = " + proj[0].toString());
             Log.d(TAG, "proj[1] = " + proj[1].toString());
             Log.d(TAG, "proj[2] = " + proj[2].toString());
+            Log.d(TAG, "proj[3] = " + proj[3].toString());
         }
 
         int eventID;
         int numEventiEliminati = 0;
         if (cursor.moveToFirst()) {
 
+            String idRow;
+            String idCalendar;
             String idColString;
             String titleCursor;
+            String calendarName;
 
-            if (DEBUG) {
+            /*if (DEBUG) {
                 Log.d(TAG, "cursor.getCount = " + cursor.getCount());
-                Log.d(TAG, "Nomi delle colonne = " + cursor.getColumnNames());
-            }
+                Log.d(TAG, "Nomi delle colonne = " + cursor.getColumnNames().toString());
+            }*/
 
-            int idCol = cursor.getColumnIndex(proj[1]);
-            int titleCol = cursor.getColumnIndex(proj[2]);
+            int row_id = cursor.getColumnIndex(proj[0]);
+            int calendar_id = cursor.getColumnIndex(proj[1]);
+            int idCol = cursor.getColumnIndex(proj[2]);
+            int titleCol = cursor.getColumnIndex(proj[3]);
+            int calendar_name_id = cursor.getColumnIndex(proj[4]);
 
             if (DEBUG) {
+                Log.d(TAG, "idRiga = " + row_id);
                 Log.d(TAG, "idColonna = " + idCol);
                 Log.d(TAG, "titleColonna numero di colonna = " + titleCol);
+                Log.d(TAG, "idCalendario = " + calendar_id);
             }
 
             do {
+                idRow = cursor.getString(row_id);
+
+                if (DEBUG)
+                    Log.d(TAG, "id Riga dell'eventID in Stringa  = " + idRow);
+
+                idCalendar = cursor.getString(calendar_id);
+
+                if (DEBUG)
+                    Log.d(TAG, "id Riga dell'eventID in Stringa  = " + idCalendar);
+
+
                 idColString = cursor.getString(idCol);
 
                 if (DEBUG)
-                    Log.d(TAG, "id Colonna dell'eventID in Stringa  = " + idColString);
+                    Log.d(TAG, "id Colonna dell'eventID in Stringa  = " + idCol);
 
                 titleCursor = cursor.getString(titleCol);
 
                 if (DEBUG)
                     Log.d(TAG, "id Colonna del titolo in Stringa  = " + idColString);
+
+                calendarName = cursor.getString(calendar_name_id);
+
+                if (DEBUG)
+                    Log.d(TAG, "Nome del calendario  = " + calendarName);
 
                 if ((titleCursor.equals(titleMatt)) || (titleCursor.equals(titleNott1)) || (titleCursor.equals(titleNott2)) || (titleCursor.equals(titlePom)) || (titleCursor.equals(titleText_REP))) {
 
@@ -270,10 +298,10 @@ public class Util {
                         Log.d(TAG, "Sono dentro all'if dell'isAlreadyCreate");
 
                     eventID = Integer.parseInt(idColString);
+                    //eventID = Integer.parseInt(idRow);
                     Uri eventsUri = Uri.parse(getCalendarUriBase() + "");
                     Uri eventUri = ContentUris.withAppendedId(eventsUri, eventID);
                     numEventiEliminati = content.delete(eventUri, null, null);
-
                 }
             } while (cursor.moveToNext());
             cursor.close();
