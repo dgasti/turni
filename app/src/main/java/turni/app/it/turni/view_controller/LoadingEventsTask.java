@@ -1,16 +1,19 @@
 package turni.app.it.turni.view_controller;
 
 import android.app.Activity;
+import android.app.ActivityOptions;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.CalendarContract;
+import android.transition.TransitionInflater;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.RelativeLayout;
@@ -23,8 +26,6 @@ import java.util.TimeZone;
 
 import model.Util;
 import turni.app.it.turni.R;
-
-import static turni.app.it.turni.view_controller.DoneDialog.isFinishing;
 
 /**
  * Created by rufy on 23/09/16.
@@ -91,12 +92,15 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
     private String titleMatt, titlePom, titleNott1, titleNott2, titleText, titleText_REP, placeText = "";
     private ProgressDialog progress;
     private String calendarName;
+    private TaskCallback mCallback;
 
-    public LoadingEventsTask(Activity activity, String text, String surname, boolean isActivityCalled) {
+
+    public LoadingEventsTask(Activity activity, String text, String surname, boolean isActivityCalled, TaskCallback callback) {
         this.activity = activity;
         this.text = text;
         this.surname = surname;
         this.isActivityCalled = isActivityCalled;
+        mCallback = callback;
     }
 
     protected void onPreExecute() {
@@ -133,11 +137,18 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
     }
 
     protected void onPostExecute(Void unused) {
-        DoneDialog.isFinishing = true;
+        LoadingEvents.isFinishing = true;
+        Intent intent = new Intent(activity.getApplicationContext(), DoneDialog.class);
+        activity.getWindow().setExitTransition(null);
+        activity.getWindow().setEnterTransition(TransitionInflater.from(activity).inflateTransition(R.transition.enter_ma_da));
+        activity.getWindow().setSharedElementEnterTransition(TransitionInflater.from(activity)
+                .inflateTransition(R.transition.circular_reveal_shared_transition));
+        activity.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(activity).toBundle());
+        mCallback.done();
         progress.dismiss();
     }
 
-    private final void createEvent() {
+    private void createEvent() {
         //Put all the string to upper case to avoid errors reading the string
         text = text.toUpperCase();
         surname = surname.toUpperCase();
@@ -147,9 +158,8 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
         //Get the calendar ID where the events should be put
         mCalID = Util.getCalendarID(activity, wSharedPrefs.getString(SP_CALENDAR_USED, null), wSharedPrefs.getString(SP_ACCOUNT_USED, null));
 
-
-        if(DEBUG)
-            Log.d(TAG, "Id del calendario = "+ mCalID);
+        if (DEBUG)
+            Log.d(TAG, "Id del calendario = " + mCalID);
 
         long startMillis = 0;
         long endMillis = 0;
@@ -198,7 +208,9 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
                 Log.d(TAG, "valore stringa tirata fuori else " + line);
                 fromIndex = fromIndex + 100;
             }
-            //Log.d(TAG, "valore stringa tirata fuori  " + line);
+
+            if (DEBUG)
+                Log.d(TAG, "valore stringa tirata fuori  " + line);
 
             //TODO add holiday in calendar event
             titleText = "TURNO LAVORATIVO";
@@ -338,7 +350,7 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
                 isFullDay = false;
                 titleText = titlePom;
             }
-            //TODO controllare evento creato all day
+
             if (line.contains(REPERIBILE)) {
                 beginTime.set(Calendar.HOUR_OF_DAY, 8);
                 beginTime.set(Calendar.MINUTE, 0);
@@ -371,7 +383,6 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
                 isBassona = true;
                 placeText = "in Bassona";
             }
-
 
             //If useful information has been found in the line create the event
             if (hasToCreateEvent) {

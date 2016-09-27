@@ -29,6 +29,10 @@
             android:label="WorkingDialog"
             android:theme="@style/DialogTheme" />
         <activity
+            android:name=".view_controller.LoadingEvents"
+            android:label="LoadingEvents"
+            android:theme="@style/DialogTheme" />
+        <activity
             android:name=".view_controller.CalendarDialog"
             android:label="@string/title_activity_calendar_dialog"
             android:theme="@style/DialogTheme" />

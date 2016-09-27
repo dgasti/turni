@@ -66,8 +66,10 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     private static final String CALENDAR_ROW = "calendar row";
     private static final String SURNAME_TEXT = "SURNAME";
     private static final int FILE_SELECT_RESULT_CODE = 3;
-    private static final int FORWARD_SELECT_BUTTON = 4;
+
+
     private static final String TAG_SURNAME = "Surname text";
+    private static final int FORWARD_SELECT_BUTTON = 4;
 
     /**
      * Dialog Account is used?
@@ -441,7 +443,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                 if (DEBUG)
                     Log.d(TAG, "Sono dentro all'else dell'intent del Forward button nell'onclick, ho superato tutti i test");
 
-                Intent intent = new Intent(getActivity(), DoneDialog.class);
+                Intent intent = new Intent(getActivity(), LoadingEvents.class);
                 v.setTransitionName("snapshot");
                 getActivity().getWindow().setExitTransition(null);
                 getActivity().getWindow().setEnterTransition(TransitionInflater.from(getActivity()).inflateTransition(R.transition.enter_ma_da));
@@ -645,39 +647,6 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         }
     }*/
 
-    public class LoadData extends AsyncTask<Void, Void, Void> {
-        ProgressDialog progressDialog;
-
-        //declare other objects as per your need
-        @Override
-        protected void onPreExecute() {
-            progressDialog = ProgressDialog.show(getActivity(), "Progress Dialog Title Text", "Process Description Text", true);
-
-            //do initialization of required objects objects here
-        }
-
-        ;
-
-        @Override
-        protected Void doInBackground(Void... params) {
-
-            //do loading operation here
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-            super.onPostExecute(result);
-            progressDialog.dismiss();
-        }
-
-        ;
-    }
-
-    private boolean isFinishing() {
-
-        return DoneDialog.isFinishing;
-    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
