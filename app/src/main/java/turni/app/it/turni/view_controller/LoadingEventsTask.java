@@ -411,10 +411,7 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
                     //hasReachable = true;
                     hasRecoveryDay = true;
                 }
-            } else {
-                hasToCreateEvent = false;
-                Log.d(TAG, "entro in assenza riga " + i);
-            }
+            } //TODO non crea eventi
 
             if (line.contains(VERONA)) {
 
