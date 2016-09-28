@@ -89,18 +89,20 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
     private SharedPreferences wSharedPrefs;
     private boolean isActivityCalled = false;
     private boolean hasToCreateEvent;
-    private String titleMatt, titlePom, titleNott1, titleNott2, titleText, titleText_REP, placeText = "";
+    private String titleMatt, titlePom, titleNott1, titleNott2, titleText, titleText_REP, titleText_REC, placeText = "";
     private ProgressDialog progress;
     private String calendarName;
     private TaskCallback mCallback;
+    private boolean recoveryDay;
 
 
-    public LoadingEventsTask(Activity activity, String text, String surname, boolean isActivityCalled, TaskCallback callback) {
+    public LoadingEventsTask(Activity activity, String text, String surname, boolean isActivityCalled, TaskCallback callback, boolean recoveryDay) {
         this.activity = activity;
         this.text = text;
         this.surname = surname;
         this.isActivityCalled = isActivityCalled;
         mCallback = callback;
+        this.recoveryDay = recoveryDay;
     }
 
     protected void onPreExecute() {
@@ -119,6 +121,10 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
     }
 
     protected Void doInBackground(Void... unused) {
+
+        if(DEBUG) {
+            Log.d(TAG, "recoveryDay in LoadingEventTasks = "+recoveryDay);
+        }
 
         if (isActivityCalled) {
             createEvent();
@@ -166,7 +172,7 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
         long checkStartMillis = 0;
         long checkEndMillis = 0;
         boolean isFullDay;
-        boolean hasReachable;
+        boolean hasReachable, hasRecoveryDay;
         boolean isVerona, isBassona;
         Calendar beginTime = null;
         Calendar endTime = null;
@@ -174,6 +180,7 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
         Calendar checkEventEnd = null;
         hasToCreateEvent = false;
         hasReachable = false;
+        hasRecoveryDay = false;
         isFullDay = false;
         isVerona = isBassona = false;
 
@@ -219,6 +226,7 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
             titleNott2 = "TURNO NOTTURNO 00";
             titlePom = "TURNO POMERIGGIO";
             titleText_REP = "REPERIBILITA'";
+            titleText_REC = "RECUPERO";
             //Get the date for this event (year,month,day)
 
             if (DEBUG)
@@ -230,7 +238,7 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
             checkEventEnd = null;
 
             //Find the work place
-            if (line.contains(RECUPERO) || line.contains(ASSENZA) || line.contains(ASSENZE) || line.contains(FESTIVO_TARGET)) {
+            if (line.contains(ASSENZA) || line.contains(ASSENZE) || line.contains(FESTIVO_TARGET)) {
                 hasToCreateEvent = false;
                 Log.d(TAG, "entro in assenza riga " + i);
             }
@@ -249,6 +257,8 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
                 hasToCreateEvent = true;
                 isFullDay = false;
                 titleText = titleMatt;
+                hasReachable = false;
+                hasRecoveryDay = false;
 
             }
             //                    if (DEBUG)
@@ -271,6 +281,8 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
                 hasToCreateEvent = true;
                 isFullDay = false;
                 titleText = titlePom;
+                hasReachable = false;
+                hasRecoveryDay = false;
             }
             if (line.contains(NOTTURNO_00)) {
                 beginTime.set(Calendar.HOUR_OF_DAY, 0);
@@ -286,6 +298,8 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
                 hasToCreateEvent = true;
                 isFullDay = false;
                 titleText = titleNott2;
+                hasReachable = false;
+                hasRecoveryDay = false;
             }
             if (line.contains(NOTTURNO_21)) {
                 beginTime.set(Calendar.HOUR_OF_DAY, 21);
@@ -304,6 +318,8 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
                 hasToCreateEvent = true;
                 isFullDay = false;
                 titleText = titleNott1;
+                hasReachable = false;
+                hasRecoveryDay = false;
             }
             if (line.contains(NOTTURNO_FESTIVO)) {
                 beginTime.set(Calendar.HOUR_OF_DAY, 0);
@@ -319,6 +335,8 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
                 hasToCreateEvent = true;
                 isFullDay = false;
                 titleText = titleNott2;
+                hasReachable = false;
+                hasRecoveryDay = false;
             }
             if (line.contains(MATTINA_FESTIVO)) {
                 beginTime.set(Calendar.HOUR_OF_DAY, 8);
@@ -334,6 +352,8 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
                 hasToCreateEvent = true;
                 isFullDay = false;
                 titleText = titleMatt;
+                hasReachable = false;
+                hasRecoveryDay = false;
             }
             if (line.contains(POMERIGGIO_FESTIVO)) {
                 beginTime.set(Calendar.HOUR_OF_DAY, 16);
@@ -349,6 +369,8 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
                 hasToCreateEvent = true;
                 isFullDay = false;
                 titleText = titlePom;
+                hasReachable = false;
+                hasRecoveryDay = false;
             }
 
             if (line.contains(REPERIBILE)) {
@@ -365,6 +387,33 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
                 isFullDay = true;
                 hasToCreateEvent = true;
                 hasReachable = true;
+                hasRecoveryDay = false;
+            }
+
+            if (recoveryDay) {
+
+                if(DEBUG)
+                    Log.d(TAG, "Sono dentro all'if che crea gli orari dell'evento RECUPERO");
+
+                if (line.contains(RECUPERO)) {
+                    beginTime.set(Calendar.HOUR_OF_DAY, 8);
+                    beginTime.set(Calendar.MINUTE, 0);
+                    endTime = (Calendar) beginTime.clone();
+                    endTime.set(Calendar.HOUR_OF_DAY, 23);
+                    endTime.set(Calendar.MINUTE, 0);
+                    checkEventBegin.set(Calendar.HOUR_OF_DAY, 0);
+                    checkEventBegin.set(Calendar.MINUTE, 1);
+                    checkEventEnd = (Calendar) checkEventBegin.clone();
+                    checkEventEnd.set(Calendar.HOUR_OF_DAY, 23);
+                    checkEventEnd.set(Calendar.MINUTE, 59);
+                    //isFullDay = true;
+                    hasToCreateEvent = true;
+                    //hasReachable = true;
+                    hasRecoveryDay = true;
+                }
+            } else {
+                hasToCreateEvent = false;
+                Log.d(TAG, "entro in assenza riga " + i);
             }
 
             if (line.contains(VERONA)) {
@@ -406,69 +455,107 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
 
                 mContentResolver = activity.getContentResolver();
                 ContentValues values = new ContentValues();
-                if (isFullDay) {
+
+                if (hasRecoveryDay) {
                     values.put(CalendarContract.Events.ALL_DAY, true);
                     values.put(CalendarContract.Events.DTSTART, startMillis);
                     values.put(CalendarContract.Events.DTEND, endMillis);
-                    if (DEBUG)
-                        Log.d(TAG, "Full day SET");
-                    if (hasReachable) {
-                        values.put(CalendarContract.Events.TITLE, titleText_REP);
-                    } else {
-                        values.put(CalendarContract.Events.TITLE, titleText);
-                    }
-                } else {
-                    values.put(CalendarContract.Events.TITLE, titleText);
-                    values.put(CalendarContract.Events.DTSTART, startMillis);
-                    values.put(CalendarContract.Events.DTEND, endMillis);
-                }
-
-                //TODO opzione modifica descrizione
-                values.put(CalendarContract.Events.DESCRIPTION, "Group workout");
-
-                if (isVerona) {
-
-                    if (DEBUG)
-                        Log.d(TAG, "Sono entrato nell'if di verona");
-
+                    values.put(CalendarContract.Events.TITLE, titleText_REC);
+                    values.put(CalendarContract.Events.DESCRIPTION, "Group workout");
                     values.put(CalendarContract.Events.EVENT_COLOR_KEY, wSharedPrefs.getInt(VERONA_COLOR_DEFAULT, 1));
                     values.put(CalendarContract.Events.EVENT_LOCATION, "Via Monte Bianco, 18\n" +
                             "37132 Verona VR");
-                    isVerona = false;
-                }
-                if (isBassona) {
+                    values.put(CalendarContract.Events.CALENDAR_ID, mCalID);
+                    TimeZone tz = TimeZone.getDefault();
+                    values.put(CalendarContract.Events.EVENT_TIMEZONE, tz.getID());
+                    String eventTitle = values.get(CalendarContract.Events.TITLE).toString();
+                    if (eventTitle.equals(titleText_REP)) {
+                        int iNumRowsDeleted = Util.isAlreadyCreate(checkStartMillis, checkEndMillis, mContentResolver);
+
+                        if (DEBUG) {
+                            Log.d(TAG, "numero di eventi deletati = " + iNumRowsDeleted);
+                        }
+
+
+                    }
+                    //isAlreadyCreate(checkStartMillis, checkEndMillis, mContentResolver, mCalID, eventTitle);
 
                     if (DEBUG)
-                        Log.d(TAG, "Sono entrato nell'if di bassona");
+                        Log.d(TAG, "sono dopo l'alreadyCreate");
 
-                    values.put(CalendarContract.Events.EVENT_COLOR_KEY, wSharedPrefs.getInt(BASSONA_COLOR_DEFAULT, 1));
-                    values.put(CalendarContract.Events.EVENT_LOCATION, "Via della Meccanica, 1\n" +
-                            "37139 Verona VR");
-                    isBassona = false;
-                }
-                values.put(CalendarContract.Events.CALENDAR_ID, mCalID);
-                TimeZone tz = TimeZone.getDefault();
-                values.put(CalendarContract.Events.EVENT_TIMEZONE, tz.getID());
-                String eventTitle = values.get(CalendarContract.Events.TITLE).toString();
-                if ((eventTitle == titleMatt) || (eventTitle == titleNott1) || (eventTitle == titleNott2) || (eventTitle == titlePom) || (eventTitle == titleText_REP)) {
-                    int iNumRowsDeleted = Util.isAlreadyCreate(checkStartMillis, checkEndMillis, mContentResolver);
+                    Uri uri1 = mContentResolver.insert(CalendarContract.Events.CONTENT_URI, values);
+                    hasRecoveryDay = false;
+                } else {
 
-                    if (DEBUG) {
-                        Log.d(TAG, "numero di eventi deletati = " + iNumRowsDeleted);
+                    if (isFullDay) {
+                        values.put(CalendarContract.Events.ALL_DAY, true);
+                        values.put(CalendarContract.Events.DTSTART, startMillis);
+                        values.put(CalendarContract.Events.DTEND, endMillis);
+
+                        if (DEBUG)
+                            Log.d(TAG, "Full day SET");
+
+                        if (hasReachable) {
+                            values.put(CalendarContract.Events.TITLE, titleText_REP);
+                        } else {
+                            values.put(CalendarContract.Events.TITLE, titleText);
+                        }
+                    } else {
+                        values.put(CalendarContract.Events.TITLE, titleText);
+                        values.put(CalendarContract.Events.DTSTART, startMillis);
+                        values.put(CalendarContract.Events.DTEND, endMillis);
                     }
 
+                    //TODO opzione modifica descrizione
+                    values.put(CalendarContract.Events.DESCRIPTION, "Group workout");
 
+                    if (isVerona) {
+
+                        if (DEBUG)
+                            Log.d(TAG, "Sono entrato nell'if di verona");
+
+                        values.put(CalendarContract.Events.EVENT_COLOR_KEY, wSharedPrefs.getInt(VERONA_COLOR_DEFAULT, 1));
+                        values.put(CalendarContract.Events.EVENT_LOCATION, "Via Monte Bianco, 18\n" +
+                                "37132 Verona VR");
+                        isVerona = false;
+                    }
+                    if (isBassona) {
+
+                        if (DEBUG)
+                            Log.d(TAG, "Sono entrato nell'if di bassona");
+
+                        values.put(CalendarContract.Events.EVENT_COLOR_KEY, wSharedPrefs.getInt(BASSONA_COLOR_DEFAULT, 1));
+                        values.put(CalendarContract.Events.EVENT_LOCATION, "Via della Meccanica, 1\n" +
+                                "37139 Verona VR");
+                        isBassona = false;
+                    }
+                    values.put(CalendarContract.Events.CALENDAR_ID, mCalID);
+                    TimeZone tz = TimeZone.getDefault();
+                    values.put(CalendarContract.Events.EVENT_TIMEZONE, tz.getID());
+                    String eventTitle = values.get(CalendarContract.Events.TITLE).toString();
+                    if ((eventTitle.equals(titleMatt)) || (eventTitle.equals(titleNott1)) || (eventTitle.equals(titleNott2)) || (eventTitle.equals(titlePom)) || (eventTitle.equals(titleText_REP))) {
+                        int iNumRowsDeleted = Util.isAlreadyCreate(checkStartMillis, checkEndMillis, mContentResolver);
+
+                        if (DEBUG) {
+                            Log.d(TAG, "numero di eventi deletati = " + iNumRowsDeleted);
+                        }
+
+
+                    }
+                    //isAlreadyCreate(checkStartMillis, checkEndMillis, mContentResolver, mCalID, eventTitle);
+
+                    if (DEBUG)
+                        Log.d(TAG, "sono dopo l'alreadyCreate");
+
+                    Uri uri1 = mContentResolver.insert(CalendarContract.Events.CONTENT_URI, values);
+                    // get the event ID that is the last element in the
+                    //  Uri  long eventID = Long.parseLong(uri1.getLastPathSegment());
                 }
-                //isAlreadyCreate(checkStartMillis, checkEndMillis, mContentResolver, mCalID, eventTitle);
-
-                if (DEBUG)
-                    Log.d(TAG, "sono dopo l'alreadyCreate");
-
-                Uri uri1 = mContentResolver.insert(CalendarContract.Events.CONTENT_URI, values);
-                // get the event ID that is the last element in the
-                //  Uri  long eventID = Long.parseLong(uri1.getLastPathSegment());
+                i++;
+            } else {
+                hasToCreateEvent = true;
+                i++;
             }
-            i++;
         }
 
         if (DEBUG)

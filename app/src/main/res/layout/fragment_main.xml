@@ -235,4 +235,12 @@
         android:layout_below="@+id/verona_color_button"
         android:layout_alignParentStart="true" />
 
+    <CheckBox
+        android:text="Visualizza l'evento RECUPERO"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/recoveryDay"
+        android:layout_below="@+id/bassona_color_button"
+        android:layout_centerHorizontal="true" />
+
 </RelativeLayout>

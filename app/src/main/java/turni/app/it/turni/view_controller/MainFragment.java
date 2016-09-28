@@ -1,7 +1,5 @@
 package turni.app.it.turni.view_controller;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.app.ActivityOptions;
 import android.app.AlertDialog;
@@ -18,7 +16,6 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -30,11 +27,12 @@ import android.transition.TransitionInflater;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -52,12 +50,13 @@ import turni.app.it.turni.R;
 
 import static android.app.Activity.RESULT_OK;
 
-public class MainFragment extends Fragment implements View.OnClickListener {
+public class MainFragment extends Fragment implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
 
     private static final boolean DEBUG = true;
     private static final String TAG = "MAINFRAGMENT";
     private static final String TURN_TEXT = "LAUNCH_WORKINGACTIVITY";
+    private static final String CHECKBOX = "CHECKBOX_RECOVERYDAY";
     private static final String TAG_FORWARD_BUTTON = "forward button";
     private static final String TAG_ACCOUNT_BUTTON = "calendar button";
     private static final int CALENDAR_DIALOG_ACTIVITY_RESULT_CODE = 1;
@@ -66,8 +65,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     private static final String CALENDAR_ROW = "calendar row";
     private static final String SURNAME_TEXT = "SURNAME";
     private static final int FILE_SELECT_RESULT_CODE = 3;
-
-
+    private static final String TAG_CHECKBOX_BUTTON = "checkbx button";
     private static final String TAG_SURNAME = "Surname text";
     private static final int FORWARD_SELECT_BUTTON = 4;
 
@@ -75,6 +73,10 @@ public class MainFragment extends Fragment implements View.OnClickListener {
      * Dialog Account is used?
      */
     private static boolean ACCOUNT_IS_USED = false;
+    /**
+     * CheckBox is Checked?
+     */
+    private static boolean CHECKBOX_IS_CHECKED = false;
     /**
      * Activity result intent Key
      */
@@ -125,6 +127,8 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     private ProgressDialog progressDialog;
     private Toolbar toolbar;
     private RelativeLayout mBackground;
+    private CheckBox mRecoveryDay;
+    private Boolean recoveryDay;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -148,6 +152,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         mSurnameText = (TextView) mView.findViewById(R.id.surname);
         mPasteButton = (Button) mView.findViewById(R.id.paste_text);
         mDeleteButton = (Button) mView.findViewById(R.id.delete_button);
+        mRecoveryDay = (CheckBox) mView.findViewById(R.id.recoveryDay);
 
         mFowardButton.setTag(TAG_FORWARD_BUTTON);
         mAccountButton.setTag(TAG_ACCOUNT_BUTTON);
@@ -157,6 +162,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         mPasteButton.setTag(TAG_PASTE_TEXT);
         mDeleteButton.setTag(TAG_DELETE_TEXT);
         mSurnameText.setTag(TAG_SURNAME);
+        mRecoveryDay.setTag(TAG_CHECKBOX_BUTTON);
 
         int drawableColor = ColorSelectorDialog.getColorDrawable(mSharedPref.getInt(VERONA_COLOR_DEFAULT, 1));
         Drawable d = getResources().getDrawable(drawableColor);
@@ -165,10 +171,15 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         d = getResources().getDrawable(drawableColor);
         mBassonaColorButton.setCompoundDrawablesWithIntrinsicBounds(d, null, null, null);
 
+        recoveryDay = mSharedPref.getBoolean("CHECKBOX_IS_CHECKED", false);
         surname_check = mSharedPref.getString("SURNAME", "");
 
         if (DEBUG) {
             Log.d(TAG, "surname_check = " + surname_check);
+        }
+
+        if(recoveryDay) {
+            mRecoveryDay.setChecked(true);
         }
 
         if (surname_check.isEmpty()) {
@@ -191,6 +202,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         mPasteButton.setOnClickListener(this);
         mDeleteButton.setOnClickListener(this);
         mSurnameText.setOnClickListener(this);
+        mRecoveryDay.setOnCheckedChangeListener(this);
 
 
         View.OnLongClickListener listener = new View.OnLongClickListener() {
@@ -376,6 +388,8 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
         if (TAG_FORWARD_BUTTON.equals(tag)) {
 
+            recoveryDay = mSharedPref.getBoolean("CHECKBOX_IS_CHECKED", false);
+
             if (DEBUG)
                 Log.d(TAG, "text passato dall'edittext = " + text);
 
@@ -452,6 +466,11 @@ public class MainFragment extends Fragment implements View.OnClickListener {
 
                 intent.putExtra(TURN_TEXT, text);
 
+                if(DEBUG)
+                    Log.d(TAG, "recoverDay passato a LoadingEvents ="+recoveryDay);
+
+                intent.putExtra(CHECKBOX, recoveryDay);
+
                 if (DEBUG)
                     Log.d(TAG, "text passato alla workingDialog = " + text);
 
@@ -505,8 +524,8 @@ public class MainFragment extends Fragment implements View.OnClickListener {
             v.setTransitionName("snapshot");
             getActivity().getWindow().setExitTransition(null);
             getActivity().getWindow().setEnterTransition(TransitionInflater.from(getActivity()).inflateTransition(R.transition.enter_ma_da));
-                     getActivity().getWindow().setSharedElementEnterTransition(TransitionInflater.from(getActivity())
-                           .inflateTransition(R.transition.circular_reveal_shared_transition));
+            getActivity().getWindow().setSharedElementEnterTransition(TransitionInflater.from(getActivity())
+                    .inflateTransition(R.transition.circular_reveal_shared_transition));
             startActivityForResult(intent, COLOR_DIALOG_ACTIVITY_RESULT_CODE,
                     ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
             if (TAG_VERONA_COLOR_BUTTON.equals(tag))
@@ -811,5 +830,17 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                 }
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+
+            CHECKBOX_IS_CHECKED = b;
+            mSharedPref.edit().putBoolean("CHECKBOX_IS_CHECKED", b).commit();
+
+            if(DEBUG) {
+                Log.d(TAG, "b = "+b);
+                Log.d(TAG, "recoveryDay dentro al checkedChange = "+recoveryDay);
+            }
     }
 }

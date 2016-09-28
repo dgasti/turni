@@ -17,9 +17,11 @@ public class LoadingEvents extends ActionBarActivity implements TaskCallback {
 
     private static final String TURN_TEXT = "LAUNCH_WORKINGACTIVITY";
     private static final String SURNAME = "SURNAME";
+    private static final String CHECKBOX = "CHECKBOX_RECOVERYDAY";
     private static final boolean DEBUG = true;
     private static final String TAG = "LOADINGEVENTS";
     private static String text, surname;
+    private static boolean recoveryDay;
     private static final int CODE_OK = 1;
     /**
      * Activity resul code not Ok
@@ -37,6 +39,7 @@ public class LoadingEvents extends ActionBarActivity implements TaskCallback {
     private String mSurname;
     private boolean isActivityCalled = false;
     private SharedPreferences wSharedPrefs;
+    private boolean mRecoveryDay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +50,8 @@ public class LoadingEvents extends ActionBarActivity implements TaskCallback {
         mText = text;
         surname = getIntent().getStringExtra(SURNAME);
         mSurname = surname;
+        recoveryDay = getIntent().getBooleanExtra(CHECKBOX, false);
+        mRecoveryDay = recoveryDay;
 
         if (DEBUG) {
             Log.d(TAG, "testo turni passato in LoadingEvents: " + text);
@@ -56,19 +61,22 @@ public class LoadingEvents extends ActionBarActivity implements TaskCallback {
         final Bundle bundle = new Bundle();
         bundle.putString(TURN_TEXT, text);
         bundle.putString(SURNAME, surname);
+        bundle.putBoolean(CHECKBOX, recoveryDay);
 
         wSharedPrefs = this.getSharedPreferences(getString(R.string.preference_file_key), this.MODE_PRIVATE);
         //mText = this.getArguments().getString(TURN_TEXT, "");
         //mSurname = this.getArguments().getString(SURNAME, "");
         if (DEBUG) {
-            Log.d(TAG, "Testo turni all'interno del PlaceFragemnt: " + mText);
-            Log.d(TAG, "Cognome all'interno del PlaceFragment: " + mSurname);
+            Log.d(TAG, "Testo turni all'interno del LoadingEvents: " + mText);
+            Log.d(TAG, "Cognome all'interno del LoadingEvents: " + mSurname);
+            Log.d(TAG, "Valore CheckBox all'interno del LoadingEvents: " + mRecoveryDay);
+
         }
 
         if (mText != null && mSurname != null)
             isActivityCalled = true;
 
-        new LoadingEventsTask(this, mText, mSurname, isActivityCalled, this).execute();
+        new LoadingEventsTask(this, mText, mSurname, isActivityCalled, this, mRecoveryDay).execute();
 
         if(DEBUG)
             Log.d(TAG, "isFinishing = "+isFinishing);
