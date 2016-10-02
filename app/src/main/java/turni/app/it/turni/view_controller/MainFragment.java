@@ -399,7 +399,19 @@ public class MainFragment extends Fragment implements View.OnClickListener, Comp
             if (DEBUG)
                 Log.d(TAG, "Sono dentro all'if del Forward button nell'onclick");
 
-            if (account_is_used == false) {
+            String calendarName = mSharedPref.getString(SP_CALENDAR_USED, "nessun calendario");
+            if(calendarName.equals("Eventi")) {
+                AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+                alertDialog.setTitle("Attenzione");
+                alertDialog.setMessage("Seleziona un calendario diverso prima di continuare!");
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                alertDialog.show();
+            } else if (account_is_used == false) {
                 AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
                 alertDialog.setTitle("Attenzione");
                 alertDialog.setMessage("Seleziona un calendario prima di continuare!");

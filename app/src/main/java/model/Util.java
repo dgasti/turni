@@ -1,8 +1,11 @@
 package model;
 
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -20,6 +23,8 @@ import turni.app.it.turni.R;
 public class Util {
     private static final boolean DEBUG = true;
     private static final String TAG = "Util";
+    private static final String SP_CALENDAR_USED = "calendar used";
+    private static SharedPreferences iSharedPrefs;
 
 
     /**
@@ -209,7 +214,10 @@ public class Util {
         return eventUri;
     }
 
-    public static int isAlreadyCreate(long begin, long end, ContentResolver content) {
+    public static int isAlreadyCreate(long begin, long end, ContentResolver content, Activity activity) {
+
+        iSharedPrefs = activity.getSharedPreferences(activity.getString(R.string.preference_file_key), activity.MODE_PRIVATE);
+
 
         String titleMatt = "TURNO MATTINO";
         String titleNott1 = "TURNO NOTTURNO 21";
@@ -217,6 +225,8 @@ public class Util {
         String titlePom = "TURNO POMERIGGIO";
         String titleText_REP = "REPERIBILITA'";
         String titleText_REC = "RECUPERO";
+
+        String calendarChoosen = iSharedPrefs.getString(SP_CALENDAR_USED, "nessun calendario");
 
 
         if (DEBUG)
@@ -294,10 +304,10 @@ public class Util {
                 if (DEBUG)
                     Log.d(TAG, "Nome del calendario  = " + calendarName);
 
-                if ((titleCursor.equals(titleMatt)) || (titleCursor.equals(titleNott1)) || (titleCursor.equals(titleNott2)) || (titleCursor.equals(titlePom)) || (titleCursor.equals(titleText_REP)) || titleCursor.equals(titleText_REC)) {
+                if (((titleCursor.equals(titleMatt)) || (titleCursor.equals(titleNott1)) || (titleCursor.equals(titleNott2)) || (titleCursor.equals(titlePom)) || (titleCursor.equals(titleText_REP)) || titleCursor.equals(titleText_REC)) && (calendarName.equalsIgnoreCase(calendarChoosen))) {
 
                     if (DEBUG)
-                        Log.d(TAG, "Sono dentro all'if dell'isAlreadyCreate");
+                        Log.d(TAG, "Sono dentro all'if del controllo dei titoli dell'isAlreadyCreate, dovrei eliminare l'evento");
 
                     eventID = Integer.parseInt(idColString);
                     //eventID = Integer.parseInt(idRow);

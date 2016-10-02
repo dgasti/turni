@@ -122,8 +122,8 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
 
     protected Void doInBackground(Void... unused) {
 
-        if(DEBUG) {
-            Log.d(TAG, "recoveryDay in LoadingEventTasks = "+recoveryDay);
+        if (DEBUG) {
+            Log.d(TAG, "recoveryDay in LoadingEventTasks = " + recoveryDay);
         }
 
         if (isActivityCalled) {
@@ -184,8 +184,8 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
         isFullDay = false;
         isVerona = isBassona = false;
 
-        if (DEBUG)
-            Log.d(TAG, "testo dei turni: " + text);
+       // if (DEBUG)
+       //     Log.d(TAG, "testo dei turni: " + text);
 
         int fromIndex = 0;
         int i = 0;
@@ -209,15 +209,15 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
                 endLine = text.indexOf(surname, surNameIndex + surname.length()) - 17;
                 line = text.substring(startLine, endLine);
                 fromIndex = endLine;
-                Log.d(TAG, "valore stringa tirata fuori if " + line);
+                //Log.d(TAG, "valore stringa tirata fuori if " + line);
             } else {
                 line = text.substring(startLine);
-                Log.d(TAG, "valore stringa tirata fuori else " + line);
+                //Log.d(TAG, "valore stringa tirata fuori else " + line);
                 fromIndex = fromIndex + 100;
             }
 
-            if (DEBUG)
-                Log.d(TAG, "valore stringa tirata fuori  " + line);
+            //if (DEBUG)
+            //    Log.d(TAG, "valore stringa tirata fuori  " + line);
 
             //TODO add holiday in calendar event
             titleText = "TURNO LAVORATIVO";
@@ -241,7 +241,17 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
             if (line.contains(ASSENZA) || line.contains(ASSENZE) || line.contains(FESTIVO_TARGET)) {
                 hasToCreateEvent = false;
                 Log.d(TAG, "entro in assenza riga " + i);
+                Log.d(TAG, "dentro all'if per creare o meno l'evento SENZA RECUPERO = " + recoveryDay);
             }
+
+            if(recoveryDay == false) {
+                if(line.contains(RECUPERO)) {
+                    hasToCreateEvent = false;
+                    Log.d(TAG, "entro in assenza riga " + i);
+                    Log.d(TAG, "recoveryDay nell'if per creare o meno l'evento = " + recoveryDay);
+                }
+            }
+
             //Set the shift hours for each case
             if (line.contains(MATTINA)) {
                 beginTime.set(Calendar.HOUR_OF_DAY, 7);
@@ -406,12 +416,11 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
                     checkEventEnd = (Calendar) checkEventBegin.clone();
                     checkEventEnd.set(Calendar.HOUR_OF_DAY, 23);
                     checkEventEnd.set(Calendar.MINUTE, 59);
-                    //isFullDay = true;
+                    isFullDay = true;
                     hasToCreateEvent = true;
-                    //hasReachable = true;
                     hasRecoveryDay = true;
                 }
-            } //TODO non crea eventi
+            }
 
             if (line.contains(VERONA)) {
 
@@ -454,7 +463,11 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
                 ContentValues values = new ContentValues();
 
                 if (hasRecoveryDay) {
-                    values.put(CalendarContract.Events.ALL_DAY, true);
+
+                    if (DEBUG)
+                        Log.d(TAG, "sono dopo l'HASRECOVERYDAY, creo l'evento recupero");
+
+                    values.put(CalendarContract.Events.ALL_DAY, 1);
                     values.put(CalendarContract.Events.DTSTART, startMillis);
                     values.put(CalendarContract.Events.DTEND, endMillis);
                     values.put(CalendarContract.Events.TITLE, titleText_REC);
@@ -465,27 +478,19 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
                     values.put(CalendarContract.Events.CALENDAR_ID, mCalID);
                     TimeZone tz = TimeZone.getDefault();
                     values.put(CalendarContract.Events.EVENT_TIMEZONE, tz.getID());
-                    String eventTitle = values.get(CalendarContract.Events.TITLE).toString();
-                    if (eventTitle.equals(titleText_REP)) {
-                        int iNumRowsDeleted = Util.isAlreadyCreate(checkStartMillis, checkEndMillis, mContentResolver);
+                    //String eventTitle = values.get(CalendarContract.Events.TITLE).toString();
+                    int iNumRowsDeleted = Util.isAlreadyCreate(checkStartMillis, checkEndMillis, mContentResolver, activity);
 
-                        if (DEBUG) {
-                            Log.d(TAG, "numero di eventi deletati = " + iNumRowsDeleted);
-                        }
-
-
+                    if (DEBUG) {
+                        Log.d(TAG, "numero di eventi deletati = " + iNumRowsDeleted);
                     }
-                    //isAlreadyCreate(checkStartMillis, checkEndMillis, mContentResolver, mCalID, eventTitle);
-
-                    if (DEBUG)
-                        Log.d(TAG, "sono dopo l'alreadyCreate");
 
                     Uri uri1 = mContentResolver.insert(CalendarContract.Events.CONTENT_URI, values);
                     hasRecoveryDay = false;
                 } else {
 
                     if (isFullDay) {
-                        values.put(CalendarContract.Events.ALL_DAY, true);
+                        values.put(CalendarContract.Events.ALL_DAY, 1);
                         values.put(CalendarContract.Events.DTSTART, startMillis);
                         values.put(CalendarContract.Events.DTEND, endMillis);
 
@@ -529,17 +534,14 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
                     values.put(CalendarContract.Events.CALENDAR_ID, mCalID);
                     TimeZone tz = TimeZone.getDefault();
                     values.put(CalendarContract.Events.EVENT_TIMEZONE, tz.getID());
-                    String eventTitle = values.get(CalendarContract.Events.TITLE).toString();
-                    if ((eventTitle.equals(titleMatt)) || (eventTitle.equals(titleNott1)) || (eventTitle.equals(titleNott2)) || (eventTitle.equals(titlePom)) || (eventTitle.equals(titleText_REP))) {
-                        int iNumRowsDeleted = Util.isAlreadyCreate(checkStartMillis, checkEndMillis, mContentResolver);
+                    //String eventTitle = values.get(CalendarContract.Events.TITLE).toString();
+                    //if ((eventTitle.equals(titleMatt)) || (eventTitle.equals(titleNott1)) || (eventTitle.equals(titleNott2)) || (eventTitle.equals(titlePom)) || (eventTitle.equals(titleText_REP))) {
+                    int iNumRowsDeleted = Util.isAlreadyCreate(checkStartMillis, checkEndMillis, mContentResolver, activity);
 
-                        if (DEBUG) {
-                            Log.d(TAG, "numero di eventi deletati = " + iNumRowsDeleted);
-                        }
-
-
+                    if (DEBUG) {
+                        Log.d(TAG, "numero di eventi deletati = " + iNumRowsDeleted);
                     }
-                    //isAlreadyCreate(checkStartMillis, checkEndMillis, mContentResolver, mCalID, eventTitle);
+                    //}
 
                     if (DEBUG)
                         Log.d(TAG, "sono dopo l'alreadyCreate");
@@ -548,9 +550,6 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
                     // get the event ID that is the last element in the
                     //  Uri  long eventID = Long.parseLong(uri1.getLastPathSegment());
                 }
-                i++;
-            } else {
-                hasToCreateEvent = true;
                 i++;
             }
         }
