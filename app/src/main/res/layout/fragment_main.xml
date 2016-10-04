@@ -240,7 +240,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/recoveryDay"
+        android:layout_marginStart="13dp"
         android:layout_below="@+id/bassona_color_button"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignParentStart="true" />
 
 </RelativeLayout>

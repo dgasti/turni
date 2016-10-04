@@ -22,7 +22,7 @@ import turni.app.it.turni.R;
  */
 public class Util {
     private static final boolean DEBUG = true;
-    private static final String TAG = "Util";
+    private static final String TAG = "UTIL";
     private static final String SP_CALENDAR_USED = "calendar used";
     private static SharedPreferences iSharedPrefs;
 
@@ -228,9 +228,10 @@ public class Util {
 
         String calendarChoosen = iSharedPrefs.getString(SP_CALENDAR_USED, "nessun calendario");
 
-
-        if (DEBUG)
+        if (DEBUG) {
             Log.d(TAG, "Sono dentro all'isAlreadyCreate");
+            Log.d(TAG, "Calendario scelto = "+ calendarChoosen);
+        }
 
         String[] proj =
                 new String[]{
@@ -271,33 +272,33 @@ public class Util {
             int calendar_name_id = cursor.getColumnIndex(proj[4]);
 
             if (DEBUG) {
-                Log.d(TAG, "idRiga = " + row_id);
+               /* Log.d(TAG, "idRiga = " + row_id);
                 Log.d(TAG, "idColonna = " + idCol);
-                Log.d(TAG, "titleColonna numero di colonna = " + titleCol);
+                Log.d(TAG, "titleColonna numero di colonna = " + titleCol);*/
                 Log.d(TAG, "idCalendario = " + calendar_id);
             }
 
             do {
                 idRow = cursor.getString(row_id);
 
-                if (DEBUG)
-                    Log.d(TAG, "id Riga dell'eventID in Stringa  = " + idRow);
+                //if (DEBUG)
+                //    Log.d(TAG, "id Riga dell'eventID in Stringa  = " + idRow);
 
                 idCalendar = cursor.getString(calendar_id);
 
-                if (DEBUG)
-                    Log.d(TAG, "id Riga dell'eventID in Stringa  = " + idCalendar);
+                //if (DEBUG)
+                //    Log.d(TAG, "id Riga dell'eventID in Stringa  = " + idCalendar);
 
 
                 idColString = cursor.getString(idCol);
 
-                if (DEBUG)
-                    Log.d(TAG, "id Colonna dell'eventID in Stringa  = " + idCol);
+                //if (DEBUG)
+                //    Log.d(TAG, "id Colonna dell'eventID in Stringa  = " + idCol);
 
                 titleCursor = cursor.getString(titleCol);
 
                 if (DEBUG)
-                    Log.d(TAG, "id Colonna del titolo in Stringa  = " + idColString);
+                    Log.d(TAG, "Titolo dell'evento  = " + titleCursor);
 
                 calendarName = cursor.getString(calendar_name_id);
 

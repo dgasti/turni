@@ -49,68 +49,9 @@ public class MainActivity extends ActionBarActivity {
         switch (item.getItemId()) {
             case R.id.action_settings:
                 return true;
-            case R.id.surname_change_setting:
-                surnameDialog(this);
-                return true;
         }
 
         return super.onOptionsItemSelected(item);
 
-    }
-
-    public void surnameDialog(final Activity activity) {
-        final Dialog dialog = new Dialog(activity);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.custom_dialog);
-        dialog.setCanceledOnTouchOutside(true);
-        dialog.setCancelable(true);
-
-
-        dialog.show();
-
-        final EditText surnameText = (EditText) dialog.findViewById(R.id.dialog_surname);
-        Button okButton = (Button) dialog.findViewById(R.id.dialog_ok);
-
-        okButton.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-
-                String surname = surnameText.getText().toString();
-
-                //if (DEBUG)
-                //    Log.d(TAG, "surname = " + surname);
-
-                /*if (surname.isEmpty()) {
-                    AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
-                    alertDialog.setTitle("Attenzione");
-                    alertDialog.setMessage("Non hai inserito il cognome!");
-                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            });
-                    alertDialog.create();
-                    alertDialog.show();
-                }*/
-
-                //if (DEBUG)
-                //    Log.d(TAG, "surname dopo if di controllo = " + surname);
-
-                surname = surname.trim();
-                if (surname.isEmpty() == false) {
-                    MainFragment.mSurnameText.setText(surname);
-                    MainFragment.mSharedPref.edit().putString("SURNAME", surname).commit();
-
-                    if(DEBUG)
-                        Log.d(TAG, "COGNOME INSERITO NELLE SHAREDPREF = "+MainFragment.mSharedPref.getString("SURNAME", "nessun cognome"));
-
-                    dialog.dismiss();
-                } else {
-                    dialog.dismiss();
-                }
-            }
-        });
     }
 }

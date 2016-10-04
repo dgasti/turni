@@ -8,7 +8,7 @@
     <string name="dialog_surname">Cognome</string>
     <string name="dialog_surname_button">Fatto</string>
     <string name="edit_text_hint">Incolla qui il testo dei turni o importa un file</string>
-    <string name="welcome_surname">Ciao!</string>
+    <string name="welcome_surname">Ciao! Nessun cognome inserito</string>
     <string name="title_activity_working">WorkingActivity</string>
     <string name="edittext_hint">Copia il testo dei turni o importalo da un file txt</string>
     <string name="account_button_string">Scegli un calendario</string>

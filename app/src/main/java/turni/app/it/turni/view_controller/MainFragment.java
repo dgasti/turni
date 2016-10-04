@@ -68,6 +68,7 @@ public class MainFragment extends Fragment implements View.OnClickListener, Comp
     private static final String TAG_CHECKBOX_BUTTON = "checkbx button";
     private static final String TAG_SURNAME = "Surname text";
     private static final int FORWARD_SELECT_BUTTON = 4;
+    private static final String TAG_SURNAME_BUTTON = "surname button";
 
     /**
      * Dialog Account is used?
@@ -115,7 +116,7 @@ public class MainFragment extends Fragment implements View.OnClickListener, Comp
     private Button mVeronaColorButton;
     private Button mBassonaColorButton;
     private boolean openVerona = false;
-    private Button mImportTextButton;
+    private Button mImportTextButton, mSurname;
     private String surname = "";
     private String surname_check = "";
     private boolean isSurnameDialogShow = false;
@@ -153,6 +154,7 @@ public class MainFragment extends Fragment implements View.OnClickListener, Comp
         mPasteButton = (Button) mView.findViewById(R.id.paste_text);
         mDeleteButton = (Button) mView.findViewById(R.id.delete_button);
         mRecoveryDay = (CheckBox) mView.findViewById(R.id.recoveryDay);
+        mSurname = (Button) mView.findViewById(R.id.surname);
 
         mFowardButton.setTag(TAG_FORWARD_BUTTON);
         mAccountButton.setTag(TAG_ACCOUNT_BUTTON);
@@ -163,6 +165,7 @@ public class MainFragment extends Fragment implements View.OnClickListener, Comp
         mDeleteButton.setTag(TAG_DELETE_TEXT);
         mSurnameText.setTag(TAG_SURNAME);
         mRecoveryDay.setTag(TAG_CHECKBOX_BUTTON);
+        mSurname.setTag(TAG_SURNAME_BUTTON);
 
         int drawableColor = ColorSelectorDialog.getColorDrawable(mSharedPref.getInt(VERONA_COLOR_DEFAULT, 1));
         Drawable d = getResources().getDrawable(drawableColor);
@@ -203,6 +206,7 @@ public class MainFragment extends Fragment implements View.OnClickListener, Comp
         mDeleteButton.setOnClickListener(this);
         mSurnameText.setOnClickListener(this);
         mRecoveryDay.setOnCheckedChangeListener(this);
+        mSurname.setOnClickListener(this);
 
 
         View.OnLongClickListener listener = new View.OnLongClickListener() {
@@ -329,6 +333,10 @@ public class MainFragment extends Fragment implements View.OnClickListener, Comp
 
         boolean account_is_used = mSharedPref.getBoolean("ACCOUNT_IS_USED", false);
         final String text = mEditText.getText().toString();
+
+        if(TAG_SURNAME_BUTTON.equals(tag)) {
+            surnameDialog(getActivity());
+        }
 
         if (TAG_SURNAME.equals(tag)) {
             if (DEBUG) {
@@ -677,6 +685,63 @@ public class MainFragment extends Fragment implements View.OnClickListener, Comp
 
         }
     }*/
+
+    public void surnameDialog(final Activity activity) {
+        final Dialog dialog = new Dialog(activity);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.custom_dialog);
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.setCancelable(true);
+
+
+        dialog.show();
+
+        final EditText surnameText = (EditText) dialog.findViewById(R.id.dialog_surname);
+        Button okButton = (Button) dialog.findViewById(R.id.dialog_ok);
+
+        okButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+
+                String surname = surnameText.getText().toString();
+
+                //if (DEBUG)
+                //    Log.d(TAG, "surname = " + surname);
+
+                /*if (surname.isEmpty()) {
+                    AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
+                    alertDialog.setTitle("Attenzione");
+                    alertDialog.setMessage("Non hai inserito il cognome!");
+                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                    alertDialog.create();
+                    alertDialog.show();
+                }*/
+
+                //if (DEBUG)
+                //    Log.d(TAG, "surname dopo if di controllo = " + surname);
+
+                surname = surname.trim();
+                if (surname.isEmpty() == false) {
+                    mSurnameText.setText(surname);
+                    mSharedPref.edit().putString("SURNAME", surname).commit();
+
+                    if(DEBUG)
+                        Log.d(TAG, "COGNOME INSERITO NELLE SHAREDPREF = "+mSharedPref.getString("SURNAME", "nessun cognome"));
+
+                    dialog.dismiss();
+                } else {
+                    dialog.dismiss();
+                }
+            }
+        });
+    }
+
 
 
     @Override
