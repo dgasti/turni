@@ -70,6 +70,11 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
     private static final CharSequence ASSENZA = "ASSENZA";
     private static final CharSequence ASSENZE = "ASSENZE";
     private static final CharSequence FESTIVO_TARGET = "TARGET";
+    private static final CharSequence UFFICIO_STORAGE = "STG";
+    private static final CharSequence UFFICIO_PIANIF = "UPI";
+    private static final CharSequence UFFICIO_MDW = "MDW";
+    private static final CharSequence UFFICIO_WIN = "WIN";
+    private static final CharSequence GIORNALIERO = "ORN";
     private static boolean isCreated;
     private SharedPreferences mSharedPref;
     private static final String TAG = "LOADINGEVENTSTASK";
@@ -94,6 +99,8 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
     private String calendarName;
     private TaskCallback mCallback;
     private boolean recoveryDay;
+    private String titleDaily;
+    private String titleWin, titleStg, titleMdw, titleBtc;
 
 
     public LoadingEventsTask(Activity activity, String text, String surname, boolean isActivityCalled, TaskCallback callback, boolean recoveryDay) {
@@ -184,8 +191,8 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
         isFullDay = false;
         isVerona = isBassona = false;
 
-       // if (DEBUG)
-       //     Log.d(TAG, "testo dei turni: " + text);
+        // if (DEBUG)
+        //     Log.d(TAG, "testo dei turni: " + text);
 
         int fromIndex = 0;
         int i = 0;
@@ -227,6 +234,12 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
             titlePom = "TURNO POMERIGGIO";
             titleText_REP = "REPERIBILITA'";
             titleText_REC = "RECUPERO";
+            titleDaily = "TURNO GIORNALIERO";
+            titleWin = "UFFICIO WINDOWS";
+            titleMdw = "UFFICIO MDW";
+            titleStg = "UFFICIO STG OPEN";
+            titleBtc = "UFFICIO PIANIF";
+
             //Get the date for this event (year,month,day)
 
             if (DEBUG)
@@ -244,8 +257,8 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
                 Log.d(TAG, "dentro all'if per creare o meno l'evento SENZA RECUPERO = " + recoveryDay);
             }
 
-            if(recoveryDay == false) {
-                if(line.contains(RECUPERO)) {
+            if (recoveryDay == false) {
+                if (line.contains(RECUPERO)) {
                     hasToCreateEvent = false;
                     Log.d(TAG, "entro in assenza riga " + i);
                     Log.d(TAG, "recoveryDay nell'if per creare o meno l'evento = " + recoveryDay);
@@ -400,9 +413,54 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
                 hasRecoveryDay = false;
             }
 
+            if (line.contains(GIORNALIERO)) {
+                beginTime.set(Calendar.HOUR_OF_DAY, 8);
+                beginTime.set(Calendar.MINUTE, 0);
+                endTime = (Calendar) beginTime.clone();
+                endTime.set(Calendar.HOUR_OF_DAY, 17);
+                endTime.set(Calendar.MINUTE, 0);
+                checkEventBegin.set(Calendar.HOUR_OF_DAY, 0);
+                checkEventBegin.set(Calendar.MINUTE, 1);
+                checkEventEnd = (Calendar) checkEventBegin.clone();
+                checkEventEnd.set(Calendar.HOUR_OF_DAY, 23);
+                checkEventEnd.set(Calendar.MINUTE, 59);
+                hasToCreateEvent = true;
+                isFullDay = false;
+                titleText = titleDaily;
+                hasReachable = false;
+                hasRecoveryDay = false;
+            }
+
+            if (line.contains(UFFICIO_PIANIF) || line.contains(UFFICIO_WIN) || line.contains(UFFICIO_MDW) || line.contains(UFFICIO_STORAGE)) {
+                beginTime.set(Calendar.HOUR_OF_DAY, 8);
+                beginTime.set(Calendar.MINUTE, 0);
+                endTime = (Calendar) beginTime.clone();
+                endTime.set(Calendar.HOUR_OF_DAY, 17);
+                endTime.set(Calendar.MINUTE, 0);
+                checkEventBegin.set(Calendar.HOUR_OF_DAY, 0);
+                checkEventBegin.set(Calendar.MINUTE, 1);
+                checkEventEnd = (Calendar) checkEventBegin.clone();
+                checkEventEnd.set(Calendar.HOUR_OF_DAY, 23);
+                checkEventEnd.set(Calendar.MINUTE, 59);
+                hasToCreateEvent = true;
+                if (line.contains(UFFICIO_MDW))
+                    titleText = titleMdw;
+                else if (line.contains(UFFICIO_STORAGE))
+                    titleText = titleStg;
+                else if (line.contains(UFFICIO_WIN))
+                    titleText = titleWin;
+                else if (line.contains(UFFICIO_PIANIF))
+                    titleText = titleBtc;
+                else
+                    titleText = titleBtc;
+                isFullDay = false;
+                hasReachable = false;
+                hasRecoveryDay = false;
+            }
+
             if (recoveryDay) {
 
-                if(DEBUG)
+                if (DEBUG)
                     Log.d(TAG, "Sono dentro all'if che crea gli orari dell'evento RECUPERO");
 
                 if (line.contains(RECUPERO)) {
