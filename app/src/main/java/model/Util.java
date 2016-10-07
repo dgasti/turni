@@ -225,6 +225,11 @@ public class Util {
         String titlePom = "TURNO POMERIGGIO";
         String titleText_REP = "REPERIBILITA'";
         String titleText_REC = "RECUPERO";
+        String titleDaily = "TURNO GIORNALIERO";
+        String titleWin = "UFFICIO WINDOWS";
+        String titleMdw = "UFFICIO MDW";
+        String titleStg = "UFFICIO STG OPEN";
+        String titleBtc = "UFFICIO PIANIF";
 
         String calendarChoosen = iSharedPrefs.getString(SP_CALENDAR_USED, "nessun calendario");
 
@@ -305,7 +310,9 @@ public class Util {
                 if (DEBUG)
                     Log.d(TAG, "Nome del calendario  = " + calendarName);
 
-                if ((titleCursor.equals(titleMatt)) || (titleCursor.equals(titleNott1)) || (titleCursor.equals(titleNott2)) || (titleCursor.equals(titlePom)) || (titleCursor.equals(titleText_REP)) || titleCursor.equals(titleText_REC)) {
+                //if (((titleCursor.equals(titleMatt)) || (titleCursor.equals(titleNott1)) || (titleCursor.equals(titleNott2)) || (titleCursor.equals(titlePom)) || (titleCursor.equals(titleText_REP)) || titleCursor.equals(titleText_REC)) && (calendarName.equals(calendarChoosen))) {
+
+                if ((titleCursor.equals(titleMatt)) || (titleCursor.equals(titleNott1)) || (titleCursor.equals(titleNott2)) || (titleCursor.equals(titlePom)) || (titleCursor.equals(titleText_REP)) || titleCursor.equals(titleText_REC) || titleCursor.equals(titleBtc) || titleCursor.equals(titleDaily) || titleCursor.equals(titleMdw) || titleCursor.equals(titleStg)) {
 
                     if (DEBUG)
                         Log.d(TAG, "Sono dentro all'if del controllo dei titoli dell'isAlreadyCreate, dovrei eliminare l'evento");
@@ -313,6 +320,12 @@ public class Util {
                     eventID = Integer.parseInt(idColString);
                     //eventID = Integer.parseInt(idRow);
                     Uri eventsUri = Uri.parse(getCalendarUriBase() + "");
+
+                    if(DEBUG) {
+                        Log.d(TAG, "eventsUri = " + eventsUri);
+                        Log.d(TAG, "event ID = " + eventID);
+                    }
+
                     Uri eventUri = ContentUris.withAppendedId(eventsUri, eventID);
                     numEventiEliminati = content.delete(eventUri, null, null);
                 }

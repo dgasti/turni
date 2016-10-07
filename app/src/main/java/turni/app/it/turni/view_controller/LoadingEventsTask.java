@@ -429,11 +429,12 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
                 titleText = titleDaily;
                 hasReachable = false;
                 hasRecoveryDay = false;
+                isVerona = true;
             }
 
             if (line.contains(UFFICIO_PIANIF) || line.contains(UFFICIO_WIN) || line.contains(UFFICIO_MDW) || line.contains(UFFICIO_STORAGE)) {
                 beginTime.set(Calendar.HOUR_OF_DAY, 8);
-                beginTime.set(Calendar.MINUTE, 0);
+                beginTime.set(Calendar.MINUTE, 15);
                 endTime = (Calendar) beginTime.clone();
                 endTime.set(Calendar.HOUR_OF_DAY, 17);
                 endTime.set(Calendar.MINUTE, 0);
@@ -456,6 +457,7 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
                 isFullDay = false;
                 hasReachable = false;
                 hasRecoveryDay = false;
+                isVerona = true;
             }
 
             if (recoveryDay) {

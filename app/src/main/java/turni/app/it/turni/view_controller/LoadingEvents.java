@@ -54,7 +54,7 @@ public class LoadingEvents extends ActionBarActivity implements TaskCallback {
         mRecoveryDay = recoveryDay;
 
         if (DEBUG) {
-            Log.d(TAG, "testo turni passato in LoadingEvents: " + text);
+            //Log.d(TAG, "testo turni passato in LoadingEvents: " + text);
             Log.d(TAG, "Cognome passato in LoadingEvents: " + surname);
         }
 
@@ -67,7 +67,7 @@ public class LoadingEvents extends ActionBarActivity implements TaskCallback {
         //mText = this.getArguments().getString(TURN_TEXT, "");
         //mSurname = this.getArguments().getString(SURNAME, "");
         if (DEBUG) {
-            Log.d(TAG, "Testo turni all'interno del LoadingEvents: " + mText);
+            //Log.d(TAG, "Testo turni all'interno del LoadingEvents: " + mText);
             Log.d(TAG, "Cognome all'interno del LoadingEvents: " + mSurname);
             Log.d(TAG, "Valore CheckBox all'interno del LoadingEvents: " + mRecoveryDay);
 

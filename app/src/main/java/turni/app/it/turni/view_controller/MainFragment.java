@@ -398,8 +398,8 @@ public class MainFragment extends Fragment implements View.OnClickListener, Comp
 
             recoveryDay = mSharedPref.getBoolean("CHECKBOX_IS_CHECKED", false);
 
-            if (DEBUG)
-                Log.d(TAG, "text passato dall'edittext = " + text);
+            //if (DEBUG)
+            //    Log.d(TAG, "text passato dall'edittext = " + text);
 
             imm = (InputMethodManager) getActivity().getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(mEditText.getWindowToken(), 0);
