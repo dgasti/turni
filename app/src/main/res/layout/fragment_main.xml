@@ -55,16 +55,6 @@
         android:paddingTop="@dimen/activity_horizontal_short_margin"
         android:visibility="visible" />
 
-    <ScrollView
-        android:id="@+id/scrollView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/dialog_container"
-        android:layout_marginTop="-30dp"
-        android:visibility="visible">
-
-    </ScrollView>
-
     <com.melnykov.fab.FloatingActionButton
         android:id="@+id/foward_button"
         android:layout_width="56dp"
@@ -146,42 +136,34 @@
         <Button
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
             android:id="@+id/delete_button"
             android:drawableLeft="@drawable/ic_cancel_black_36dp"
             android:gravity="center"
             android:background="?android:attr/selectableItemBackground"
-            android:minHeight="0dp"
-            android:minWidth="0dp"
-            android:layout_alignParentTop="true"
             android:layout_toEndOf="@+id/paste_text" />
 
         <Button
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
             android:id="@+id/paste_text"
             android:drawableLeft="@drawable/ic_content_paste_black_36dp"
             android:background="?android:attr/selectableItemBackground"
             android:gravity="center"
-            android:minHeight="0dp"
-            android:minWidth="0dp"
             android:layout_alignParentTop="true"
-            android:layout_toEndOf="@+id/import_text_button" />
+            android:layout_centerInParent="true" />
 
         <Button
             style="?android:attr/buttonStyleSmall"
             android:id="@+id/import_text_button"
             android:layout_width="wrap_content"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
             android:drawableLeft="@drawable/ic_note_add_black_36dp"
             android:gravity="center"
-            android:minHeight="0dp"
-            android:minWidth="0dp"
             android:background="?android:attr/selectableItemBackground"
-            android:layout_marginStart="127dp"
             android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true" />
+            android:layout_toStartOf="@+id/paste_text"/>
 
     </RelativeLayout>
 
@@ -190,7 +172,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/list_items_height"
         android:background="?android:attr/selectableItemBackground"
-        android:drawableLeft="@drawable/drawable_calendar_grey600_24dp"
+        android:drawableLeft="@drawable/ic_event_black_36dp"
         android:singleLine="true"
         android:text="@string/account_button_string"
         android:textAllCaps="false"
@@ -237,11 +219,12 @@
 
     <CheckBox
         android:text="Visualizza l'evento RECUPERO"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/recoveryDay"
-        android:layout_marginStart="13dp"
         android:layout_below="@+id/bassona_color_button"
-        android:layout_alignParentStart="true" />
+        android:gravity="left|center_vertical"
+        android:paddingLeft="28dp"
+        android:layout_marginLeft="12dp"/>
 
 </RelativeLayout>
