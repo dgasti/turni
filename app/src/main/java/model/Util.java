@@ -317,6 +317,4 @@ public class Util {
         }
         return numEventiEliminati;
     }
-
-
 }
