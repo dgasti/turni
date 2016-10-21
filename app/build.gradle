@@ -25,5 +25,5 @@ dependencies {
     compile 'com.melnykov:floatingactionbutton:1.2.0'
     compile 'com.android.support:appcompat-v7:21.0.3'
     compile 'com.android.support:support-v4:21.0.3'
-    compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha1'
+    //compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha1'
 }

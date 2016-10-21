@@ -191,9 +191,6 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
         isFullDay = false;
         isVerona = isBassona = false;
 
-        // if (DEBUG)
-        //     Log.d(TAG, "testo dei turni: " + text);
-
         int fromIndex = 0;
         int i = 0;
         events = text.indexOf(surname, fromIndex);
@@ -216,15 +213,11 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
                 endLine = text.indexOf(surname, surNameIndex + surname.length()) - 17;
                 line = text.substring(startLine, endLine);
                 fromIndex = endLine;
-                //Log.d(TAG, "valore stringa tirata fuori if " + line);
             } else {
                 line = text.substring(startLine);
-                //Log.d(TAG, "valore stringa tirata fuori else " + line);
                 fromIndex = fromIndex + 100;
             }
 
-            //if (DEBUG)
-            //    Log.d(TAG, "valore stringa tirata fuori  " + line);
 
             //TODO add holiday in calendar event
             titleText = "TURNO LAVORATIVO";
@@ -284,12 +277,6 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
                 hasRecoveryDay = false;
 
             }
-            //                    if (DEBUG)
-//                        Log.d(TAG, "get timezone  after timemillis"+beginTime.getTimeZone());
-//                    if (DEBUG)
-//                        Log.d(TAG, "Start hour is " + beginTime);
-//                    if (DEBUG)
-//                        Log.d(TAG, "finish hour is  " + endTime);
             if (line.contains(POMERIGGIO)) {
                 beginTime.set(Calendar.HOUR_OF_DAY, 14);
                 beginTime.set(Calendar.MINUTE, 10);
@@ -505,7 +492,6 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
                 if (DEBUG) {
                     Log.d(TAG, "Sono dentro all'if che crea gli eventi");
                     Log.d(TAG, "isVerona = " + isVerona);
-
                     Log.d(TAG, "isBassona = " + isBassona);
                 }
 
@@ -538,7 +524,6 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
                     values.put(CalendarContract.Events.CALENDAR_ID, mCalID);
                     TimeZone tz = TimeZone.getDefault();
                     values.put(CalendarContract.Events.EVENT_TIMEZONE, tz.getID());
-                    //String eventTitle = values.get(CalendarContract.Events.TITLE).toString();
                     int iNumRowsDeleted = Util.isAlreadyCreate(checkStartMillis, checkEndMillis, mContentResolver, activity);
 
                     if (DEBUG) {
@@ -594,14 +579,11 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
                     values.put(CalendarContract.Events.CALENDAR_ID, mCalID);
                     TimeZone tz = TimeZone.getDefault();
                     values.put(CalendarContract.Events.EVENT_TIMEZONE, tz.getID());
-                    //String eventTitle = values.get(CalendarContract.Events.TITLE).toString();
-                    //if ((eventTitle.equals(titleMatt)) || (eventTitle.equals(titleNott1)) || (eventTitle.equals(titleNott2)) || (eventTitle.equals(titlePom)) || (eventTitle.equals(titleText_REP))) {
                     int iNumRowsDeleted = Util.isAlreadyCreate(checkStartMillis, checkEndMillis, mContentResolver, activity);
 
                     if (DEBUG) {
                         Log.d(TAG, "numero di eventi deletati = " + iNumRowsDeleted);
                     }
-                    //}
 
                     if (DEBUG)
                         Log.d(TAG, "sono dopo l'alreadyCreate");

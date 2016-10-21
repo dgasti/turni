@@ -5,7 +5,6 @@ import android.app.ActivityOptions;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Fragment;
-import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.ContentUris;
@@ -106,11 +105,9 @@ public class MainFragment extends Fragment implements View.OnClickListener, Comp
     private static final String TAG_DELETE_TEXT = "delete text";
 
     private View mView;
-    private Context context;
     private FloatingActionButton mFowardButton;
     private EditText mEditText;
-    private String mText;
-    public static TextView mTextView, mSurnameText;
+    public static TextView mSurnameText;
     private Button mAccountButton, mPasteButton, mDeleteButton;
     public static SharedPreferences mSharedPref;
     private Button mVeronaColorButton;
@@ -123,9 +120,6 @@ public class MainFragment extends Fragment implements View.OnClickListener, Comp
     private String path;
     private InputMethodManager imm;
     private ClipData.Item item;
-    private Bundle bundle;
-    private Activity activity;
-    private ProgressDialog progressDialog;
     private Toolbar toolbar;
     private RelativeLayout mBackground;
     private CheckBox mRecoveryDay;
@@ -237,13 +231,6 @@ public class MainFragment extends Fragment implements View.OnClickListener, Comp
         if (calendarName != null && accountName != null && Util.getCalendarID(getActivity(), calendarName, accountName) >= 0)
             mAccountButton.setText(calendarName + "  (" + accountName + ")");
 
-        //String text = "2016-08-26EE39318Gastaldo S.LD1-VR107.00-14.12 \n" +
-        //      "2016-08-27EE39318Gastaldo S.WEDAssenza WeekEnd \n" +
-        //    "2016-08-28EE39318Gastaldo S.FN2-VR116.00-24.00";
-        //         "2015-04-07 XL90355Bonuzzi N.RECRecupero";
-        //String text="";
-        //mEditText.setText(text);
-
         return mView;
     }
 
@@ -347,7 +334,6 @@ public class MainFragment extends Fragment implements View.OnClickListener, Comp
 
 
         if (TAG_IMPORT_TEXT_BUTTON.equals(tag)) {
-            //Toast.makeText(getActivity().getApplicationContext(), "Funzione ancora non attiva!", Toast.LENGTH_SHORT).show();
             imm = (InputMethodManager) getActivity().getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(mEditText.getWindowToken(), 0);
 
@@ -380,7 +366,6 @@ public class MainFragment extends Fragment implements View.OnClickListener, Comp
                 Toast.makeText(getActivity().getApplicationContext(), "Nulla da incollare", Toast.LENGTH_SHORT).show();
 
             }
-            //Toast.makeText(getActivity().getApplicationContext(), "Incollato", Toast.LENGTH_SHORT).show();
         }
         if (TAG_DELETE_TEXT.equals(tag)) {
 
@@ -397,9 +382,6 @@ public class MainFragment extends Fragment implements View.OnClickListener, Comp
         if (TAG_FORWARD_BUTTON.equals(tag)) {
 
             recoveryDay = mSharedPref.getBoolean("CHECKBOX_IS_CHECKED", false);
-
-            //if (DEBUG)
-            //    Log.d(TAG, "text passato dall'edittext = " + text);
 
             imm = (InputMethodManager) getActivity().getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(mEditText.getWindowToken(), 0);
@@ -443,37 +425,6 @@ public class MainFragment extends Fragment implements View.OnClickListener, Comp
                 alertDialog.show();
             } else {
 
-               /* final ProgressDialog progress = new ProgressDialog(getActivity());
-                progress.setTitle("Caricando");
-                progress.setMessage("Un momento di pazienza mentre carico i turni nel calendario...");
-                progress.show();
-
-                Thread thread = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (isFinishing()) {
-                            //try {
-                            //    Thread.sleep(3000);
-                                progress.hide();
-                                progress.dismiss();
-                            //} catch (InterruptedException e) {
-                            //    e.printStackTrace();
-                           // }
-                        }
-                    }
-                });
-
-                thread.start(); */
-
-
-                //Handler pdCanceller = new Handler();
-                //pdCanceller.postDelayed(progressRunnable, 3000);
-
-                //new LoadData().execute(null, null, null);
-
-                //new LoadingTask(getActivity()).execute();
-
-
                 if (DEBUG)
                     Log.d(TAG, "Sono dentro all'else dell'intent del Forward button nell'onclick, ho superato tutti i test");
 
@@ -506,7 +457,6 @@ public class MainFragment extends Fragment implements View.OnClickListener, Comp
                 }
 
                 startActivityForResult(intent, FORWARD_SELECT_BUTTON, ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
-                //startActivityForResult(intent, FORWARD_SELECT_BUTTON);
                 mFowardButton.animate().alpha(0).setDuration(250);
 
             }
@@ -520,8 +470,6 @@ public class MainFragment extends Fragment implements View.OnClickListener, Comp
             v.setTransitionName("snapshot");
             getActivity().getWindow().setExitTransition(null);
             getActivity().getWindow().setEnterTransition(TransitionInflater.from(getActivity()).inflateTransition(R.transition.enter_ma_da));
-            //        getActivity().getWindow().setSharedElementEnterTransition(TransitionInflater.from(getActivity())
-            //              .inflateTransition(R.transition.circular_reveal_shared_transition));
             startActivityForResult(intent, CALENDAR_DIALOG_ACTIVITY_RESULT_CODE,
                     ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
             mAccountButton.animate().alpha(0).setDuration(250);
@@ -560,7 +508,6 @@ public class MainFragment extends Fragment implements View.OnClickListener, Comp
 
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("text/plain");
-        //intent.addCategory(Intent.CATEGORY_OPENABLE);
 
         try {
             startActivityForResult(
@@ -665,27 +612,6 @@ public class MainFragment extends Fragment implements View.OnClickListener, Comp
         return "com.android.providers.media.documents".equals(uri.getAuthority());
     }
 
-    /*private class ProcessUpdateProfile extends AsyncTask<Void, Void, Void> {
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            return null;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            Timer t = new Timer();
-            t.schedule(new TimerTask() {
-
-                @Override
-                public void run() {
-                    progressDialog = ProgressDialog.show(getActivity(), "In progress", "Loading");
-                }
-            }, 3000);
-
-        }
-    }*/
-
     public void surnameDialog(final Activity activity) {
         final Dialog dialog = new Dialog(activity);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -706,26 +632,6 @@ public class MainFragment extends Fragment implements View.OnClickListener, Comp
 
                 String surname = surnameText.getText().toString();
 
-                //if (DEBUG)
-                //    Log.d(TAG, "surname = " + surname);
-
-                /*if (surname.isEmpty()) {
-                    AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
-                    alertDialog.setTitle("Attenzione");
-                    alertDialog.setMessage("Non hai inserito il cognome!");
-                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            });
-                    alertDialog.create();
-                    alertDialog.show();
-                }*/
-
-                //if (DEBUG)
-                //    Log.d(TAG, "surname dopo if di controllo = " + surname);
-
                 surname = surname.trim();
                 if (surname.isEmpty() == false) {
                     mSurnameText.setText(surname);
@@ -741,8 +647,6 @@ public class MainFragment extends Fragment implements View.OnClickListener, Comp
             }
         });
     }
-
-
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -808,17 +712,6 @@ public class MainFragment extends Fragment implements View.OnClickListener, Comp
                     try {
                         uri = data.getData();
                     } catch (NullPointerException e) {
-                    /*    AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
-                        alertDialog.setTitle("Attenzione");
-                        alertDialog.setMessage("File non trovato, riprovare!");
-                        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                    }
-                                });
-                        alertDialog.show();
-                        */
                         uri = Uri.parse(" ");
                     }
 
@@ -826,15 +719,6 @@ public class MainFragment extends Fragment implements View.OnClickListener, Comp
                     if (DEBUG)
                         Log.d(TAG, "File Uri: " + uri.toString());
 
-                    //TODO check if it works
-                    //if (uri != null && "content".equals(uri.getScheme())) {
-                    //   Cursor cursor = getActivity().getContentResolver().query(uri, new String[]{MediaStore.Images.Media.DATA}, null, null, null);
-                    //   cursor.moveToFirst();
-                    //    path = cursor.getString(0);
-                    //    cursor.close();
-                    //} else {
-                    // Get the path
-                    //    path = " ";
                     try {
                         path = getPath(getActivity().getApplicationContext(), uri);
                     } catch (NullPointerException e) {
@@ -843,9 +727,7 @@ public class MainFragment extends Fragment implements View.OnClickListener, Comp
 
                     if (DEBUG)
                         Log.d(TAG, "File Path: " + path);
-                    // Get the file instance
-                    // File file = new File(path);
-                    // Initiate the upload
+
                     if (path.isEmpty()) {
                         AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
                         alertDialog.setTitle("Attenzione");
@@ -876,17 +758,6 @@ public class MainFragment extends Fragment implements View.OnClickListener, Comp
                         mEditText.setText(text);
 
                     } catch (FileNotFoundException e) {
-                        /*    AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
-                            alertDialog.setTitle("Attenzione");
-                            alertDialog.setMessage("File non trovato, riprovare!");
-                            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                                    new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            dialog.dismiss();
-                                        }
-                                    });
-                            alertDialog.show();
-                            */
                         path = " ";
                         e.printStackTrace();
                     } catch (IOException e) {
@@ -895,7 +766,6 @@ public class MainFragment extends Fragment implements View.OnClickListener, Comp
                     }
 
                     break;
-                    //}
                 } else {
 
                     if (DEBUG)

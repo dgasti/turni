@@ -54,7 +54,6 @@ public class LoadingEvents extends ActionBarActivity implements TaskCallback {
         mRecoveryDay = recoveryDay;
 
         if (DEBUG) {
-            //Log.d(TAG, "testo turni passato in LoadingEvents: " + text);
             Log.d(TAG, "Cognome passato in LoadingEvents: " + surname);
         }
 
@@ -64,13 +63,10 @@ public class LoadingEvents extends ActionBarActivity implements TaskCallback {
         bundle.putBoolean(CHECKBOX, recoveryDay);
 
         wSharedPrefs = this.getSharedPreferences(getString(R.string.preference_file_key), this.MODE_PRIVATE);
-        //mText = this.getArguments().getString(TURN_TEXT, "");
-        //mSurname = this.getArguments().getString(SURNAME, "");
+
         if (DEBUG) {
-            //Log.d(TAG, "Testo turni all'interno del LoadingEvents: " + mText);
             Log.d(TAG, "Cognome all'interno del LoadingEvents: " + mSurname);
             Log.d(TAG, "Valore CheckBox all'interno del LoadingEvents: " + mRecoveryDay);
-
         }
 
         if (mText != null && mSurname != null)
@@ -81,14 +77,6 @@ public class LoadingEvents extends ActionBarActivity implements TaskCallback {
         if(DEBUG)
             Log.d(TAG, "isFinishing = "+isFinishing);
 
-        /*while(!isFinishing) {
-
-            if (isFinishing == true) {
-                isFinishing = false;
-                Intent intent = new Intent(getApplicationContext(), DoneDialog.class);
-                startActivity(intent);
-            }
-        }*/
     }
 
     public void done() {

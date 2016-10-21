@@ -120,7 +120,6 @@ public class ColorSelectorDialog extends ActionBarActivity {
             //   catch (Exception e){}
             for (int i = 1; i < 12; i++) {
                 mColorView[i].setTag(i+"");
-                //mColorView[i].setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.check, 0);
                 mColorView[i].setOnClickListener(this);
             }
             mBackground.setTag(VIEW_BACKGROUND);

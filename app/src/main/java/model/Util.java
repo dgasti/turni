@@ -203,11 +203,9 @@ public class Util {
         Uri eventUri;
         if (android.os.Build.VERSION.SDK_INT <= 7) {
             // the old way
-
             eventUri = Uri.parse("content://calendar/events");
         } else {
             // the new way
-
             eventUri = Uri.parse("content://com.android.calendar/events");
         }
 
@@ -265,11 +263,6 @@ public class Util {
             String titleCursor;
             String calendarName;
 
-            /*if (DEBUG) {
-                Log.d(TAG, "cursor.getCount = " + cursor.getCount());
-                Log.d(TAG, "Nomi delle colonne = " + cursor.getColumnNames().toString());
-            }*/
-
             int row_id = cursor.getColumnIndex(proj[0]);
             int calendar_id = cursor.getColumnIndex(proj[1]);
             int idCol = cursor.getColumnIndex(proj[2]);
@@ -277,29 +270,13 @@ public class Util {
             int calendar_name_id = cursor.getColumnIndex(proj[4]);
 
             if (DEBUG) {
-               /* Log.d(TAG, "idRiga = " + row_id);
-                Log.d(TAG, "idColonna = " + idCol);
-                Log.d(TAG, "titleColonna numero di colonna = " + titleCol);*/
                 Log.d(TAG, "idCalendario = " + calendar_id);
             }
 
             do {
                 idRow = cursor.getString(row_id);
-
-                //if (DEBUG)
-                //    Log.d(TAG, "id Riga dell'eventID in Stringa  = " + idRow);
-
                 idCalendar = cursor.getString(calendar_id);
-
-                //if (DEBUG)
-                //    Log.d(TAG, "id Riga dell'eventID in Stringa  = " + idCalendar);
-
-
                 idColString = cursor.getString(idCol);
-
-                //if (DEBUG)
-                //    Log.d(TAG, "id Colonna dell'eventID in Stringa  = " + idCol);
-
                 titleCursor = cursor.getString(titleCol);
 
                 if (DEBUG)
@@ -310,15 +287,21 @@ public class Util {
                 if (DEBUG)
                     Log.d(TAG, "Nome del calendario  = " + calendarName);
 
-                //if (((titleCursor.equals(titleMatt)) || (titleCursor.equals(titleNott1)) || (titleCursor.equals(titleNott2)) || (titleCursor.equals(titlePom)) || (titleCursor.equals(titleText_REP)) || titleCursor.equals(titleText_REC)) && (calendarName.equals(calendarChoosen))) {
+                /*if (((titleCursor.equals(titleMatt)) || (titleCursor.equals(titleNott1)) || (titleCursor.equals(titleNott2)) ||
+                        (titleCursor.equals(titlePom)) || (titleCursor.equals(titleText_REP)) ||
+                        titleCursor.equals(titleText_REC) || titleCursor.equals(titleBtc) || titleCursor.equals(titleDaily) ||
+                        titleCursor.equals(titleMdw) || titleCursor.equals(titleStg)) && (calendarName.equals(calendarChoosen))) {*/
 
-                if ((titleCursor.equals(titleMatt)) || (titleCursor.equals(titleNott1)) || (titleCursor.equals(titleNott2)) || (titleCursor.equals(titlePom)) || (titleCursor.equals(titleText_REP)) || titleCursor.equals(titleText_REC) || titleCursor.equals(titleBtc) || titleCursor.equals(titleDaily) || titleCursor.equals(titleMdw) || titleCursor.equals(titleStg)) {
+                if ((titleCursor.equals(titleMatt)) ||
+                        (titleCursor.equals(titleNott1)) || (titleCursor.equals(titleNott2)) || (titleCursor.equals(titlePom)) ||
+                        (titleCursor.equals(titleText_REP)) || titleCursor.equals(titleText_REC) ||
+                        titleCursor.equals(titleBtc) || titleCursor.equals(titleDaily) || titleCursor.equals(titleMdw) ||
+                        titleCursor.equals(titleStg)) {
 
                     if (DEBUG)
                         Log.d(TAG, "Sono dentro all'if del controllo dei titoli dell'isAlreadyCreate, dovrei eliminare l'evento");
 
                     eventID = Integer.parseInt(idColString);
-                    //eventID = Integer.parseInt(idRow);
                     Uri eventsUri = Uri.parse(getCalendarUriBase() + "");
 
                     if(DEBUG) {

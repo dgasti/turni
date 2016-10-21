@@ -105,20 +105,6 @@ public class DoneDialog extends ActionBarActivity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            //Setting up the shared preference
-            /*wSharedPrefs = getActivity().getSharedPreferences(getString(R.string.preference_file_key), getActivity().MODE_PRIVATE);
-            mText = this.getArguments().getString(LAUNCH_ACTIVITY, "");
-            mSurname = this.getArguments().getString(SURNAME, "");
-
-            if (DEBUG) {
-                Log.d(TAG, "Testo turni all'interno del PlaceFragemnt: " + mText);
-                Log.d(TAG, "Cognome all'interno del PlaceFragment: " + mSurname);
-            }
-
-            if (mText != null && mSurname != null)
-                isActivityCalled = true;*/
-
-            //Inflate the views
             final View rootView = inflater.inflate(R.layout.fragment_working_dialog, container, false);
             getActivity().getWindow().setEnterTransition(TransitionInflater.from(getActivity()).inflateTransition(R.transition.enter_ma_da));
 
