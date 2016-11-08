@@ -21,11 +21,10 @@ import turni.app.it.turni.R;
  * Created by nick on 26/03/2015.
  */
 public class Util {
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
     private static final String TAG = "UTIL";
     private static final String SP_CALENDAR_USED = "calendar used";
     private static SharedPreferences iSharedPrefs;
-
 
     /**
      * Return the calendar ID using the calendar name
@@ -228,6 +227,11 @@ public class Util {
         String titleMdw = "UFFICIO MDW";
         String titleStg = "UFFICIO STG OPEN";
         String titleBtc = "UFFICIO PIANIF";
+        //String titleTextNew = "TURNO LAVORATIVO";
+        String titleMattNew = "MATTINA: TURNO LAVORATIVO";
+        String titleNott1New = "NOTTE 21: TURNO LAVORATIVO";
+        String titleNott2New = "NOTTE 00: TURNO LAVORATIVO";
+        String titlePomNew = "POMERIGGIO: TURNO LAVORATIVO";
 
         String calendarChoosen = iSharedPrefs.getString(SP_CALENDAR_USED, "nessun calendario");
 
@@ -287,19 +291,38 @@ public class Util {
                 if (DEBUG)
                     Log.d(TAG, "Nome del calendario  = " + calendarName);
 
-                /*if (((titleCursor.equals(titleMatt)) || (titleCursor.equals(titleNott1)) || (titleCursor.equals(titleNott2)) ||
-                        (titleCursor.equals(titlePom)) || (titleCursor.equals(titleText_REP)) ||
-                        titleCursor.equals(titleText_REC) || titleCursor.equals(titleBtc) || titleCursor.equals(titleDaily) ||
-                        titleCursor.equals(titleMdw) || titleCursor.equals(titleStg)) && (calendarName.equals(calendarChoosen))) {*/
+                /*if (((titleCursor.equals(titleMatt)) ||
+                        (titleCursor.equals(titleNott1)) || (titleCursor.equals(titleNott2)) || (titleCursor.equals(titlePom)) ||
+                        (titleCursor.equals(titleText_REP)) || titleCursor.equals(titleText_REC) ||
+                        titleCursor.equals(titleBtc) || titleCursor.equals(titleDaily) || titleCursor.equals(titleMdw) ||
+                        titleCursor.equals(titleStg) || titleCursor.equals(titleWin))
+                        && (calendarName.equals(calendarChoosen))) {*/
 
                 if ((titleCursor.equals(titleMatt)) ||
                         (titleCursor.equals(titleNott1)) || (titleCursor.equals(titleNott2)) || (titleCursor.equals(titlePom)) ||
                         (titleCursor.equals(titleText_REP)) || titleCursor.equals(titleText_REC) ||
                         titleCursor.equals(titleBtc) || titleCursor.equals(titleDaily) || titleCursor.equals(titleMdw) ||
-                        titleCursor.equals(titleStg)) {
+                        titleCursor.equals(titleStg) || titleCursor.equals(titleWin)) {
 
                     if (DEBUG)
                         Log.d(TAG, "Sono dentro all'if del controllo dei titoli dell'isAlreadyCreate, dovrei eliminare l'evento");
+
+                    eventID = Integer.parseInt(idColString);
+                    Uri eventsUri = Uri.parse(getCalendarUriBase() + "");
+
+                    if(DEBUG) {
+                        Log.d(TAG, "eventsUri = " + eventsUri);
+                        Log.d(TAG, "event ID = " + eventID);
+                    }
+
+                    Uri eventUri = ContentUris.withAppendedId(eventsUri, eventID);
+                    numEventiEliminati = content.delete(eventUri, null, null);
+                }
+                else if ((titleCursor.equals(titleMattNew)) ||
+                        (titleCursor.equals(titleNott1New)) || (titleCursor.equals(titleNott2New))
+                        || (titleCursor.equals(titlePomNew))){
+                    if (DEBUG)
+                        Log.d(TAG, "Sono dentro all'if del controllo dei titoliNew dell'isAlreadyCreate, dovrei eliminare l'evento");
 
                     eventID = Integer.parseInt(idColString);
                     Uri eventsUri = Uri.parse(getCalendarUriBase() + "");

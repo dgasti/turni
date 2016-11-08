@@ -68,7 +68,7 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
      */
     private static final String CREATE_EVENTS = "create events";
     private static final CharSequence ASSENZA = "ASSENZA";
-    private static final CharSequence ASSENZE = "ASSENZE";
+    private static final CharSequence FERIE = "FERIE";
     private static final CharSequence FESTIVO_TARGET = "TARGET";
     private static final CharSequence UFFICIO_STORAGE = "STG";
     private static final CharSequence UFFICIO_PIANIF = "UPI";
@@ -93,7 +93,7 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
     private ContentResolver mContentResolver;
     private SharedPreferences wSharedPrefs;
     private boolean isActivityCalled = false;
-    private boolean hasToCreateEvent;
+    private boolean hasToCreateEvent, hasToCreateNoEvent;
     private String titleMatt, titlePom, titleNott1, titleNott2, titleText, titleText_REP, titleText_REC, placeText = "";
     private ProgressDialog progress;
     private String calendarName;
@@ -186,6 +186,7 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
         Calendar checkEventBegin = null;
         Calendar checkEventEnd = null;
         hasToCreateEvent = false;
+        hasToCreateNoEvent = false;
         hasReachable = false;
         hasRecoveryDay = false;
         isFullDay = false;
@@ -221,10 +222,10 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
 
             //TODO add holiday in calendar event
             titleText = "TURNO LAVORATIVO";
-            titleMatt = "TURNO MATTINO";
-            titleNott1 = "TURNO NOTTURNO 21";
-            titleNott2 = "TURNO NOTTURNO 00";
-            titlePom = "TURNO POMERIGGIO";
+            titleMatt = "MATTINA: TURNO LAVORATIVO";
+            titleNott1 = "NOTTE 21: TURNO LAVORATIVO";
+            titleNott2 = "NOTTE 00: TURNO LAVORATIVO";
+            titlePom = "POMERIGGIO: TURNO LAVORATIVO";
             titleText_REP = "REPERIBILITA'";
             titleText_REC = "RECUPERO";
             titleDaily = "TURNO GIORNALIERO";
@@ -244,15 +245,25 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
             checkEventEnd = null;
 
             //Find the work place
-            if (line.contains(ASSENZA) || line.contains(ASSENZE) || line.contains(FESTIVO_TARGET)) {
+            if (line.contains(ASSENZA) || line.contains(FERIE) || line.contains(FESTIVO_TARGET)) {
                 hasToCreateEvent = false;
-                Log.d(TAG, "entro in assenza riga " + i);
-                Log.d(TAG, "dentro all'if per creare o meno l'evento SENZA RECUPERO = " + recoveryDay);
+                hasToCreateNoEvent = true;
+                checkEventBegin.set(Calendar.HOUR_OF_DAY, 0);
+                checkEventBegin.set(Calendar.MINUTE, 1);
+                checkEventEnd = (Calendar) checkEventBegin.clone();
+                checkEventEnd.set(Calendar.HOUR_OF_DAY, 23);
+                checkEventEnd.set(Calendar.MINUTE, 59);
+                isFullDay = false;
+                hasReachable = false;
+                hasRecoveryDay = false;
+                //Log.d(TAG, "entro in assenza riga " + i);
+                //Log.d(TAG, "dentro all'if per creare o meno l'evento SENZA RECUPERO = " + recoveryDay);
             }
 
             if (recoveryDay == false) {
                 if (line.contains(RECUPERO)) {
                     hasToCreateEvent = false;
+                    hasToCreateNoEvent = false;
                     Log.d(TAG, "entro in assenza riga " + i);
                     Log.d(TAG, "recoveryDay nell'if per creare o meno l'evento = " + recoveryDay);
                 }
@@ -271,6 +282,7 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
                 checkEventEnd.set(Calendar.HOUR_OF_DAY, 23);
                 checkEventEnd.set(Calendar.MINUTE, 59);
                 hasToCreateEvent = true;
+                hasToCreateNoEvent = false;
                 isFullDay = false;
                 titleText = titleMatt;
                 hasReachable = false;
@@ -289,6 +301,7 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
                 checkEventEnd.set(Calendar.HOUR_OF_DAY, 23);
                 checkEventEnd.set(Calendar.MINUTE, 59);
                 hasToCreateEvent = true;
+                hasToCreateNoEvent = false;
                 isFullDay = false;
                 titleText = titlePom;
                 hasReachable = false;
@@ -306,6 +319,7 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
                 checkEventEnd.set(Calendar.HOUR_OF_DAY, 23);
                 checkEventEnd.set(Calendar.MINUTE, 59);
                 hasToCreateEvent = true;
+                hasToCreateNoEvent = false;
                 isFullDay = false;
                 titleText = titleNott2;
                 hasReachable = false;
@@ -326,6 +340,7 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
                 checkEventEnd.set(Calendar.HOUR_OF_DAY, 6);
                 checkEventEnd.set(Calendar.MINUTE, 1);
                 hasToCreateEvent = true;
+                hasToCreateNoEvent = false;
                 isFullDay = false;
                 titleText = titleNott1;
                 hasReachable = false;
@@ -343,6 +358,7 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
                 checkEventEnd.set(Calendar.HOUR_OF_DAY, 23);
                 checkEventEnd.set(Calendar.MINUTE, 59);
                 hasToCreateEvent = true;
+                hasToCreateNoEvent = false;
                 isFullDay = false;
                 titleText = titleNott2;
                 hasReachable = false;
@@ -360,6 +376,7 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
                 checkEventEnd.set(Calendar.HOUR_OF_DAY, 23);
                 checkEventEnd.set(Calendar.MINUTE, 59);
                 hasToCreateEvent = true;
+                hasToCreateNoEvent = false;
                 isFullDay = false;
                 titleText = titleMatt;
                 hasReachable = false;
@@ -377,6 +394,7 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
                 checkEventEnd.set(Calendar.HOUR_OF_DAY, 23);
                 checkEventEnd.set(Calendar.MINUTE, 59);
                 hasToCreateEvent = true;
+                hasToCreateNoEvent = false;
                 isFullDay = false;
                 titleText = titlePom;
                 hasReachable = false;
@@ -396,6 +414,7 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
                 checkEventEnd.set(Calendar.MINUTE, 59);
                 isFullDay = true;
                 hasToCreateEvent = true;
+                hasToCreateNoEvent = false;
                 hasReachable = true;
                 hasRecoveryDay = false;
             }
@@ -412,6 +431,7 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
                 checkEventEnd.set(Calendar.HOUR_OF_DAY, 23);
                 checkEventEnd.set(Calendar.MINUTE, 59);
                 hasToCreateEvent = true;
+                hasToCreateNoEvent = false;
                 isFullDay = false;
                 titleText = titleDaily;
                 hasReachable = false;
@@ -431,6 +451,7 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
                 checkEventEnd.set(Calendar.HOUR_OF_DAY, 23);
                 checkEventEnd.set(Calendar.MINUTE, 59);
                 hasToCreateEvent = true;
+                hasToCreateNoEvent = false;
                 if (line.contains(UFFICIO_MDW))
                     titleText = titleMdw;
                 else if (line.contains(UFFICIO_STORAGE))
@@ -465,6 +486,7 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
                     checkEventEnd.set(Calendar.MINUTE, 59);
                     isFullDay = true;
                     hasToCreateEvent = true;
+                    hasToCreateNoEvent = false;
                     hasRecoveryDay = true;
                 }
             }
@@ -583,16 +605,25 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
 
                     if (DEBUG) {
                         Log.d(TAG, "numero di eventi deletati = " + iNumRowsDeleted);
-                    }
-
-                    if (DEBUG)
                         Log.d(TAG, "sono dopo l'alreadyCreate");
+                    }
 
                     Uri uri1 = mContentResolver.insert(CalendarContract.Events.CONTENT_URI, values);
                     // get the event ID that is the last element in the
                     //  Uri  long eventID = Long.parseLong(uri1.getLastPathSegment());
                 }
                 i++;
+            }
+            else if (hasToCreateNoEvent){
+                mContentResolver = activity.getContentResolver();
+                checkStartMillis = checkEventBegin.getTimeInMillis();
+                checkEndMillis = checkEventEnd.getTimeInMillis();
+                int iNumRowsDeleted = Util.isAlreadyCreate(checkStartMillis, checkEndMillis, mContentResolver, activity);
+
+                if (DEBUG) {
+                    Log.d(TAG, "numero di eventi deletati = " + iNumRowsDeleted);
+                    Log.d(TAG, "sono dopo l'alreadyCreate");
+                }
             }
         }
 
