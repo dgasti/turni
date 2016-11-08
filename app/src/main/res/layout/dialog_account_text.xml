@@ -4,7 +4,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Medium Text"
-        android:drawableLeft="@drawable/account_circle_grey600_36dp"
+        android:drawableLeft="@drawable/ic_account_circle_black_24dp"
         android:drawablePadding="16dp"
         android:paddingLeft="16dp"
         android:gravity="center_vertical"/>
