@@ -291,18 +291,18 @@ public class Util {
                 if (DEBUG)
                     Log.d(TAG, "Nome del calendario  = " + calendarName);
 
-                /*if (((titleCursor.equals(titleMatt)) ||
+                if (((titleCursor.equals(titleMatt)) ||
                         (titleCursor.equals(titleNott1)) || (titleCursor.equals(titleNott2)) || (titleCursor.equals(titlePom)) ||
                         (titleCursor.equals(titleText_REP)) || titleCursor.equals(titleText_REC) ||
                         titleCursor.equals(titleBtc) || titleCursor.equals(titleDaily) || titleCursor.equals(titleMdw) ||
                         titleCursor.equals(titleStg) || titleCursor.equals(titleWin))
-                        && (calendarName.equals(calendarChoosen))) {*/
+                        && (calendarName.equals(calendarChoosen))) {
 
-                if ((titleCursor.equals(titleMatt)) ||
+                /*if ((titleCursor.equals(titleMatt)) ||
                         (titleCursor.equals(titleNott1)) || (titleCursor.equals(titleNott2)) || (titleCursor.equals(titlePom)) ||
                         (titleCursor.equals(titleText_REP)) || titleCursor.equals(titleText_REC) ||
                         titleCursor.equals(titleBtc) || titleCursor.equals(titleDaily) || titleCursor.equals(titleMdw) ||
-                        titleCursor.equals(titleStg) || titleCursor.equals(titleWin)) {
+                        titleCursor.equals(titleStg) || titleCursor.equals(titleWin)) {*/
 
                     if (DEBUG)
                         Log.d(TAG, "Sono dentro all'if del controllo dei titoli dell'isAlreadyCreate, dovrei eliminare l'evento");

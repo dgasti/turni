@@ -189,6 +189,7 @@ public class DoneDialog extends ActionBarActivity {
                         Intent i = new Intent();
                         ComponentName cn = new ComponentName("com.google.android.calendar", "com.android.calendar.LaunchActivity");
                         i.setComponent(cn);
+                        startActivity(i);
                     }
                 }
             }
