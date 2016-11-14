@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Intent;
@@ -153,7 +154,23 @@ public class DoneDialog extends ActionBarActivity {
                     Intent i = new Intent();
                     ComponentName cn = new ComponentName("com.google.android.calendar", "com.android.calendar.LaunchActivity");
                     i.setComponent(cn);
-                    startActivity(i);
+                    try {
+                        startActivity(i);
+                    }catch (ActivityNotFoundException e) {
+                        PackageManager packmngr = getActivity().getApplicationContext().getPackageManager();
+                        Intent intent = new Intent(Intent.ACTION_MAIN);
+                        intent.addCategory(Intent.CATEGORY_LAUNCHER);
+                        List<ResolveInfo> list = packmngr.queryIntentActivities(intent, PackageManager.PERMISSION_GRANTED);
+                        ResolveInfo Resolvebest = null;
+                        for (final ResolveInfo info : list) {
+                            if (info.activityInfo.packageName.endsWith(".calendar"))
+                                Resolvebest = info;
+                        }
+                        if (Resolvebest != null) {
+                            intent.setClassName(Resolvebest.activityInfo.packageName, Resolvebest.activityInfo.name);
+                            startActivity(intent);
+                        }
+                    }
 
                 } else {
                     PackageManager packmngr = getActivity().getApplicationContext().getPackageManager();
@@ -168,6 +185,10 @@ public class DoneDialog extends ActionBarActivity {
                     if (Resolvebest != null) {
                         intent.setClassName(Resolvebest.activityInfo.packageName, Resolvebest.activityInfo.name);
                         startActivity(intent);
+                    } else {
+                        Intent i = new Intent();
+                        ComponentName cn = new ComponentName("com.google.android.calendar", "com.android.calendar.LaunchActivity");
+                        i.setComponent(cn);
                     }
                 }
             }
