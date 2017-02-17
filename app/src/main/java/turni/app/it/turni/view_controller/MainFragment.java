@@ -429,11 +429,14 @@ public class MainFragment extends Fragment implements View.OnClickListener, Comp
                     Log.d(TAG, "Sono dentro all'else dell'intent del Forward button nell'onclick, ho superato tutti i test");
 
                 Intent intent = new Intent(getActivity(), LoadingEvents.class);
-                v.setTransitionName("snapshot");
-                getActivity().getWindow().setExitTransition(null);
-                getActivity().getWindow().setEnterTransition(TransitionInflater.from(getActivity()).inflateTransition(R.transition.enter_ma_da));
-                getActivity().getWindow().setSharedElementEnterTransition(TransitionInflater.from(getActivity())
-                        .inflateTransition(R.transition.circular_reveal_shared_transition));
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    v.setTransitionName("snapshot");
+                    getActivity().getWindow().setExitTransition(null);
+                    getActivity().getWindow().setEnterTransition(TransitionInflater.from(getActivity()).inflateTransition(R.transition.enter_ma_da));
+                    getActivity().getWindow().setSharedElementEnterTransition(TransitionInflater.from(getActivity())
+                            .inflateTransition(R.transition.circular_reveal_shared_transition));
+                }
+
 
                 intent.putExtra(TURN_TEXT, text);
 
@@ -456,7 +459,9 @@ public class MainFragment extends Fragment implements View.OnClickListener, Comp
                         Log.d(TAG, "Cognome passato alla workingDialog surname = " + surname);
                 }
 
-                startActivityForResult(intent, FORWARD_SELECT_BUTTON, ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    startActivityForResult(intent, FORWARD_SELECT_BUTTON, ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
+                }
                 mFowardButton.animate().alpha(0).setDuration(250);
 
             }
@@ -467,11 +472,14 @@ public class MainFragment extends Fragment implements View.OnClickListener, Comp
             imm.hideSoftInputFromWindow(mEditText.getWindowToken(), 0);
 
             Intent intent = new Intent(getActivity(), CalendarDialog.class);
-            v.setTransitionName("snapshot");
-            getActivity().getWindow().setExitTransition(null);
-            getActivity().getWindow().setEnterTransition(TransitionInflater.from(getActivity()).inflateTransition(R.transition.enter_ma_da));
-            startActivityForResult(intent, CALENDAR_DIALOG_ACTIVITY_RESULT_CODE,
-                    ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                v.setTransitionName("snapshot");
+                getActivity().getWindow().setExitTransition(null);
+                getActivity().getWindow().setEnterTransition(TransitionInflater.from(getActivity()).inflateTransition(R.transition.enter_ma_da));
+                startActivityForResult(intent, CALENDAR_DIALOG_ACTIVITY_RESULT_CODE,
+                        ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
+            }
+
             mAccountButton.animate().alpha(0).setDuration(250);
         }
 
@@ -489,13 +497,16 @@ public class MainFragment extends Fragment implements View.OnClickListener, Comp
                 intent.putExtra(COLOR_SELECTOR_BUNDLE, TAG_BASSONA_COLOR_BUTTON);
                 openVerona = false;
             }
-            v.setTransitionName("snapshot");
-            getActivity().getWindow().setExitTransition(null);
-            getActivity().getWindow().setEnterTransition(TransitionInflater.from(getActivity()).inflateTransition(R.transition.enter_ma_da));
-            getActivity().getWindow().setSharedElementEnterTransition(TransitionInflater.from(getActivity())
-                    .inflateTransition(R.transition.circular_reveal_shared_transition));
-            startActivityForResult(intent, COLOR_DIALOG_ACTIVITY_RESULT_CODE,
-                    ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                v.setTransitionName("snapshot");
+                getActivity().getWindow().setExitTransition(null);
+                getActivity().getWindow().setEnterTransition(TransitionInflater.from(getActivity()).inflateTransition(R.transition.enter_ma_da));
+                getActivity().getWindow().setSharedElementEnterTransition(TransitionInflater.from(getActivity())
+                        .inflateTransition(R.transition.circular_reveal_shared_transition));
+                startActivityForResult(intent, COLOR_DIALOG_ACTIVITY_RESULT_CODE,
+                        ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
+            }
+
             if (TAG_VERONA_COLOR_BUTTON.equals(tag))
                 mVeronaColorButton.animate().alpha(0).setDuration(250);
             if (TAG_BASSONA_COLOR_BUTTON.equals(tag))
