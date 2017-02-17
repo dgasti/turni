@@ -3,6 +3,7 @@ package turni.app.it.turni.view_controller;
 import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.transition.TransitionInflater;
@@ -110,7 +111,9 @@ public class CalendarDialog extends Activity {
             mBackgroundView.setTag(BACKGROUND);
 
             mBackgroundView.setOnClickListener(this);
-            getActivity().getWindow().setEnterTransition(TransitionInflater.from(getActivity()).inflateTransition(R.transition.enter_ma_da));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                getActivity().getWindow().setEnterTransition(TransitionInflater.from(getActivity()).inflateTransition(R.transition.enter_ma_da));
+            }
 
             int eventIndex = 0;
             mAccountsList = Util.getCalendarAccounts(getActivity());
@@ -146,7 +149,9 @@ public class CalendarDialog extends Activity {
             String tag = (String) v.getTag();
 
             if (BACKGROUND.equalsIgnoreCase(tag))
-                getActivity().finishAfterTransition();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    getActivity().finishAfterTransition();
+                }
 
             if(CALENDAR_ROW.equalsIgnoreCase(tag)){
                 Intent resultIntent=new Intent();
@@ -156,7 +161,9 @@ public class CalendarDialog extends Activity {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        getActivity().finishAfterTransition();
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            getActivity().finishAfterTransition();
+                        }
                     }
                 },250);
 

@@ -2,6 +2,7 @@ package turni.app.it.turni.view_controller;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Bundle;
 import android.transition.TransitionInflater;
@@ -96,7 +97,9 @@ public class ColorSelectorDialog extends ActionBarActivity {
                 colorDefault = mSPref.getInt(BASSONA_COLOR_DEFAULT, 1);
             //Inflate the views
             View rootView = inflater.inflate(R.layout.fragment_color_selector_dialog, container, false);
-            getActivity().getWindow().setEnterTransition(TransitionInflater.from(getActivity()).inflateTransition(R.transition.enter_ma_da));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                getActivity().getWindow().setEnterTransition(TransitionInflater.from(getActivity()).inflateTransition(R.transition.enter_ma_da));
+            }
             mColorView[1] = (Button) rootView.findViewById(R.id.row_color_1);
             mColorView[2] = (Button) rootView.findViewById(R.id.row_color_2);
             mColorView[3] = (Button) rootView.findViewById(R.id.row_color_3);
@@ -133,7 +136,9 @@ public class ColorSelectorDialog extends ActionBarActivity {
             String tag=(String)view.getTag();
             if(VIEW_BACKGROUND.equals(tag)){
                 getActivity().setResult(CODE_NOT_OK, getActivity().getIntent());
-                getActivity().finishAfterTransition();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    getActivity().finishAfterTransition();
+                }
             }
             else {
                 //Get the color selected
@@ -152,7 +157,9 @@ public class ColorSelectorDialog extends ActionBarActivity {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        getActivity().finishAfterTransition();
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            getActivity().finishAfterTransition();
+                        }
                     }
                 }, 250);
             }

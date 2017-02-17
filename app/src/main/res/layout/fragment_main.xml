@@ -155,20 +155,6 @@
         android:paddingLeft="28dp"
         android:layout_marginLeft="12dp"/>
 
-    <com.melnykov.fab.FloatingActionButton
-        android:id="@+id/foward_button"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:layout_marginRight="@dimen/activity_horizontal_short_margin"
-        android:src="@drawable/ic_play_arrow_white_24dp"
-        fab:fab_colorNormal="@color/red_500"
-        fab:fab_colorPressed="@color/red_500"
-        fab:fab_colorRipple="@color/red_A700"
-        fab:fab_shadow="true"
-        android:layout_below="@+id/recoveryDay"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="43dp" />
-
     <RelativeLayout
         android:id="@+id/dialog_container"
         android:layout_width="match_parent"
@@ -227,22 +213,19 @@
 
     </RelativeLayout>
 
-    <CheckBox
-        android:text="CheckBox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/recoveryDay"
-        android:layout_alignStart="@+id/recoveryDay"
-        android:layout_marginTop="19dp"
-        android:id="@+id/checkBox" />
-
-    <ProgressBar
-        style="?android:attr/progressBarStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/checkBox"
-        android:layout_toEndOf="@+id/foward_button"
-        android:layout_marginStart="28dp"
-        android:id="@+id/progressBar" />
+    <com.melnykov.fab.FloatingActionButton
+        android:id="@+id/foward_button"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_marginRight="@dimen/activity_horizontal_short_margin"
+        android:src="@drawable/ic_play_arrow_white_24dp"
+        fab:fab_colorNormal="@color/red_500"
+        fab:fab_colorPressed="@color/red_500"
+        fab:fab_colorRipple="@color/red_A700"
+        fab:fab_shadow="true"
+        android:layout_marginEnd="40dp"
+        android:layout_marginBottom="22dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>
