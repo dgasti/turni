@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.provider.CalendarContract;
 import android.transition.TransitionInflater;
 import android.util.Log;
@@ -138,7 +139,9 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
             isActivityCalled = false;
             text = null;
             surname = null;
-            activity.startPostponedEnterTransition();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                activity.startPostponedEnterTransition();
+            }
         }
         return null;
     }
@@ -152,11 +155,17 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
     protected void onPostExecute(Void unused) {
         LoadingEvents.isFinishing = true;
         Intent intent = new Intent(activity.getApplicationContext(), DoneDialog.class);
-        activity.getWindow().setExitTransition(null);
-        activity.getWindow().setEnterTransition(TransitionInflater.from(activity).inflateTransition(R.transition.enter_ma_da));
-        activity.getWindow().setSharedElementEnterTransition(TransitionInflater.from(activity)
-                .inflateTransition(R.transition.circular_reveal_shared_transition));
-        activity.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(activity).toBundle());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            activity.getWindow().setExitTransition(null);
+            activity.getWindow().setEnterTransition(TransitionInflater.from(activity).inflateTransition(R.transition.enter_ma_da));
+            activity.getWindow().setSharedElementEnterTransition(TransitionInflater.from(activity)
+                    .inflateTransition(R.transition.circular_reveal_shared_transition));
+            activity.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(activity).toBundle());
+        }
+        else {
+            activity.startActivity(intent);
+        }
+
         mCallback.done();
         progress.dismiss();
     }

@@ -107,7 +107,9 @@ public class DoneDialog extends ActionBarActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             final View rootView = inflater.inflate(R.layout.fragment_working_dialog, container, false);
-            getActivity().getWindow().setEnterTransition(TransitionInflater.from(getActivity()).inflateTransition(R.transition.enter_ma_da));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                getActivity().getWindow().setEnterTransition(TransitionInflater.from(getActivity()).inflateTransition(R.transition.enter_ma_da));
+            }
 
             mBackground = (RelativeLayout) rootView.findViewById(R.id.working_dialog_fragment_background);
             sync_calendar = (Button) rootView.findViewById(R.id.sync_button);
@@ -130,7 +132,9 @@ public class DoneDialog extends ActionBarActivity {
             String tag = (String) view.getTag();
             if (BACKGROUND.equals(tag)) {
                 getActivity().setResult(CODE_NOT_OK, getActivity().getIntent());
-                getActivity().finishAfterTransition();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    getActivity().finishAfterTransition();
+                }
             }
             if (SYNC_CALENDAR.equals(tag)) {
                 AccountManager manager = AccountManager.get(getActivity());

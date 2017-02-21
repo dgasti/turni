@@ -462,6 +462,9 @@ public class MainFragment extends Fragment implements View.OnClickListener, Comp
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     startActivityForResult(intent, FORWARD_SELECT_BUTTON, ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
                 }
+                else {
+                    startActivityForResult(intent, FORWARD_SELECT_BUTTON);
+                }
                 mFowardButton.animate().alpha(0).setDuration(250);
 
             }
@@ -478,6 +481,9 @@ public class MainFragment extends Fragment implements View.OnClickListener, Comp
                 getActivity().getWindow().setEnterTransition(TransitionInflater.from(getActivity()).inflateTransition(R.transition.enter_ma_da));
                 startActivityForResult(intent, CALENDAR_DIALOG_ACTIVITY_RESULT_CODE,
                         ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
+            }
+            else {
+                startActivityForResult(intent, CALENDAR_DIALOG_ACTIVITY_RESULT_CODE);
             }
 
             mAccountButton.animate().alpha(0).setDuration(250);
@@ -505,6 +511,9 @@ public class MainFragment extends Fragment implements View.OnClickListener, Comp
                         .inflateTransition(R.transition.circular_reveal_shared_transition));
                 startActivityForResult(intent, COLOR_DIALOG_ACTIVITY_RESULT_CODE,
                         ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
+            }
+            else {
+                startActivityForResult(intent, COLOR_DIALOG_ACTIVITY_RESULT_CODE);
             }
 
             if (TAG_VERONA_COLOR_BUTTON.equals(tag))
