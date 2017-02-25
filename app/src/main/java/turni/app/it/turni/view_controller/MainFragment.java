@@ -92,14 +92,20 @@ public class MainFragment extends Fragment implements View.OnClickListener, Comp
     /**
      * Activity result intent key
      */
+
+    private static boolean recoveryColorButtonVisibility = false;
+
+
     private static final String RESULT_ACCOUNT = "result account";
     private static final String SP_CALENDAR_USED = "calendar used";
     private static final String SP_ACCOUNT_USED = "account used";
     private static final String TAG_VERONA_COLOR_BUTTON = "tag color button";
     private static final String TAG_BASSONA_COLOR_BUTTON = "tag bassona color button";
+    private static final String TAG_RECOVERY_COLOR_BUTTON = "tag recovery color button";
     private static final String COLOR_SELECTOR_BUNDLE = "color selector bundle";
     private static final String BASSONA_COLOR_DEFAULT = "bassona color default";
-    private static final String VERONA_COLOR_DEFAULT = "result color selected";
+    private static final String VERONA_COLOR_DEFAULT = "verona color default";
+    private static final String RECOVERY_COLOR_DEFAULT = "recovery color default";
     private static final String TAG_IMPORT_TEXT_BUTTON = "import text button";
     private static final String TAG_PASTE_TEXT = "paste text";
     private static final String TAG_DELETE_TEXT = "delete text";
@@ -124,6 +130,8 @@ public class MainFragment extends Fragment implements View.OnClickListener, Comp
     private RelativeLayout mBackground;
     private CheckBox mRecoveryDay;
     private Boolean recoveryDay;
+    private Button mRecoveryColorButton;
+    private Object buttonView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -143,6 +151,7 @@ public class MainFragment extends Fragment implements View.OnClickListener, Comp
         mAccountButton = (Button) mView.findViewById(R.id.account_button);
         mVeronaColorButton = (Button) mView.findViewById(R.id.verona_color_button);
         mBassonaColorButton = (Button) mView.findViewById(R.id.bassona_color_button);
+        mRecoveryColorButton = (Button) mView.findViewById(R.id.recupero_color_button);
         mImportTextButton = (Button) mView.findViewById(R.id.import_text_button);
         mSurnameText = (TextView) mView.findViewById(R.id.surname);
         mPasteButton = (Button) mView.findViewById(R.id.paste_text);
@@ -154,6 +163,7 @@ public class MainFragment extends Fragment implements View.OnClickListener, Comp
         mAccountButton.setTag(TAG_ACCOUNT_BUTTON);
         mVeronaColorButton.setTag(TAG_VERONA_COLOR_BUTTON);
         mBassonaColorButton.setTag(TAG_BASSONA_COLOR_BUTTON);
+        mRecoveryColorButton.setTag(TAG_RECOVERY_COLOR_BUTTON);
         mImportTextButton.setTag(TAG_IMPORT_TEXT_BUTTON);
         mPasteButton.setTag(TAG_PASTE_TEXT);
         mDeleteButton.setTag(TAG_DELETE_TEXT);
@@ -167,9 +177,21 @@ public class MainFragment extends Fragment implements View.OnClickListener, Comp
         drawableColor = ColorSelectorDialog.getColorDrawable(mSharedPref.getInt(BASSONA_COLOR_DEFAULT, 1));
         d = getResources().getDrawable(drawableColor);
         mBassonaColorButton.setCompoundDrawablesWithIntrinsicBounds(d, null, null, null);
+        drawableColor = ColorSelectorDialog.getColorDrawable(mSharedPref.getInt(RECOVERY_COLOR_DEFAULT, 1));
+        d = getResources().getDrawable(drawableColor);
+        mRecoveryColorButton.setCompoundDrawablesWithIntrinsicBounds(d, null, null, null);
 
         recoveryDay = mSharedPref.getBoolean("CHECKBOX_IS_CHECKED", false);
         surname_check = mSharedPref.getString("SURNAME", "");
+        recoveryColorButtonVisibility = mSharedPref.getBoolean("VISIBILITY", false);
+        if(recoveryColorButtonVisibility) {
+            mRecoveryDay.setChecked(true);
+            mRecoveryColorButton.setEnabled(true);
+        }
+        else {
+            mRecoveryDay.setChecked(false);
+            mRecoveryColorButton.setEnabled(false);
+        }
 
         if (DEBUG) {
             Log.d(TAG, "surname_check = " + surname_check);
@@ -199,9 +221,24 @@ public class MainFragment extends Fragment implements View.OnClickListener, Comp
         mPasteButton.setOnClickListener(this);
         mDeleteButton.setOnClickListener(this);
         mSurnameText.setOnClickListener(this);
-        mRecoveryDay.setOnCheckedChangeListener(this);
         mSurname.setOnClickListener(this);
+        mRecoveryColorButton.setOnClickListener(this);
+        mRecoveryDay.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if(mRecoveryDay.isChecked()) {
+                    mRecoveryColorButton.setEnabled(true);
+                    recoveryColorButtonVisibility = true;
+                    mSharedPref.edit().putBoolean("VISIBILITY", recoveryColorButtonVisibility).commit();
 
+                }
+                else {
+                    mRecoveryColorButton.setEnabled(false);
+                    recoveryColorButtonVisibility = false;
+                    mSharedPref.edit().putBoolean("VISIBILITY", recoveryColorButtonVisibility).commit();
+                }
+            }
+        });
 
         View.OnLongClickListener listener = new View.OnLongClickListener() {
             public boolean onLongClick(View v) {
@@ -292,6 +329,8 @@ public class MainFragment extends Fragment implements View.OnClickListener, Comp
         });
         return true;
     }
+
+
 
     /**
      * Hides the soft keyboard
@@ -489,7 +528,7 @@ public class MainFragment extends Fragment implements View.OnClickListener, Comp
             mAccountButton.animate().alpha(0).setDuration(250);
         }
 
-        if (TAG_VERONA_COLOR_BUTTON.equals(tag) || TAG_BASSONA_COLOR_BUTTON.equals(tag)) {
+        if (TAG_VERONA_COLOR_BUTTON.equals(tag) || TAG_BASSONA_COLOR_BUTTON.equals(tag) || TAG_RECOVERY_COLOR_BUTTON.equals(tag)) {
 
             imm = (InputMethodManager) getActivity().getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(mEditText.getWindowToken(), 0);
@@ -501,6 +540,10 @@ public class MainFragment extends Fragment implements View.OnClickListener, Comp
             }
             if (TAG_BASSONA_COLOR_BUTTON.equals(tag)) {
                 intent.putExtra(COLOR_SELECTOR_BUNDLE, TAG_BASSONA_COLOR_BUTTON);
+                openVerona = false;
+            }
+            if(TAG_RECOVERY_COLOR_BUTTON.equals(tag)) {
+                intent.putExtra(COLOR_SELECTOR_BUNDLE, TAG_RECOVERY_COLOR_BUTTON);
                 openVerona = false;
             }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -520,6 +563,9 @@ public class MainFragment extends Fragment implements View.OnClickListener, Comp
                 mVeronaColorButton.animate().alpha(0).setDuration(250);
             if (TAG_BASSONA_COLOR_BUTTON.equals(tag))
                 mBassonaColorButton.animate().alpha(0).setDuration(250);
+            if(TAG_RECOVERY_COLOR_BUTTON.equals(tag)) {
+                mRecoveryColorButton.animate().alpha(0).setDuration(250);
+            }
         }
 
     }
@@ -703,17 +749,25 @@ public class MainFragment extends Fragment implements View.OnClickListener, Comp
                         Drawable d = getActivity().getResources().getDrawable(colorDrawable);
                         mVeronaColorButton.setCompoundDrawablesWithIntrinsicBounds(d, null, null, null);
                         mVeronaColorButton.animate().alpha(1f).setDuration(250);
-                    } else {
+                    } else if (TAG_BASSONA_COLOR_BUTTON.equals(data.getStringExtra(COLOR_SELECTOR_BUNDLE))){
                         colorSelected = mSharedPref.getInt(BASSONA_COLOR_DEFAULT, 0);
                         int colorDrawable = ColorSelectorDialog.getColorDrawable(colorSelected);
                         Drawable d = getActivity().getResources().getDrawable(colorDrawable);
                         mBassonaColorButton.setCompoundDrawablesWithIntrinsicBounds(d, null, null, null);
                         mBassonaColorButton.animate().alpha(1f).setDuration(250);
                     }
+                    else if (TAG_RECOVERY_COLOR_BUTTON.equals(data.getStringExtra(COLOR_SELECTOR_BUNDLE))){
+                        colorSelected = mSharedPref.getInt(RECOVERY_COLOR_DEFAULT, 0);
+                        int colorDrawable = ColorSelectorDialog.getColorDrawable(colorSelected);
+                        Drawable d = getActivity().getResources().getDrawable(colorDrawable);
+                        mRecoveryColorButton.setCompoundDrawablesWithIntrinsicBounds(d, null, null, null);
+                        mRecoveryColorButton.animate().alpha(1f).setDuration(250);
+                    }
                     break;
                 } else {
                     mVeronaColorButton.animate().alpha(1f).setDuration(250);
                     mBassonaColorButton.animate().alpha(1f).setDuration(250);
+                    mRecoveryColorButton.animate().alpha(1f).setDuration(250);
                 }
             case (FILE_SELECT_RESULT_CODE):
 

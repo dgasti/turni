@@ -164,6 +164,9 @@ public class CalendarDialog extends Activity {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                             getActivity().finishAfterTransition();
                         }
+                        else {
+                            getActivity().finish();
+                        }
                     }
                 },250);
 

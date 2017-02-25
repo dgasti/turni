@@ -42,6 +42,9 @@ public class ColorSelectorDialog extends ActionBarActivity {
     private static final String TAG_BASSONA_COLOR_BUTTON = "tag bassona color button";
     private static final String BASSONA_COLOR_DEFAULT = "bassona color default";
     private static final String VERONA_COLOR_DEFAULT = "result color selected";
+    private static final String TAG_RECOVERY_COLOR_BUTTON = "tag recovery color button";
+    private static final String RECOVERY_COLOR_DEFAULT = "recovery color default";
+
     /**
      * It represent the location to which the class must assign the color
      */
@@ -95,6 +98,8 @@ public class ColorSelectorDialog extends ActionBarActivity {
                 colorDefault = mSPref.getInt(VERONA_COLOR_DEFAULT, 1);
             if (TAG_BASSONA_COLOR_BUTTON.equals(mLocationColor))
                 colorDefault = mSPref.getInt(BASSONA_COLOR_DEFAULT, 1);
+            if (TAG_RECOVERY_COLOR_BUTTON.equals(mLocationColor))
+                colorDefault = mSPref.getInt(RECOVERY_COLOR_DEFAULT, 1);
             //Inflate the views
             View rootView = inflater.inflate(R.layout.fragment_color_selector_dialog, container, false);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -151,6 +156,9 @@ public class ColorSelectorDialog extends ActionBarActivity {
                 if (TAG_BASSONA_COLOR_BUTTON.equals(mLocationColor)) {
                     edit.putInt(BASSONA_COLOR_DEFAULT, colorSelected);
                 }
+                if (TAG_RECOVERY_COLOR_BUTTON.equals(mLocationColor)) {
+                    edit.putInt(RECOVERY_COLOR_DEFAULT, colorSelected);
+                }
                 edit.commit();
                 int c = mSPref.getInt(VERONA_COLOR_DEFAULT, 0);
                 getActivity().setResult(CODE_OK, getActivity().getIntent());
@@ -159,6 +167,9 @@ public class ColorSelectorDialog extends ActionBarActivity {
                     public void run() {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                             getActivity().finishAfterTransition();
+                        }
+                        else {
+                            getActivity().finish();
                         }
                     }
                 }, 250);

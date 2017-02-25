@@ -13,7 +13,9 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Debug;
 import android.provider.CalendarContract;
+import android.text.style.TtsSpan;
 import android.transition.TransitionInflater;
 import android.util.Log;
 import android.widget.Button;
@@ -111,6 +113,10 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
         this.isActivityCalled = isActivityCalled;
         mCallback = callback;
         this.recoveryDay = recoveryDay;
+
+        if (DEBUG) {
+            Log.d(TAG, "Entrato in AsyncTask");
+        }
     }
 
     protected void onPreExecute() {
@@ -174,9 +180,21 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
         //Put all the string to upper case to avoid errors reading the string
         text = text.toUpperCase();
         surname = surname.toUpperCase();
-        Log.d(TAG, "surname = " + surname);
+
+        if(DEBUG)
+            Log.d(TAG, "surname = " + surname);
+
         Scanner sc = new Scanner(text);
+
+        if(DEBUG) {
+            Log.d(TAG, "Dopo lo scanner");
+        }
+
         String line = "";
+
+        if(DEBUG) {
+            Log.d(TAG, "Dopo la string line");
+        }
         //Get the calendar ID where the events should be put
         mCalID = Util.getCalendarID(activity, wSharedPrefs.getString(SP_CALENDAR_USED, null), wSharedPrefs.getString(SP_ACCOUNT_USED, null));
 
@@ -207,6 +225,10 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
         //un indice che permette di iterare (dopo vedi)
         //-1 è quel  valore che dice che non trova la substringa perche ha finito le iterazioni
         //fromIndex all'inizio è zero quindi cerca la substringa dall'inizio del testo
+
+        if(DEBUG) {
+            Log.d(TAG, "index del primo cognome = " + events);
+        }
 
         while (text.indexOf(surname, fromIndex) != -1) {
             Log.d(TAG, "index: " + text.indexOf(surname, fromIndex));
@@ -548,7 +570,7 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
                     values.put(CalendarContract.Events.DTSTART, startMillis);
                     values.put(CalendarContract.Events.DTEND, endMillis);
                     values.put(CalendarContract.Events.TITLE, titleText_REC);
-                    values.put(CalendarContract.Events.DESCRIPTION, "Group workout");
+                    values.put(CalendarContract.Events.DESCRIPTION, "Turno di lavoro");
                     values.put(CalendarContract.Events.EVENT_COLOR_KEY, wSharedPrefs.getInt(VERONA_COLOR_DEFAULT, 1));
                     values.put(CalendarContract.Events.EVENT_LOCATION, "Via Monte Bianco, 18\n" +
                             "37132 Verona VR");
