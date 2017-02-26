@@ -15,6 +15,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.transition.TransitionInflater;
 import android.util.Log;
@@ -196,6 +197,17 @@ public class DoneDialog extends ActionBarActivity {
                         startActivity(i);
                     }
                 }
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            getActivity().finishAfterTransition();
+                        }
+                        else {
+                            getActivity().finish();
+                        }
+                    }
+                }, 250);
             }
         }
     }

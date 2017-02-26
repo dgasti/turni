@@ -44,7 +44,7 @@ public class ColorSelectorDialog extends ActionBarActivity {
     private static final String TAG_VERONA_COLOR_BUTTON = "tag verona color button";
     private static final String TAG_BASSONA_COLOR_BUTTON = "tag bassona color button";
     private static final String BASSONA_COLOR_DEFAULT = "bassona color default";
-    private static final String VERONA_COLOR_DEFAULT = "result color selected";
+    private static final String VERONA_COLOR_DEFAULT = "verona color default";
     private static final String TAG_RECOVERY_COLOR_BUTTON = "tag recovery color button";
     private static final String RECOVERY_COLOR_DEFAULT = "recovery color default";
 
@@ -165,10 +165,18 @@ public class ColorSelectorDialog extends ActionBarActivity {
             else {
                 //Get the color selected
                 int colorSelected = Integer.parseInt((String) view.getTag());
+
+                if (DEBUG) {
+                    Log.d(TAG, "ColorSelected = " + colorSelected);
+                }
+
                 SharedPreferences.Editor edit = mSPref.edit();
                 //Set the selected color as the new default
                 if (TAG_VERONA_COLOR_BUTTON.equals(mLocationColor)) {
                     edit.putInt(VERONA_COLOR_DEFAULT, colorSelected);
+                    if (DEBUG) {
+                        Log.d(TAG, "ColorSelected dopo averlo inserito nelle share pref. = " + colorSelected);
+                    }
                 }
                 if (TAG_BASSONA_COLOR_BUTTON.equals(mLocationColor)) {
                     edit.putInt(BASSONA_COLOR_DEFAULT, colorSelected);
@@ -179,6 +187,11 @@ public class ColorSelectorDialog extends ActionBarActivity {
                 edit.commit();
                 int c = mSPref.getInt(VERONA_COLOR_DEFAULT, 0);
                 getActivity().setResult(CODE_OK, getActivity().getIntent());
+
+                if (DEBUG) {
+                    Log.d(TAG, "ColorSelected dopo il getActivity.SetResult = " + colorSelected);
+                }
+
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
