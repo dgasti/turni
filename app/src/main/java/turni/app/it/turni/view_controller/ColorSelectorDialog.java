@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Bundle;
 import android.transition.TransitionInflater;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -37,8 +38,10 @@ public class ColorSelectorDialog extends ActionBarActivity {
      * Activity resul code not Ok
      */
     private static final int CODE_NOT_OK = 0;
+    private static final boolean DEBUG = true;
+    private static final String TAG = "COLORSELECTORDIALOG";
     private static final String COLOR_SELECTOR_BUNDLE = "color selector bundle";
-    private static final String TAG_VERONA_COLOR_BUTTON = "tag color button";
+    private static final String TAG_VERONA_COLOR_BUTTON = "tag verona color button";
     private static final String TAG_BASSONA_COLOR_BUTTON = "tag bassona color button";
     private static final String BASSONA_COLOR_DEFAULT = "bassona color default";
     private static final String VERONA_COLOR_DEFAULT = "result color selected";
@@ -94,8 +97,19 @@ public class ColorSelectorDialog extends ActionBarActivity {
             mSPref = getActivity().getSharedPreferences(getString(R.string.preference_file_key), getActivity().MODE_PRIVATE);
             int colorDefault = 0;
             //Get the color previously assigned to Verona or Bassona
-            if (TAG_VERONA_COLOR_BUTTON.equals(mLocationColor))
+            if (TAG_VERONA_COLOR_BUTTON.equals(mLocationColor)) {
+
+                if (DEBUG) {
+                    Log.d(TAG, "mLocationColor = " + mLocationColor);
+                    Log.d(TAG, "Sono dentro a: " + TAG_VERONA_COLOR_BUTTON);
+                }
+
                 colorDefault = mSPref.getInt(VERONA_COLOR_DEFAULT, 1);
+
+                if (DEBUG) {
+                    Log.d(TAG, "ColorDefault = " + colorDefault);
+                }
+            }
             if (TAG_BASSONA_COLOR_BUTTON.equals(mLocationColor))
                 colorDefault = mSPref.getInt(BASSONA_COLOR_DEFAULT, 1);
             if (TAG_RECOVERY_COLOR_BUTTON.equals(mLocationColor))
@@ -143,6 +157,9 @@ public class ColorSelectorDialog extends ActionBarActivity {
                 getActivity().setResult(CODE_NOT_OK, getActivity().getIntent());
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     getActivity().finishAfterTransition();
+                }
+                else {
+                    getActivity().finish();
                 }
             }
             else {

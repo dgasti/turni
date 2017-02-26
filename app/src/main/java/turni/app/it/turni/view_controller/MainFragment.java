@@ -13,6 +13,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.ImageFormat;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
@@ -99,7 +100,7 @@ public class MainFragment extends Fragment implements View.OnClickListener, Comp
     private static final String RESULT_ACCOUNT = "result account";
     private static final String SP_CALENDAR_USED = "calendar used";
     private static final String SP_ACCOUNT_USED = "account used";
-    private static final String TAG_VERONA_COLOR_BUTTON = "tag color button";
+    private static final String TAG_VERONA_COLOR_BUTTON = "tag verona color button";
     private static final String TAG_BASSONA_COLOR_BUTTON = "tag bassona color button";
     private static final String TAG_RECOVERY_COLOR_BUTTON = "tag recovery color button";
     private static final String COLOR_SELECTOR_BUNDLE = "color selector bundle";
@@ -741,22 +742,54 @@ public class MainFragment extends Fragment implements View.OnClickListener, Comp
 
                 break;
             case (COLOR_DIALOG_ACTIVITY_RESULT_CODE):
+
+                if (DEBUG) {
+                    Log.d(TAG, "Sono dentro al caso di risposta dall'activity della scelta dei colori");
+                }
+
                 if (resultCode == CODE_OK) {
                     int colorSelected = 0;
                     if (TAG_VERONA_COLOR_BUTTON.equals(data.getStringExtra(COLOR_SELECTOR_BUNDLE))) {
+
+                        if (DEBUG) {
+                            Log.d(TAG, "Ricevo il Result Code: " + resultCode + " = " + CODE_OK);
+                            Log.d(TAG, "Sono dentro a: " + TAG_VERONA_COLOR_BUTTON);
+                        }
                         colorSelected = mSharedPref.getInt(VERONA_COLOR_DEFAULT, 0);
+
+                        if (DEBUG) {
+                            Log.d(TAG, "ColorSelected = " + colorSelected);
+                        }
+
                         int colorDrawable = ColorSelectorDialog.getColorDrawable(colorSelected);
                         Drawable d = getActivity().getResources().getDrawable(colorDrawable);
                         mVeronaColorButton.setCompoundDrawablesWithIntrinsicBounds(d, null, null, null);
                         mVeronaColorButton.animate().alpha(1f).setDuration(250);
                     } else if (TAG_BASSONA_COLOR_BUTTON.equals(data.getStringExtra(COLOR_SELECTOR_BUNDLE))){
+
+                        if (DEBUG) {
+                            Log.d(TAG, "Ricevo il Result Code: " + resultCode + " = " + CODE_OK);
+                            Log.d(TAG, "Sono dentro a: " + TAG_BASSONA_COLOR_BUTTON);
+                        }
+
                         colorSelected = mSharedPref.getInt(BASSONA_COLOR_DEFAULT, 0);
+
+                        if (DEBUG) {
+                            Log.d(TAG, "ColorSelected = " + colorSelected);
+                        }
+
                         int colorDrawable = ColorSelectorDialog.getColorDrawable(colorSelected);
                         Drawable d = getActivity().getResources().getDrawable(colorDrawable);
                         mBassonaColorButton.setCompoundDrawablesWithIntrinsicBounds(d, null, null, null);
                         mBassonaColorButton.animate().alpha(1f).setDuration(250);
                     }
                     else if (TAG_RECOVERY_COLOR_BUTTON.equals(data.getStringExtra(COLOR_SELECTOR_BUNDLE))){
+
+                        if (DEBUG) {
+                            Log.d(TAG, "Ricevo il Result Code: " + resultCode + " = " + CODE_OK);
+                            Log.d(TAG, "Sono dentro a: " + TAG_VERONA_COLOR_BUTTON);
+                        }
+
                         colorSelected = mSharedPref.getInt(RECOVERY_COLOR_DEFAULT, 0);
                         int colorDrawable = ColorSelectorDialog.getColorDrawable(colorSelected);
                         Drawable d = getActivity().getResources().getDrawable(colorDrawable);
