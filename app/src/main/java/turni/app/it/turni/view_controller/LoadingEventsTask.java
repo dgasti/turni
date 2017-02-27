@@ -3,6 +3,7 @@ package turni.app.it.turni.view_controller;
 import android.app.Activity;
 import android.app.ActivityOptions;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -13,9 +14,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.os.Debug;
 import android.provider.CalendarContract;
-import android.text.style.TtsSpan;
 import android.transition.TransitionInflater;
 import android.util.Log;
 import android.widget.Button;
@@ -67,9 +66,9 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
     private static final String BASSONA_COLOR_DEFAULT = "bassona color default";
     private static final String VERONA_COLOR_DEFAULT = "result color selected";
     /**
-     * Constant used in onStartCommand() to start the creation of the events
+     * Constant used in onStartCommand() to start the creation of the i
      */
-    private static final String CREATE_EVENTS = "create events";
+    private static final String CREATE_EVENTS = "create i";
     private static final CharSequence ASSENZA = "ASSENZA";
     private static final CharSequence ASSENZE = "ASSENZE";
     private static final CharSequence FERIE = "FERIE";
@@ -86,7 +85,7 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    private static int events = 0;
+    private static int eventi = 0;
     private static final String BACKGROUND = "background";
     private static final String SYNC_CALENDAR = "sync calendar";
     private static final String GET_CALENDAR = "get calendar";
@@ -105,6 +104,7 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
     private boolean recoveryDay;
     private String titleDaily;
     private String titleWin, titleStg, titleMdw, titleBtc;
+    AlertDialog.Builder alertDialog;
 
 
     public LoadingEventsTask(Activity activity, String text, String surname, boolean isActivityCalled, TaskCallback callback, boolean recoveryDay) {
@@ -121,6 +121,7 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
     }
 
     protected void onPreExecute() {
+        super.onPreExecute();
 
         wSharedPrefs = activity.getSharedPreferences(activity.getString(R.string.preference_file_key), activity.MODE_PRIVATE);
 
@@ -133,6 +134,10 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
         progress.setTitle("Caricando");
         progress.setMessage("Un momento di pazienza mentre carico i turni nel calendario...");
         progress.show();
+
+        if(eventi == 0) {
+            progress.dismiss();
+        }
     }
 
     protected Void doInBackground(Void... unused) {
@@ -160,17 +165,43 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
     }
 
     protected void onPostExecute(Void unused) {
-        LoadingEvents.isFinishing = true;
-        Intent intent = new Intent(activity.getApplicationContext(), DoneDialog.class);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            activity.getWindow().setExitTransition(null);
-            activity.getWindow().setEnterTransition(TransitionInflater.from(activity).inflateTransition(R.transition.enter_ma_da));
-            activity.getWindow().setSharedElementEnterTransition(TransitionInflater.from(activity)
-                    .inflateTransition(R.transition.circular_reveal_shared_transition));
-            activity.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(activity).toBundle());
-        }
-        else {
-            activity.startActivity(intent);
+        super.onPostExecute(unused);
+
+        if (eventi == 0) {
+
+            if (!DEBUG) {
+                Log.d(TAG, "SONO ENTRATO NELL'IF CHE MI FA VEDERE UN DIALOG DI ALERT PER NESSUN EVENTO CREATO");
+            }
+
+            LoadingEvents.isFinishing = true;
+            Toast.makeText(activity.getApplicationContext(), "NESSUN EVENTO CREATO", Toast.LENGTH_LONG).show();
+
+            /*alertDialog = new AlertDialog.Builder(activity);
+            alertDialog.setTitle("Attenzione");
+            alertDialog.setMessage("Nessun evento creato! Controlla il cognome inserito!");
+            alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    activity.onBackPressed();
+                    activity.finish();
+                }
+            });
+            alertDialog.create().show();*/
+
+        } else {
+
+            LoadingEvents.isFinishing = true;
+            Intent intent = new Intent(activity.getApplicationContext(), DoneDialog.class);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                activity.getWindow().setExitTransition(null);
+                activity.getWindow().setEnterTransition(TransitionInflater.from(activity).inflateTransition(R.transition.enter_ma_da));
+                activity.getWindow().setSharedElementEnterTransition(TransitionInflater.from(activity)
+                        .inflateTransition(R.transition.circular_reveal_shared_transition));
+                activity.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(activity).toBundle());
+            } else {
+                activity.startActivity(intent);
+            }
+
         }
 
         mCallback.done();
@@ -196,7 +227,7 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
         if(DEBUG) {
             Log.d(TAG, "Dopo la string line");
         }
-        //Get the calendar ID where the events should be put
+        //Get the calendar ID where the i should be put
         mCalID = Util.getCalendarID(activity, wSharedPrefs.getString(SP_CALENDAR_USED, null), wSharedPrefs.getString(SP_ACCOUNT_USED, null));
 
         if (DEBUG)
@@ -222,13 +253,13 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
 
         int fromIndex = 0;
         int i = 0;
-        events = text.indexOf(surname, fromIndex);
+        i = text.indexOf(surname, fromIndex);
         //un indice che permette di iterare (dopo vedi)
         //-1 è quel  valore che dice che non trova la substringa perche ha finito le iterazioni
         //fromIndex all'inizio è zero quindi cerca la substringa dall'inizio del testo
 
         if(DEBUG) {
-            Log.d(TAG, "index del primo cognome = " + events);
+            Log.d(TAG, "index del primo cognome = " + i);
         }
 
         while (text.indexOf(surname, fromIndex) != -1) {
@@ -276,7 +307,7 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
 
             //Get the date for this event (year,month,day)
 
-            if (DEBUG)
+            if (!DEBUG)
                 Log.d(TAG, "turno = " + line);
 
             beginTime = Util.getEventDate(line);
@@ -306,7 +337,7 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
                     hasToCreateNoEvent = false;
 
                     if (DEBUG) {
-                        Log.d(TAG, "entro in assenza riga " + i);
+                        Log.d(TAG, "entro in assenza riga " + eventi);
                         Log.d(TAG, "recoveryDay nell'if per creare o meno l'evento = " + recoveryDay);
                     }
                 }
@@ -703,7 +734,7 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
                     // get the event ID that is the last element in the
                     //  Uri  long eventID = Long.parseLong(uri1.getLastPathSegment());
                 }
-                i++;
+                eventi++;
             }
             else if (hasToCreateNoEvent){
                 mContentResolver = activity.getContentResolver();
@@ -718,25 +749,13 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
             }
         }
 
-        if (DEBUG)
-            Log.d(TAG, "Eventi creati = " + i);
-
-        if (i == 0) {
-            Toast.makeText(activity.getApplicationContext(), "NESSUN EVENTO CREATO", Toast.LENGTH_LONG).show();
-            AlertDialog alertDialog = new AlertDialog.Builder(activity).create();
-            alertDialog.setTitle("Attenzione");
-            alertDialog.setMessage("Nessun evento creato! Controlla il cognome inserito!");
-            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                            activity.onBackPressed();
-                        }
-                    });
-            alertDialog.show();
+        if (!DEBUG) {
+            Log.d(TAG, "Eventi creati = " + eventi);
+            Log.d(TAG, "text.indexOf(surname, fromIndex) = " + text.indexOf(surname, fromIndex));
         }
 
     }
 
 }
+
 
