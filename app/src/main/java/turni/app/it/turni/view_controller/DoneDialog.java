@@ -197,7 +197,7 @@ public class DoneDialog extends ActionBarActivity {
                         startActivity(i);
                     }
                 }
-                new Handler().postDelayed(new Runnable() {
+/*                new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -208,6 +208,7 @@ public class DoneDialog extends ActionBarActivity {
                         }
                     }
                 }, 250);
+                */
             }
         }
     }
