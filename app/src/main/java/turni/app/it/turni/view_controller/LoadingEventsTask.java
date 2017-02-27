@@ -40,7 +40,7 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
     private String surname;
     private Activity activity;
     Context context;
-    private static final boolean DEBUG = false;
+    private static final boolean DEBUG = true;
     /**
      * Indicates that the day is a RECUPERO
      */
@@ -64,7 +64,8 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
     private static final String SP_CALENDAR_USED = "calendar used";
     private static final String SP_ACCOUNT_USED = "account used";
     private static final String BASSONA_COLOR_DEFAULT = "bassona color default";
-    private static final String VERONA_COLOR_DEFAULT = "result color selected";
+    private static final String VERONA_COLOR_DEFAULT = "verona color default";
+    private static final String RECOVERY_COLOR_DEFAULT = "recovery color default";
     /**
      * Constant used in onStartCommand() to start the creation of the i
      */
@@ -123,7 +124,7 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
     protected void onPreExecute() {
         super.onPreExecute();
 
-        wSharedPrefs = activity.getSharedPreferences(activity.getString(R.string.preference_file_key), activity.MODE_PRIVATE);
+        wSharedPrefs = activity.getSharedPreferences(activity.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
 
         if (DEBUG) {
             Log.d(TAG, "Calendario usato = " + wSharedPrefs.getString(SP_CALENDAR_USED, "nessun calendario").toString());
@@ -169,7 +170,7 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
 
         if (eventi == 0) {
 
-            if (!DEBUG) {
+            if (DEBUG) {
                 Log.d(TAG, "SONO ENTRATO NELL'IF CHE MI FA VEDERE UN DIALOG DI ALERT PER NESSUN EVENTO CREATO");
             }
 
@@ -238,7 +239,7 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
         long checkStartMillis = 0;
         long checkEndMillis = 0;
         boolean isFullDay;
-        boolean hasReachable, hasRecoveryDay;
+        boolean hasReachable, hasToCreateRecoveryDay;
         boolean isVerona, isBassona;
         Calendar beginTime = null;
         Calendar endTime = null;
@@ -247,7 +248,7 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
         hasToCreateEvent = false;
         hasToCreateNoEvent = false;
         hasReachable = false;
-        hasRecoveryDay = false;
+        hasToCreateRecoveryDay = false;
         isFullDay = false;
         isVerona = isBassona = false;
 
@@ -307,7 +308,7 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
 
             //Get the date for this event (year,month,day)
 
-            if (!DEBUG)
+            if (DEBUG)
                 Log.d(TAG, "turno = " + line);
 
             beginTime = Util.getEventDate(line);
@@ -326,7 +327,7 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
                 checkEventEnd.set(Calendar.MINUTE, 59);
                 isFullDay = false;
                 hasReachable = false;
-                hasRecoveryDay = false;
+                hasToCreateRecoveryDay = false;
                 //Log.d(TAG, "entro in assenza riga " + i);
                 //Log.d(TAG, "dentro all'if per creare o meno l'evento SENZA RECUPERO = " + recoveryDay);
             }
@@ -360,7 +361,7 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
                 isFullDay = false;
                 titleText = titleMatt;
                 hasReachable = false;
-                hasRecoveryDay = false;
+                hasToCreateRecoveryDay = false;
 
                 if (DEBUG) {
                     Log.d(TAG, "Dentro all'evento di MATTINA");
@@ -383,7 +384,7 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
                 isFullDay = false;
                 titleText = titlePom;
                 hasReachable = false;
-                hasRecoveryDay = false;
+                hasToCreateRecoveryDay = false;
 
                 if (DEBUG) {
                     Log.d(TAG, "Dentro all'evento di POMERIGGIO");
@@ -406,7 +407,7 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
                 isFullDay = false;
                 titleText = titleNott2;
                 hasReachable = false;
-                hasRecoveryDay = false;
+                hasToCreateRecoveryDay = false;
 
                 if (DEBUG) {
                     Log.d(TAG, "Dentro all'evento di NOTTE 00");
@@ -432,7 +433,7 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
                 isFullDay = false;
                 titleText = titleNott1;
                 hasReachable = false;
-                hasRecoveryDay = false;
+                hasToCreateRecoveryDay = false;
 
                 if (DEBUG) {
                     Log.d(TAG, "Dentro all'evento di NOTTE 21");
@@ -455,7 +456,7 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
                 isFullDay = false;
                 titleText = titleNott2;
                 hasReachable = false;
-                hasRecoveryDay = false;
+                hasToCreateRecoveryDay = false;
 
                 if (DEBUG) {
                     Log.d(TAG, "Dentro all'evento di NOTTE FESTIVO");
@@ -478,7 +479,7 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
                 isFullDay = false;
                 titleText = titleMatt;
                 hasReachable = false;
-                hasRecoveryDay = false;
+                hasToCreateRecoveryDay = false;
 
                 if (DEBUG) {
                     Log.d(TAG, "Dentro all'evento di MATTINA FESTIVO");
@@ -501,7 +502,7 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
                 isFullDay = false;
                 titleText = titlePom;
                 hasReachable = false;
-                hasRecoveryDay = false;
+                hasToCreateRecoveryDay = false;
 
                 if (DEBUG) {
                     Log.d(TAG, "Dentro all'evento di POMERIGGIO FESTIVO");
@@ -524,7 +525,7 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
                 hasToCreateEvent = true;
                 hasToCreateNoEvent = false;
                 hasReachable = true;
-                hasRecoveryDay = false;
+                hasToCreateRecoveryDay = false;
 
                 if (DEBUG) {
                     Log.d(TAG, "Dentro all'evento di REPERIBILE");
@@ -547,7 +548,7 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
                 isFullDay = false;
                 titleText = titleDaily;
                 hasReachable = false;
-                hasRecoveryDay = false;
+                hasToCreateRecoveryDay = false;
                 isVerona = true;
 
                 if (DEBUG) {
@@ -581,7 +582,7 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
                     titleText = titleBtc;
                 isFullDay = false;
                 hasReachable = false;
-                hasRecoveryDay = false;
+                hasToCreateRecoveryDay = false;
                 isVerona = true;
 
                 if (DEBUG) {
@@ -609,7 +610,7 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
                     isFullDay = true;
                     hasToCreateEvent = true;
                     hasToCreateNoEvent = false;
-                    hasRecoveryDay = true;
+                    hasToCreateRecoveryDay = true;
                 }
             }
 
@@ -652,19 +653,20 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
                 mContentResolver = activity.getContentResolver();
                 ContentValues values = new ContentValues();
 
-                if (hasRecoveryDay) {
+                if (hasToCreateRecoveryDay) {
 
                     if (DEBUG)
-                        Log.d(TAG, "sono dopo l'HASRECOVERYDAY, creo l'evento recupero");
+                        Log.d(TAG, "sono dopo l'hasToCreateRecoveryDay, creo l'evento recupero");
 
                     values.put(CalendarContract.Events.ALL_DAY, 1);
                     values.put(CalendarContract.Events.DTSTART, startMillis);
                     values.put(CalendarContract.Events.DTEND, endMillis);
                     values.put(CalendarContract.Events.TITLE, titleText_REC);
-                    values.put(CalendarContract.Events.DESCRIPTION, "Turno di lavoro");
-                    values.put(CalendarContract.Events.EVENT_COLOR_KEY, wSharedPrefs.getInt(VERONA_COLOR_DEFAULT, 1));
-                    values.put(CalendarContract.Events.EVENT_LOCATION, "Via Monte Bianco, 18\n" +
-                            "37132 Verona VR");
+                    values.put(CalendarContract.Events.DESCRIPTION, "Recupero");
+                    values.put(CalendarContract.Events.EVENT_COLOR_KEY, wSharedPrefs.getInt(RECOVERY_COLOR_DEFAULT, 1));
+                    //values.put(CalendarContract.Events.EVENT_LOCATION, "Via Monte Bianco, 18\n" +
+                    //        "37132 Verona VR");
+                    values.put(CalendarContract.Events.AVAILABILITY, CalendarContract.Events.AVAILABILITY_FREE);
                     values.put(CalendarContract.Events.CALENDAR_ID, mCalID);
                     TimeZone tz = TimeZone.getDefault();
                     values.put(CalendarContract.Events.EVENT_TIMEZONE, tz.getID());
@@ -675,7 +677,7 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
                     }
 
                     Uri uri1 = mContentResolver.insert(CalendarContract.Events.CONTENT_URI, values);
-                    hasRecoveryDay = false;
+                    hasToCreateRecoveryDay = false;
                 } else {
 
                     if (isFullDay) {
@@ -698,7 +700,7 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
                     }
 
                     //TODO opzione modifica descrizione
-                    values.put(CalendarContract.Events.DESCRIPTION, "Group workout");
+                    values.put(CalendarContract.Events.DESCRIPTION, "Turno di lavoro");
 
                     if (isVerona) {
 
@@ -749,7 +751,7 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
             }
         }
 
-        if (!DEBUG) {
+        if (DEBUG) {
             Log.d(TAG, "Eventi creati = " + eventi);
             Log.d(TAG, "text.indexOf(surname, fromIndex) = " + text.indexOf(surname, fromIndex));
         }

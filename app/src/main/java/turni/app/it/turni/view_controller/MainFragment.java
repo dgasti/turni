@@ -65,7 +65,7 @@ public class MainFragment extends Fragment implements View.OnClickListener, Comp
     private static final String CALENDAR_ROW = "calendar row";
     private static final String SURNAME_TEXT = "SURNAME";
     private static final int FILE_SELECT_RESULT_CODE = 3;
-    private static final String TAG_CHECKBOX_BUTTON = "checkbx button";
+    private static final String TAG_CHECKBOX_BUTTON = "checkbox button";
     private static final String TAG_SURNAME = "Surname text";
     private static final int FORWARD_SELECT_BUTTON = 4;
     private static final String TAG_SURNAME_BUTTON = "surname button";
@@ -146,7 +146,7 @@ public class MainFragment extends Fragment implements View.OnClickListener, Comp
         mView = inflater.inflate(R.layout.fragment_main, null, false);
         toolbar = (Toolbar) mView.findViewById(R.id.my_awesome_toolbar);
         ((ActionBarActivity) getActivity()).setSupportActionBar(toolbar);
-        ((ActionBarActivity) getActivity()).setTitle("VTS - Turni");
+        getActivity().setTitle("VTS - Turni");
         mFowardButton = (FloatingActionButton) mView.findViewById(R.id.foward_button);
         mEditText = (EditText) mView.findViewById(R.id.edit_text);
         mAccountButton = (Button) mView.findViewById(R.id.account_button);
@@ -187,11 +187,13 @@ public class MainFragment extends Fragment implements View.OnClickListener, Comp
         recoveryColorButtonVisibility = mSharedPref.getBoolean("VISIBILITY", false);
         if(recoveryColorButtonVisibility) {
             mRecoveryDay.setChecked(true);
+            recoveryDay = true;
             mRecoveryColorButton.setEnabled(true);
         }
         else {
             mRecoveryDay.setChecked(false);
             mRecoveryColorButton.setEnabled(false);
+            recoveryDay = false;
         }
 
         if (DEBUG) {
@@ -224,22 +226,7 @@ public class MainFragment extends Fragment implements View.OnClickListener, Comp
         mSurnameText.setOnClickListener(this);
         mSurname.setOnClickListener(this);
         mRecoveryColorButton.setOnClickListener(this);
-        mRecoveryDay.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if(mRecoveryDay.isChecked()) {
-                    mRecoveryColorButton.setEnabled(true);
-                    recoveryColorButtonVisibility = true;
-                    mSharedPref.edit().putBoolean("VISIBILITY", recoveryColorButtonVisibility).commit();
-
-                }
-                else {
-                    mRecoveryColorButton.setEnabled(false);
-                    recoveryColorButtonVisibility = false;
-                    mSharedPref.edit().putBoolean("VISIBILITY", recoveryColorButtonVisibility).commit();
-                }
-            }
-        });
+        mRecoveryDay.setOnCheckedChangeListener(this);
 
         View.OnLongClickListener listener = new View.OnLongClickListener() {
             public boolean onLongClick(View v) {
@@ -426,7 +413,7 @@ public class MainFragment extends Fragment implements View.OnClickListener, Comp
             imm = (InputMethodManager) getActivity().getApplicationContext().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(mEditText.getWindowToken(), 0);
 
-            if (DEBUG)
+            if (!DEBUG)
                 Log.d(TAG, "Sono dentro all'if del Forward button nell'onclick");
 
             String calendarName = mSharedPref.getString(SP_CALENDAR_USED, "nessun calendario");
@@ -465,7 +452,7 @@ public class MainFragment extends Fragment implements View.OnClickListener, Comp
                 alertDialog.show();
             } else {
 
-                if (DEBUG)
+                if (!DEBUG)
                     Log.d(TAG, "Sono dentro all'else dell'intent del Forward button nell'onclick, ho superato tutti i test");
 
                 Intent intent = new Intent(getActivity(), LoadingEvents.class);
@@ -743,7 +730,7 @@ public class MainFragment extends Fragment implements View.OnClickListener, Comp
                 break;
             case (COLOR_DIALOG_ACTIVITY_RESULT_CODE):
 
-                if (DEBUG) {
+                if (!DEBUG) {
                     Log.d(TAG, "Sono dentro al caso di risposta dall'activity della scelta dei colori");
                 }
 
@@ -751,13 +738,13 @@ public class MainFragment extends Fragment implements View.OnClickListener, Comp
                     int colorSelected = 0;
                     if (TAG_VERONA_COLOR_BUTTON.equals(data.getStringExtra(COLOR_SELECTOR_BUNDLE))) {
 
-                        if (DEBUG) {
+                        if (!DEBUG) {
                             Log.d(TAG, "Ricevo il Result Code: " + resultCode + " = " + CODE_OK);
                             Log.d(TAG, "Sono dentro a: " + TAG_VERONA_COLOR_BUTTON);
                         }
                         colorSelected = mSharedPref.getInt(VERONA_COLOR_DEFAULT, 0);
 
-                        if (DEBUG) {
+                        if (!DEBUG) {
                             Log.d(TAG, "ColorSelected = " + colorSelected);
                         }
 
@@ -767,14 +754,14 @@ public class MainFragment extends Fragment implements View.OnClickListener, Comp
                         mVeronaColorButton.animate().alpha(1f).setDuration(250);
                     } else if (TAG_BASSONA_COLOR_BUTTON.equals(data.getStringExtra(COLOR_SELECTOR_BUNDLE))){
 
-                        if (DEBUG) {
+                        if (!DEBUG) {
                             Log.d(TAG, "Ricevo il Result Code: " + resultCode + " = " + CODE_OK);
                             Log.d(TAG, "Sono dentro a: " + TAG_BASSONA_COLOR_BUTTON);
                         }
 
                         colorSelected = mSharedPref.getInt(BASSONA_COLOR_DEFAULT, 0);
 
-                        if (DEBUG) {
+                        if (!DEBUG) {
                             Log.d(TAG, "ColorSelected = " + colorSelected);
                         }
 
@@ -785,7 +772,7 @@ public class MainFragment extends Fragment implements View.OnClickListener, Comp
                     }
                     else if (TAG_RECOVERY_COLOR_BUTTON.equals(data.getStringExtra(COLOR_SELECTOR_BUNDLE))){
 
-                        if (DEBUG) {
+                        if (!DEBUG) {
                             Log.d(TAG, "Ricevo il Result Code: " + resultCode + " = " + CODE_OK);
                             Log.d(TAG, "Sono dentro a: " + TAG_VERONA_COLOR_BUTTON);
                         }
@@ -889,12 +876,29 @@ public class MainFragment extends Fragment implements View.OnClickListener, Comp
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
 
-            CHECKBOX_IS_CHECKED = b;
-            mSharedPref.edit().putBoolean("CHECKBOX_IS_CHECKED", b).commit();
+        CHECKBOX_IS_CHECKED = b;
+        mSharedPref.edit().putBoolean("CHECKBOX_IS_CHECKED", b).commit();
 
-            if(DEBUG) {
-                Log.d(TAG, "b = "+b);
-                Log.d(TAG, "recoveryDay dentro al checkedChange = "+recoveryDay);
-            }
+        if(mRecoveryDay.isChecked()) {
+            mRecoveryColorButton.setEnabled(true);
+            recoveryColorButtonVisibility = true;
+            recoveryDay = true;
+            mSharedPref.edit().putBoolean("VISIBILITY", recoveryColorButtonVisibility).commit();
+            mSharedPref.edit().putBoolean("CHECKBOX_IS_CHECKED", recoveryDay).commit();
+
+        }
+        else {
+            mRecoveryColorButton.setEnabled(false);
+            recoveryColorButtonVisibility = false;
+            recoveryDay = false;
+            mSharedPref.edit().putBoolean("VISIBILITY", recoveryColorButtonVisibility).commit();
+            mSharedPref.edit().putBoolean("CHECKBOX_IS_CHECKED", recoveryDay).commit();
+
+        }
+
+        if(DEBUG) {
+            Log.d(TAG, "b = "+b);
+            Log.d(TAG, "recoveryDay dentro al checkedChange = "+recoveryDay);
+        }
     }
 }

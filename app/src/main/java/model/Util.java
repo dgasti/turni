@@ -213,7 +213,7 @@ public class Util {
 
     public static int isAlreadyCreate(long begin, long end, ContentResolver content, Activity activity) {
 
-        iSharedPrefs = activity.getSharedPreferences(activity.getString(R.string.preference_file_key), activity.MODE_PRIVATE);
+        iSharedPrefs = activity.getSharedPreferences(activity.getString(R.string.preference_file_key), Context.MODE_PRIVATE);
 
 
         String titleMatt = "TURNO MATTINO";

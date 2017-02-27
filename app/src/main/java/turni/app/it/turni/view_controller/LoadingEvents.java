@@ -3,6 +3,7 @@ package turni.app.it.turni.view_controller;
 import android.app.Activity;
 import android.app.LoaderManager;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.ActionBarActivity;
@@ -62,7 +63,7 @@ public class LoadingEvents extends ActionBarActivity implements TaskCallback {
         bundle.putString(SURNAME, surname);
         bundle.putBoolean(CHECKBOX, recoveryDay);
 
-        wSharedPrefs = this.getSharedPreferences(getString(R.string.preference_file_key), this.MODE_PRIVATE);
+        wSharedPrefs = this.getSharedPreferences(getString(R.string.preference_file_key), MODE_PRIVATE);
 
         if (DEBUG) {
             Log.d(TAG, "Cognome all'interno del LoadingEvents: " + mSurname);

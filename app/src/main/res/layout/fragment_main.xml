@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fab="http://schemas.android.com/apk/res-auto"
     android:id="@+id/root"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-<RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?android:attr/selectableItemBackground">
@@ -43,6 +39,7 @@
         android:layout_below="@+id/surname"
         android:background="#BDBDBD" />
 
+
     <EditText
         android:id="@+id/edit_text"
         android:layout_width="match_parent"
@@ -76,27 +73,6 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentStart="true" />
 
-        <!--<EditText
-            android:id="@+id/title_text"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/list_items_height"
-            android:layout_gravity="center_horizontal"
-            android:background="@color/transparent"
-            android:drawableLeft="@drawable/drawable_descr_24dp"
-            android:drawablePadding="@dimen/activity_horizontal_medium_margin"
-            android:elegantTextHeight="true"
-            android:hint="@string/title_editor_text"
-            android:maxLines="1"
-            android:paddingLeft="@dimen/activity_horizontal_short_margin" />
-
-        <TextView
-            android:id="@+id/title_example_text"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/list_items_height"
-            android:layout_marginLeft="@dimen/activity_horizontal_long_margin"
-            android:gravity="left|center_vertical"
-            android:text="Medium Text"
-            android:textAppearance="?android:attr/textAppearanceMedium" /> -->
     </LinearLayout>
 
     <Button
@@ -153,12 +129,14 @@
     <CheckBox
         android:text="Visualizza l'evento RECUPERO"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/list_items_height"
+        android:background="?android:attr/selectableItemBackground"
         android:id="@+id/recoveryDay"
         android:layout_below="@+id/bassona_color_button"
         android:gravity="left|center_vertical"
-        android:paddingLeft="28dp"
-        android:layout_marginLeft="12dp"/>
+        android:paddingLeft="@dimen/activity_horizontal_short_margin"
+        android:layout_marginLeft="12dp"
+        android:layout_alignParentStart="true" />
 
     <RelativeLayout
         android:id="@+id/dialog_container"
@@ -248,6 +226,4 @@
 
 </RelativeLayout>
 
-
-    </ScrollView>
 

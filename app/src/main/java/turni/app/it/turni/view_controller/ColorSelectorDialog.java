@@ -1,5 +1,6 @@
 package turni.app.it.turni.view_controller;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
@@ -43,9 +44,9 @@ public class ColorSelectorDialog extends ActionBarActivity {
     private static final String COLOR_SELECTOR_BUNDLE = "color selector bundle";
     private static final String TAG_VERONA_COLOR_BUTTON = "tag verona color button";
     private static final String TAG_BASSONA_COLOR_BUTTON = "tag bassona color button";
+    private static final String TAG_RECOVERY_COLOR_BUTTON = "tag recovery color button";
     private static final String BASSONA_COLOR_DEFAULT = "bassona color default";
     private static final String VERONA_COLOR_DEFAULT = "verona color default";
-    private static final String TAG_RECOVERY_COLOR_BUTTON = "tag recovery color button";
     private static final String RECOVERY_COLOR_DEFAULT = "recovery color default";
 
     /**
@@ -94,7 +95,7 @@ public class ColorSelectorDialog extends ActionBarActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             //Setting up the shared preference
-            mSPref = getActivity().getSharedPreferences(getString(R.string.preference_file_key), getActivity().MODE_PRIVATE);
+            mSPref = getActivity().getSharedPreferences(getString(R.string.preference_file_key), MODE_PRIVATE);
             int colorDefault = 0;
             //Get the color previously assigned to Verona or Bassona
             if (TAG_VERONA_COLOR_BUTTON.equals(mLocationColor)) {
