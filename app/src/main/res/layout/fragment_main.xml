@@ -17,20 +17,20 @@
 
 
     <Button
+        android:id="@+id/surname"
         android:layout_width="match_parent"
         android:layout_height="@dimen/list_items_height"
-        android:id="@+id/surname"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/my_awesome_toolbar"
         android:background="?android:attr/selectableItemBackground"
-        android:elegantTextHeight="true"
         android:drawableLeft="@drawable/ic_account_circle_black_24dp"
-        android:text="@string/welcome_surname"
-        android:textAllCaps="false"
         android:drawablePadding="@dimen/activity_horizontal_medium_margin"
+        android:elegantTextHeight="true"
         android:gravity="left|center_vertical"
         android:paddingLeft="@dimen/activity_horizontal_short_margin"
-        android:visibility="visible"
-        android:layout_below="@+id/my_awesome_toolbar"
-        android:layout_alignParentStart="true" />
+        android:text="@string/welcome_surname"
+        android:textAllCaps="false"
+        android:visibility="visible" />
 
     <View
         android:id="@+id/divider"
@@ -44,19 +44,77 @@
         android:id="@+id/edit_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/divider"
         android:layout_alignParentStart="true"
+        android:layout_below="@+id/divider"
         android:background="@color/transparent"
         android:elegantTextHeight="true"
         android:hint="@string/edit_text_hint"
-        android:textAlignment="center"
         android:maxHeight="200dp"
         android:paddingLeft="@dimen/activity_horizontal_short_margin"
         android:paddingRight="10dp"
         android:paddingTop="@dimen/activity_horizontal_short_margin"
+        android:textAlignment="center"
         android:visibility="visible" />
 
-    <LinearLayout
+    <RelativeLayout
+        android:id="@+id/dialog_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/edit_text"
+        android:layout_marginTop="10dp"
+        android:visibility="visible">
+
+        <View
+            android:id="@+id/divider2"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:background="#BDBDBD" />
+
+        <View
+            android:id="@+id/divider5"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/paste_text"
+            android:background="#BDBDBD" />
+
+        <Button
+            android:id="@+id/delete_button"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/paste_text"
+            android:background="?android:attr/selectableItemBackground"
+            android:drawableLeft="@drawable/ic_cancel_black_36dp"
+            android:gravity="center" />
+
+        <Button
+            android:id="@+id/paste_text"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerInParent="true"
+            android:background="?android:attr/selectableItemBackground"
+            android:drawableLeft="@drawable/ic_content_paste_black_36dp"
+            android:gravity="center" />
+
+        <Button
+            android:id="@+id/import_text_button"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_toStartOf="@+id/paste_text"
+            android:background="?android:attr/selectableItemBackground"
+            android:drawableLeft="@drawable/ic_note_add_black_36dp"
+            android:gravity="center" />
+
+    </RelativeLayout>
+
+    <!---<LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -73,156 +131,121 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentStart="true" />
 
-    </LinearLayout>
+    </LinearLayout>-->
 
     <Button
         android:id="@+id/account_button"
         android:layout_width="match_parent"
         android:layout_height="@dimen/list_items_height"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/dialog_container"
         android:background="?android:attr/selectableItemBackground"
         android:drawableLeft="@drawable/ic_event_black_36dp"
-        android:singleLine="true"
-        android:text="@string/account_button_string"
-        android:textAllCaps="false"
         android:drawablePadding="@dimen/activity_horizontal_medium_margin"
         android:gravity="left|center_vertical"
         android:paddingLeft="@dimen/activity_horizontal_short_margin"
-        android:layout_below="@+id/dialog_container"
-        android:layout_alignParentStart="true" />
+        android:singleLine="true"
+        android:text="@string/account_button_string"
+        android:textAllCaps="false" />
 
     <View
         android:id="@+id/divider4"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="#BDBDBD"
         android:layout_alignBottom="@+id/account_button"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:background="#BDBDBD" />
 
-    <Button
-        android:id="@+id/verona_color_button"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="@dimen/list_items_height"
-        android:background="?android:attr/selectableItemBackground"
-        android:drawableLeft="@drawable/circle_orange_24dp"
-        android:drawablePadding="@dimen/activity_horizontal_medium_margin"
-        android:gravity="left|center_vertical"
-        android:paddingLeft="@dimen/activity_horizontal_short_margin"
-        android:text="@string/verona_event_color_string"
-        android:focusable="true"
+        android:layout_height="match_parent"
         android:layout_below="@+id/account_button"
-        android:layout_alignParentStart="true" />
-
-
-    <Button
-        android:id="@+id/bassona_color_button"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/list_items_height"
-        android:background="?android:attr/selectableItemBackground"
-        android:drawableLeft="@drawable/circle_orange_24dp"
-        android:drawablePadding="@dimen/activity_horizontal_medium_margin"
-        android:gravity="left|center_vertical"
-        android:paddingLeft="@dimen/activity_horizontal_short_margin"
-        android:text="@string/bassona_event_color_string"
-        android:layout_below="@+id/verona_color_button"
-        android:layout_alignParentStart="true" />
-
-    <CheckBox
-        android:text="Visualizza l'evento RECUPERO"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/list_items_height"
-        android:background="?android:attr/selectableItemBackground"
-        android:id="@+id/recoveryDay"
-        android:layout_below="@+id/bassona_color_button"
-        android:gravity="left|center_vertical"
-        android:paddingLeft="@dimen/activity_horizontal_short_margin"
-        android:layout_marginLeft="12dp"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="2dp">
 
     <RelativeLayout
-        android:id="@+id/dialog_container"
+        android:id="@+id/realativeScroll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="visible"
-        android:layout_marginTop="10dp"
-        android:layout_below="@+id/edit_text"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/divider4">
 
-        <View
-            android:id="@+id/divider2"
+        <Button
+            android:id="@+id/verona_color_button"
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#BDBDBD"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true" />
+            android:layout_height="@dimen/list_items_height"
+            android:layout_alignParentStart="true"
+            android:background="?android:attr/selectableItemBackground"
+            android:drawableLeft="@drawable/circle_orange_24dp"
+            android:drawablePadding="@dimen/activity_horizontal_medium_margin"
+            android:focusable="true"
+            android:gravity="left|center_vertical"
+            android:paddingLeft="@dimen/activity_horizontal_short_margin"
+            android:text="@string/verona_event_color_string" />
+            <!--android:layout_below="@+id/account_button"-->
 
-        <View
-            android:id="@+id/divider5"
+        <Button
+            android:id="@+id/bassona_color_button"
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_below="@+id/paste_text"
-            android:background="#BDBDBD" />
+            android:layout_height="@dimen/list_items_height"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/verona_color_button"
+            android:background="?android:attr/selectableItemBackground"
+            android:drawableLeft="@drawable/circle_orange_24dp"
+            android:drawablePadding="@dimen/activity_horizontal_medium_margin"
+            android:gravity="left|center_vertical"
+            android:paddingLeft="@dimen/activity_horizontal_short_margin"
+            android:text="@string/bassona_event_color_string" />
+
+        <CheckBox
+            android:id="@+id/recoveryDay"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/list_items_height"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/bassona_color_button"
+            android:layout_marginLeft="12dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:gravity="left|center_vertical"
+            android:paddingLeft="@dimen/activity_horizontal_short_margin"
+            android:text="@string/recovery_check_box" />
+
 
         <Button
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/delete_button"
-            android:drawableLeft="@drawable/ic_cancel_black_36dp"
-            android:gravity="center"
+            android:id="@+id/recupero_color_button"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/list_items_height"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/recoveryDay"
             android:background="?android:attr/selectableItemBackground"
-            android:layout_toEndOf="@+id/paste_text" />
+            android:drawableLeft="@drawable/circle_orange_24dp"
+            android:drawablePadding="@dimen/activity_horizontal_medium_margin"
+            android:focusable="true"
+            android:gravity="left|center_vertical"
+            android:paddingLeft="@dimen/activity_horizontal_short_margin"
+            android:text="@string/recovery_event_color_string" />
 
-        <Button
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/paste_text"
-            android:drawableLeft="@drawable/ic_content_paste_black_36dp"
-            android:background="?android:attr/selectableItemBackground"
-            android:gravity="center"
-            android:layout_alignParentTop="true"
-            android:layout_centerInParent="true" />
 
-        <Button
-            style="?android:attr/buttonStyleSmall"
-            android:id="@+id/import_text_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_note_add_black_36dp"
-            android:gravity="center"
-            android:background="?android:attr/selectableItemBackground"
-            android:layout_alignParentTop="true"
-            android:layout_toStartOf="@+id/paste_text"/>
+        <com.melnykov.fab.FloatingActionButton
+            android:id="@+id/foward_button"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="12dp"
+            android:layout_marginRight="@dimen/activity_horizontal_short_margin"
+            android:src="@drawable/ic_play_arrow_white_24dp"
+            fab:fab_colorNormal="@color/red_500"
+            fab:fab_colorPressed="@color/red_500"
+            fab:fab_colorRipple="@color/red_A700"
+            fab:fab_shadow="true"
+            android:layout_marginTop="29dp"
+            android:layout_below="@+id/recoveryDay"
+            android:layout_alignParentEnd="true" />
 
     </RelativeLayout>
 
-    <Button
-        android:id="@+id/recupero_color_button"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/list_items_height"
-        android:background="?android:attr/selectableItemBackground"
-        android:drawableLeft="@drawable/circle_orange_24dp"
-        android:drawablePadding="@dimen/activity_horizontal_medium_margin"
-        android:gravity="left|center_vertical"
-        android:paddingLeft="@dimen/activity_horizontal_short_margin"
-        android:text="@string/recovery_event_color_string"
-        android:focusable="true"
-        android:layout_below="@+id/recoveryDay" />
+    </ScrollView>
 
-    <com.melnykov.fab.FloatingActionButton
-        android:id="@+id/foward_button"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:layout_marginRight="@dimen/activity_horizontal_short_margin"
-        android:src="@drawable/ic_play_arrow_white_24dp"
-        fab:fab_colorNormal="@color/red_500"
-        fab:fab_colorPressed="@color/red_500"
-        fab:fab_colorRipple="@color/red_A700"
-        fab:fab_shadow="true"
-        android:layout_marginEnd="16dp"
-        android:layout_marginTop="31dp"
-        android:layout_below="@+id/recoveryDay"
-        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>
 

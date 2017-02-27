@@ -40,7 +40,7 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
     private String surname;
     private Activity activity;
     Context context;
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
     /**
      * Indicates that the day is a RECUPERO
      */
@@ -136,9 +136,9 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
         progress.setMessage("Un momento di pazienza mentre carico i turni nel calendario...");
         progress.show();
 
-        if(eventi == 0) {
-            progress.dismiss();
-        }
+        //if(eventi == 0) {
+        //    progress.dismiss();
+        //}
     }
 
     protected Void doInBackground(Void... unused) {
