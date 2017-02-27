@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fab="http://schemas.android.com/apk/res-auto"
     android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+<RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?android:attr/selectableItemBackground">
@@ -132,6 +136,7 @@
         android:layout_below="@+id/account_button"
         android:layout_alignParentStart="true" />
 
+
     <Button
         android:id="@+id/bassona_color_button"
         android:layout_width="match_parent"
@@ -213,21 +218,6 @@
 
     </RelativeLayout>
 
-    <com.melnykov.fab.FloatingActionButton
-        android:id="@+id/foward_button"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:layout_marginRight="@dimen/activity_horizontal_short_margin"
-        android:src="@drawable/ic_play_arrow_white_24dp"
-        fab:fab_colorNormal="@color/red_500"
-        fab:fab_colorPressed="@color/red_500"
-        fab:fab_colorRipple="@color/red_A700"
-        fab:fab_shadow="true"
-        android:layout_marginEnd="40dp"
-        android:layout_marginBottom="22dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true" />
-
     <Button
         android:id="@+id/recupero_color_button"
         android:layout_width="match_parent"
@@ -239,9 +229,25 @@
         android:paddingLeft="@dimen/activity_horizontal_short_margin"
         android:text="@string/recovery_event_color_string"
         android:focusable="true"
-        android:layout_below="@+id/recoveryDay"
-        android:layout_alignParentStart="true" />
+        android:layout_below="@+id/recoveryDay" />
 
-    <!---->
+    <com.melnykov.fab.FloatingActionButton
+        android:id="@+id/foward_button"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_marginRight="@dimen/activity_horizontal_short_margin"
+        android:src="@drawable/ic_play_arrow_white_24dp"
+        fab:fab_colorNormal="@color/red_500"
+        fab:fab_colorPressed="@color/red_500"
+        fab:fab_colorRipple="@color/red_A700"
+        fab:fab_shadow="true"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="31dp"
+        android:layout_below="@+id/recoveryDay"
+        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>
+
+
+    </ScrollView>
+

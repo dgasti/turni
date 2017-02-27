@@ -114,6 +114,9 @@ public class CalendarDialog extends Activity {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 getActivity().getWindow().setEnterTransition(TransitionInflater.from(getActivity()).inflateTransition(R.transition.enter_ma_da));
             }
+            else {
+                getActivity().getWindowManager().getDefaultDisplay();
+            }
 
             int eventIndex = 0;
             mAccountsList = Util.getCalendarAccounts(getActivity());

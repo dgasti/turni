@@ -71,6 +71,7 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
      */
     private static final String CREATE_EVENTS = "create events";
     private static final CharSequence ASSENZA = "ASSENZA";
+    private static final CharSequence ASSENZE = "ASSENZE";
     private static final CharSequence FERIE = "FERIE";
     private static final CharSequence FESTIVO_TARGET = "TARGET";
     private static final CharSequence UFFICIO_STORAGE = "STG";
@@ -231,14 +232,22 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
         }
 
         while (text.indexOf(surname, fromIndex) != -1) {
-            Log.d(TAG, "index: " + text.indexOf(surname, fromIndex));
-            int surNameIndex = text.indexOf(surname, fromIndex);  //trovo la posizione del primo cognome
-            int startLine = surNameIndex - 17;                     //Trovo la posizione dell'inizio della stringa che è 17 posti indietro l'inizio del cognome
+
+            if (DEBUG) {
+                Log.d(TAG, "index: " + text.indexOf(surname, fromIndex));
+            }
+
+            int surNameIndex = text.indexOf(surname, fromIndex);   //trovo la posizione del primo cognome
+            int startLine = surNameIndex - 17; //Trovo la posizione dell'inizio della stringa che è 17 posti indietro l'inizio del cognome
+
             //Per trovare la fine della riga:
             //- trovo la posizione del cognome successivo. Per fare questo dico a indexOf di partire dalla fine del cognome precedente (surNameIndex+surName lenght)
             //- successivamente tolgo 18 posizioni e quindi mi si mette prima della seconda data
             //- faccio una verifica che il cognome che sto verificando ne abbia uno successivo o sia già l'ultimo
-            Log.d(TAG, "startline = " + startLine);
+
+            if (DEBUG) {
+                Log.d(TAG, "startline = " + startLine);
+            }
 
             int endLine;
             if (text.indexOf(surname, surNameIndex + surname.length()) != -1) {
@@ -276,7 +285,7 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
             checkEventEnd = null;
 
             //Find the work place
-            if (line.contains(ASSENZA) || line.contains(FERIE) || line.contains(FESTIVO_TARGET)) {
+            if (line.contains(ASSENZA) || line.contains(FERIE) || line.contains(FESTIVO_TARGET) || line.contains(ASSENZE)) {
                 hasToCreateEvent = false;
                 hasToCreateNoEvent = true;
                 checkEventBegin.set(Calendar.HOUR_OF_DAY, 0);
@@ -295,8 +304,11 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
                 if (line.contains(RECUPERO)) {
                     hasToCreateEvent = false;
                     hasToCreateNoEvent = false;
-                    Log.d(TAG, "entro in assenza riga " + i);
-                    Log.d(TAG, "recoveryDay nell'if per creare o meno l'evento = " + recoveryDay);
+
+                    if (DEBUG) {
+                        Log.d(TAG, "entro in assenza riga " + i);
+                        Log.d(TAG, "recoveryDay nell'if per creare o meno l'evento = " + recoveryDay);
+                    }
                 }
             }
 
@@ -319,6 +331,10 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
                 hasReachable = false;
                 hasRecoveryDay = false;
 
+                if (DEBUG) {
+                    Log.d(TAG, "Dentro all'evento di MATTINA");
+                }
+
             }
             if (line.contains(POMERIGGIO)) {
                 beginTime.set(Calendar.HOUR_OF_DAY, 14);
@@ -337,6 +353,11 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
                 titleText = titlePom;
                 hasReachable = false;
                 hasRecoveryDay = false;
+
+                if (DEBUG) {
+                    Log.d(TAG, "Dentro all'evento di POMERIGGIO");
+                }
+
             }
             if (line.contains(NOTTURNO_00)) {
                 beginTime.set(Calendar.HOUR_OF_DAY, 0);
@@ -355,6 +376,11 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
                 titleText = titleNott2;
                 hasReachable = false;
                 hasRecoveryDay = false;
+
+                if (DEBUG) {
+                    Log.d(TAG, "Dentro all'evento di NOTTE 00");
+                }
+
             }
             if (line.contains(NOTTURNO_21)) {
                 beginTime.set(Calendar.HOUR_OF_DAY, 21);
@@ -376,6 +402,11 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
                 titleText = titleNott1;
                 hasReachable = false;
                 hasRecoveryDay = false;
+
+                if (DEBUG) {
+                    Log.d(TAG, "Dentro all'evento di NOTTE 21");
+                }
+
             }
             if (line.contains(NOTTURNO_FESTIVO)) {
                 beginTime.set(Calendar.HOUR_OF_DAY, 0);
@@ -394,6 +425,11 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
                 titleText = titleNott2;
                 hasReachable = false;
                 hasRecoveryDay = false;
+
+                if (DEBUG) {
+                    Log.d(TAG, "Dentro all'evento di NOTTE FESTIVO");
+                }
+
             }
             if (line.contains(MATTINA_FESTIVO)) {
                 beginTime.set(Calendar.HOUR_OF_DAY, 8);
@@ -412,6 +448,11 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
                 titleText = titleMatt;
                 hasReachable = false;
                 hasRecoveryDay = false;
+
+                if (DEBUG) {
+                    Log.d(TAG, "Dentro all'evento di MATTINA FESTIVO");
+                }
+
             }
             if (line.contains(POMERIGGIO_FESTIVO)) {
                 beginTime.set(Calendar.HOUR_OF_DAY, 16);
@@ -430,6 +471,11 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
                 titleText = titlePom;
                 hasReachable = false;
                 hasRecoveryDay = false;
+
+                if (DEBUG) {
+                    Log.d(TAG, "Dentro all'evento di POMERIGGIO FESTIVO");
+                }
+
             }
 
             if (line.contains(REPERIBILE)) {
@@ -448,6 +494,10 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
                 hasToCreateNoEvent = false;
                 hasReachable = true;
                 hasRecoveryDay = false;
+
+                if (DEBUG) {
+                    Log.d(TAG, "Dentro all'evento di REPERIBILE");
+                }
             }
 
             if (line.contains(GIORNALIERO)) {
@@ -468,6 +518,11 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
                 hasReachable = false;
                 hasRecoveryDay = false;
                 isVerona = true;
+
+                if (DEBUG) {
+                    Log.d(TAG, "Dentro all'evento di GIORNALIERO");
+                }
+
             }
 
             if (line.contains(UFFICIO_PIANIF) || line.contains(UFFICIO_WIN) || line.contains(UFFICIO_MDW) || line.contains(UFFICIO_STORAGE)) {
@@ -497,6 +552,11 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
                 hasReachable = false;
                 hasRecoveryDay = false;
                 isVerona = true;
+
+                if (DEBUG) {
+                    Log.d(TAG, "Dentro all'evento di UFFICIO");
+                }
+
             }
 
             if (recoveryDay) {
