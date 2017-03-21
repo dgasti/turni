@@ -696,7 +696,7 @@ public class MainFragment extends Fragment implements View.OnClickListener, Comp
         return "com.android.providers.media.documents".equals(uri.getAuthority());
     }
 
-    public void surnameDialog(final Activity activity) {
+    /*public void surnameDialog(final Activity activity) {
         final Dialog dialog = new Dialog(activity);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.custom_dialog);
@@ -730,7 +730,7 @@ public class MainFragment extends Fragment implements View.OnClickListener, Comp
                 }
             }
         });
-    }
+    }*/
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
