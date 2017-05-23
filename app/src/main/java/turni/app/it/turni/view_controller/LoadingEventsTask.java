@@ -40,7 +40,7 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
     private String surname;
     private Activity activity;
     Context context;
-    private static final boolean DEBUG = false;
+    private static final boolean DEBUG = false; //false
     /**
      * Indicates that the day is a RECUPERO
      */
