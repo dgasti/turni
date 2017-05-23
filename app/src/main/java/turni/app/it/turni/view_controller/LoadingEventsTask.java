@@ -741,7 +741,7 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
                     //  Uri  long eventID = Long.parseLong(uri1.getLastPathSegment());
 
                     if (DEBUG)
-                        Log.d(TAG, "link evento creato: " + uri1);
+                        Log.d(TAG, "link evento creato: " + uri1); //mi fa vedere il link dell'evento creato
                 }
                 eventi++;
             }
