@@ -320,8 +320,8 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
             if (line.contains(ASSENZA) || line.contains(FERIE) || line.contains(FESTIVO_TARGET) || line.contains(ASSENZE)) {
                 hasToCreateEvent = false;
                 hasToCreateNoEvent = true;
-                checkEventBegin.set(Calendar.HOUR_OF_DAY, 0);
-                checkEventBegin.set(Calendar.MINUTE, 1);
+                checkEventBegin.set(Calendar.HOUR_OF_DAY, 4);
+                checkEventBegin.set(Calendar.MINUTE, 30);
                 checkEventEnd = (Calendar) checkEventBegin.clone();
                 checkEventEnd.set(Calendar.HOUR_OF_DAY, 23);
                 checkEventEnd.set(Calendar.MINUTE, 59);
