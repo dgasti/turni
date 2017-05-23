@@ -40,7 +40,7 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
     private String surname;
     private Activity activity;
     Context context;
-    private static final boolean DEBUG = false;
+    private static final boolean DEBUG = true;
     /**
      * Indicates that the day is a RECUPERO
      */
@@ -320,8 +320,8 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
             if (line.contains(ASSENZA) || line.contains(FERIE) || line.contains(FESTIVO_TARGET) || line.contains(ASSENZE)) {
                 hasToCreateEvent = false;
                 hasToCreateNoEvent = true;
-                checkEventBegin.set(Calendar.HOUR_OF_DAY, 0);
-                checkEventBegin.set(Calendar.MINUTE, 1);
+                checkEventBegin.set(Calendar.HOUR_OF_DAY, 4);
+                checkEventBegin.set(Calendar.MINUTE, 30);
                 checkEventEnd = (Calendar) checkEventBegin.clone();
                 checkEventEnd.set(Calendar.HOUR_OF_DAY, 23);
                 checkEventEnd.set(Calendar.MINUTE, 59);
@@ -422,12 +422,12 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
                 endTime.add(Calendar.DAY_OF_YEAR, 1);
                 endTime.set(Calendar.HOUR_OF_DAY, 4);
                 endTime.set(Calendar.MINUTE, 27);
-                checkEventBegin.set(Calendar.HOUR_OF_DAY, 6);
-                checkEventBegin.set(Calendar.MINUTE, 0);
+                checkEventBegin.set(Calendar.HOUR_OF_DAY, 4);
+                checkEventBegin.set(Calendar.MINUTE, 30);
                 checkEventEnd = (Calendar) checkEventBegin.clone();
-                checkEventEnd.add(Calendar.DAY_OF_YEAR, 1);
-                checkEventEnd.set(Calendar.HOUR_OF_DAY, 6);
-                checkEventEnd.set(Calendar.MINUTE, 1);
+                //checkEventEnd.add(Calendar.DAY_OF_YEAR, 1);
+                checkEventEnd.set(Calendar.HOUR_OF_DAY, 23);
+                checkEventEnd.set(Calendar.MINUTE, 59);
                 hasToCreateEvent = true;
                 hasToCreateNoEvent = false;
                 isFullDay = false;
@@ -597,6 +597,10 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
                     Log.d(TAG, "Sono dentro all'if che crea gli orari dell'evento RECUPERO");
 
                 if (line.contains(RECUPERO)) {
+
+                    if (DEBUG)
+                        Log.d(TAG, "e' un evento RECUPERO");
+
                     beginTime.set(Calendar.HOUR_OF_DAY, 8);
                     beginTime.set(Calendar.MINUTE, 0);
                     endTime = (Calendar) beginTime.clone();
@@ -735,6 +739,9 @@ public class LoadingEventsTask extends AsyncTask<Void, Void, Void> {
                     Uri uri1 = mContentResolver.insert(CalendarContract.Events.CONTENT_URI, values);
                     // get the event ID that is the last element in the
                     //  Uri  long eventID = Long.parseLong(uri1.getLastPathSegment());
+
+                    if (DEBUG)
+                        Log.d(TAG, "link evento creato: " + uri1);
                 }
                 eventi++;
             }

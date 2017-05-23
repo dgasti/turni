@@ -321,6 +321,7 @@ public class Util {
                 else if ((titleCursor.equals(titleMattNew)) ||
                         (titleCursor.equals(titleNott1New)) || (titleCursor.equals(titleNott2New))
                         || (titleCursor.equals(titlePomNew))){
+
                     if (DEBUG)
                         Log.d(TAG, "Sono dentro all'if del controllo dei titoliNew dell'isAlreadyCreate, dovrei eliminare l'evento");
 
