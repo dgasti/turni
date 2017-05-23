@@ -48,6 +48,7 @@ import java.io.IOException;
 import model.Util;
 import turni.app.it.turni.R;
 
+import static android.R.attr.tag;
 import static android.app.Activity.RESULT_OK;
 
 public class MainFragment extends Fragment implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
@@ -63,12 +64,13 @@ public class MainFragment extends Fragment implements View.OnClickListener, Comp
     private static final int COLOR_DIALOG_ACTIVITY_RESULT_CODE = 2;
     private static final String RESULT_COLOR_SELECTED = "result color selected";
     private static final String CALENDAR_ROW = "calendar row";
-    private static final String SURNAME_TEXT = "SURNAME";
     private static final int FILE_SELECT_RESULT_CODE = 3;
     private static final String TAG_CHECKBOX_BUTTON = "checkbox button";
     private static final String TAG_SURNAME = "Surname text";
     private static final int FORWARD_SELECT_BUTTON = 4;
     private static final String TAG_SURNAME_BUTTON = "surname button";
+    private static final String SURNAME = "SURNAME";
+    private static final int SURNAME_DIALOG_ACTIVITY_RESULT_CODE = 5;
 
     /**
      * Dialog Account is used?
@@ -183,8 +185,9 @@ public class MainFragment extends Fragment implements View.OnClickListener, Comp
         mRecoveryColorButton.setCompoundDrawablesWithIntrinsicBounds(d, null, null, null);
 
         recoveryDay = mSharedPref.getBoolean("CHECKBOX_IS_CHECKED", false);
-        surname_check = mSharedPref.getString("SURNAME", "");
+        surname_check = mSharedPref.getString(SURNAME, "");
         recoveryColorButtonVisibility = mSharedPref.getBoolean("VISIBILITY", false);
+
         if(recoveryColorButtonVisibility) {
             mRecoveryDay.setChecked(true);
             recoveryDay = true;
@@ -205,16 +208,31 @@ public class MainFragment extends Fragment implements View.OnClickListener, Comp
         }
 
         if (surname_check.isEmpty()) {
-            isSurnameDialogShow = showSurnameDialog(getActivity());
-            surname_check = mSharedPref.getString("SURNAME", "");
+            //isSurnameDialogShow = showSurnameDialog(getActivity());
+            //surname_check = mSharedPref.getString("SURNAME", "");
+            Intent intent = new Intent(getActivity(), SurnameDialog.class);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                getView().setTransitionName("snapshot");
+                getActivity().getWindow().setExitTransition(null);
+                getActivity().getWindow().setEnterTransition(TransitionInflater.from(getActivity()).inflateTransition(R.transition.enter_ma_da));
+                getActivity().getWindow().setSharedElementEnterTransition(TransitionInflater.from(getActivity())
+                        .inflateTransition(R.transition.circular_reveal_shared_transition));
+                startActivityForResult(intent, SURNAME_DIALOG_ACTIVITY_RESULT_CODE,
+                        ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
+            }
+            else {
+                startActivityForResult(intent, SURNAME_DIALOG_ACTIVITY_RESULT_CODE);
+            }
+            //mSurname.animate().alpha(0).setDuration(250);
+
         } else {
             surname_check = surname_check.trim();
             mSurnameText.setText(surname_check);
         }
 
-        if (isSurnameDialogShow) {
+        /*if (isSurnameDialogShow) {
             mSurnameText.setText("Chi sei?");
-        }
+        }*/
 
         mFowardButton.setOnClickListener(this);
         mAccountButton.setOnClickListener(this);
@@ -349,7 +367,19 @@ public class MainFragment extends Fragment implements View.OnClickListener, Comp
         final String text = mEditText.getText().toString();
 
         if(TAG_SURNAME_BUTTON.equals(tag)) {
-            surnameDialog(getActivity());
+            Intent intent = new Intent(getActivity(), SurnameDialog.class);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                v.setTransitionName("snapshot");
+                getActivity().getWindow().setExitTransition(null);
+                getActivity().getWindow().setEnterTransition(TransitionInflater.from(getActivity()).inflateTransition(R.transition.enter_ma_da));
+                getActivity().getWindow().setSharedElementEnterTransition(TransitionInflater.from(getActivity())
+                        .inflateTransition(R.transition.circular_reveal_shared_transition));
+                startActivityForResult(intent, SURNAME_DIALOG_ACTIVITY_RESULT_CODE,
+                        ActivityOptions.makeSceneTransitionAnimation(getActivity()).toBundle());
+            }
+            else {
+                startActivityForResult(intent, SURNAME_DIALOG_ACTIVITY_RESULT_CODE);
+            }
         }
 
         if (TAG_SURNAME.equals(tag)) {
@@ -477,11 +507,11 @@ public class MainFragment extends Fragment implements View.OnClickListener, Comp
 
                 if (!(surname_check.isEmpty())) {
                     surname_check = mSharedPref.getString("SURNAME", "nessun cognome");
-                    intent.putExtra(SURNAME_TEXT, surname_check);
+                    intent.putExtra(SURNAME, surname_check);
                     if (DEBUG)
                         Log.d(TAG, "Cognome passato alla workingDialog surname_check= " + surname_check);
                 } else {
-                    intent.putExtra(SURNAME_TEXT, surname);
+                    intent.putExtra(SURNAME, surname);
                     if (DEBUG)
                         Log.d(TAG, "Cognome passato alla workingDialog surname = " + surname);
                 }
@@ -666,7 +696,7 @@ public class MainFragment extends Fragment implements View.OnClickListener, Comp
         return "com.android.providers.media.documents".equals(uri.getAuthority());
     }
 
-    public void surnameDialog(final Activity activity) {
+    /*public void surnameDialog(final Activity activity) {
         final Dialog dialog = new Dialog(activity);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.custom_dialog);
@@ -700,7 +730,7 @@ public class MainFragment extends Fragment implements View.OnClickListener, Comp
                 }
             }
         });
-    }
+    }*/
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -711,6 +741,15 @@ public class MainFragment extends Fragment implements View.OnClickListener, Comp
             Log.d(TAG, "RESULT CODE = " + resultCode);
         }
         switch (requestCode) {
+            case (SURNAME_DIALOG_ACTIVITY_RESULT_CODE):
+                if(resultCode == CODE_OK) {
+                    mSharedPref.edit().putString(SURNAME, "").commit();
+                    surname = mSharedPref.getString(SURNAME, "");
+                    mSurname.animate().alpha(1f).setDuration(250);
+                }
+                else
+                    mSurname.animate().alpha(1f).setDuration(250);
+                break;
             case (CALENDAR_DIALOG_ACTIVITY_RESULT_CODE):
                 if (resultCode == CODE_OK) {
                     ACCOUNT_IS_USED = true;
@@ -726,7 +765,6 @@ public class MainFragment extends Fragment implements View.OnClickListener, Comp
                     edit.commit();
                 } else
                     mAccountButton.animate().alpha(1f).setDuration(250);
-
                 break;
             case (COLOR_DIALOG_ACTIVITY_RESULT_CODE):
 

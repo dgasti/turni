@@ -1,0 +1,35 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/color_selector_dialog_background"
+    tools:context="turni.app.it.turni.view_controller.SurnameDialog$PlaceholderFragment">
+
+    <TextView
+        android:id="@+id/surname_welcome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="40dp"
+        android:text="@string/dialog_surname_title" />
+
+    <EditText
+        android:id="@+id/surname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/dialog_surname"
+        android:layout_centerVertical="true"
+        android:layout_alignStart="@+id/surname_button" />
+    <Button
+        android:id="@+id/surname_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="29dp"
+        android:text="Button" />
+
+</RelativeLayout>
